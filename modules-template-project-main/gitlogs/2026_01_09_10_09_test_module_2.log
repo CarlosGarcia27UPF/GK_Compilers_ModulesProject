@@ -1,0 +1,11 @@
+See log of execution in file ./logs/2026_01_09_10_09_test_module_2.log
+Testing Module 2: Fibonacci Function
+Fibonacci negative test passed!: fig(-3) = -1
+Fibonacci special case n = 0 test Passed!: fig(0) = 0
+Fibonacci special case n = 1 test Passed!: fig(1) = 1
+Fibonacci first successive case (n = 2) test Passed!: fig(2) = 1
+Fibonacci successive n case test Passed!: fig(6) = 8
+Fibonacci function tests passed!
+Fibonacci Intentional mistake. If you see this message the test is commented out. Uncomment the assert to see mistake: fib(5) = 5 (and program will abort)
+Finished tests for Module 2: Fibonacci function
+

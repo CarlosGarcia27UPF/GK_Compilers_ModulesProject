@@ -1,0 +1,9 @@
+Test project D:/a/modules-template-project/modules-template-project/build
+    Start 1: TestModuleArgs
+1/2 Test #1: TestModuleArgs ...................   Passed    0.01 sec
+    Start 2: TestModule_2
+2/2 Test #2: TestModule_2 .....................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   0.03 sec

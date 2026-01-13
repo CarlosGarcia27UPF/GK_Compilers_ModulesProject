@@ -1,0 +1,28 @@
+See log of execution in file ./logs/2026_01_09_10_09_proj_modules_template.log
+Starting module args ...
+Arguments received (4):
+Argument 0: D:\a\modules-template-project\modules-template-project\build\modules_template_main.exe
+Argument 1: ym111larg1
+Argument 2: yml111arg2
+Argument 3: yml111arg3
+Module arguments: not implemented yet
+Finished module args!!
+Starting module 2 ...
+Fibonacci of 4 is: 3
+Finished module 2!!
+All modules executed successfully!
+
+See log of execution in file ./logs/2026_01_09_10_09_proj_modules_template.log
+Starting module args ...
+Arguments received (4):
+Argument 0: D:\a\modules-template-project\modules-template-project\build\modules_template_main.exe
+Argument 1: ym222larg1
+Argument 2: yml222arg2
+Argument 3: yml222arg3
+Module arguments: not implemented yet
+Finished module args!!
+Starting module 2 ...
+Fibonacci of 4 is: 3
+Finished module 2!!
+All modules executed successfully!
+
