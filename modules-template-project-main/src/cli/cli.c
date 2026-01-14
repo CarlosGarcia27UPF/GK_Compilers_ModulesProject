@@ -5,7 +5,7 @@
  * Module: cli - Command-line options
  * Responsible for: Parsing -c -d -all -help and other CLI options
  *
- * Author: [Team Member 1]
+ * Author: [Emmanuel Cooper]
  * -----------------------------------------------------------------------------
  */
 
