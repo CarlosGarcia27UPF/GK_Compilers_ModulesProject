@@ -3,22 +3,25 @@
 FILE* ofile = NULL; // The output handler for the project run (same variable name as in modules)
 
 int main(int argc, char *argv[]) {
-    int n = 0;
+    (void)argc;  // Suppress unused parameter warning
+    (void)argv;  // Suppress unused parameter warning
 
     ofile = stdout; // Default output to stdout
     ofile = set_output_test_file(PROJOUTFILENAME);
 
-    fprintf(ofile, "Starting module args ...\n");
-    process_arguments(argc, argv);
-    fprintf(ofile, "Finished module args!!\n");
+    fprintf(ofile, "=== P1PP Preprocessor - Module Initialization ===\n\n");
 
-    fprintf(ofile, "Starting module 2 ...\n");
-    n = fib(FIBNUM);
-    fprintf(ofile, "Fibonacci of %d is: %d\n", FIBNUM, n);
-    fprintf(ofile, "Finished module 2!!\n");
-    
+    // Initialize all modules for TM1
+    cli_init();
+    io_init();
+    comments_init();
+    directives_init();
+    macros_init();
+    errors_init();
+    tokens_init();
+
+    fprintf(ofile, "\n=== All modules initialized successfully! ===\n");
     printf("All modules executed successfully!\n\n");
-    fprintf(ofile, "All modules executed successfully!\n\n");
 
     fclose(ofile); 
     return 0;
