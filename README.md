@@ -148,8 +148,10 @@ typedef struct {
     int do_directives;  // -d
     int do_help;        // -help
 } cli_options_t;
+```
 
-Macro table (required by #define and #ifdef)
+### Macro table (required by #define and #ifdef)
+```c
 typedef struct {
     char *name;
     char *value;
@@ -160,8 +162,9 @@ typedef struct {
     int size;
     int capacity;
 } macro_table_t;
-
-Preprocessing context
+```
+### Preprocessing context
+```c
 typedef struct {
     cli_options_t opt;
 
@@ -175,14 +178,18 @@ typedef struct {
 
     int error_count;
 } pp_context_t;
+```
 
-Text buffer
+### Text buffer
+```c
 typedef struct {
     char *data;
     long len;
     long cap;
 } buffer_t;
 ```
+---
+
 ## 8. Module Responsibilities
 
 ### CLI (`src/cli`)
