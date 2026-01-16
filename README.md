@@ -183,149 +183,107 @@ typedef struct {
     long cap;
 } buffer_t;
 ```
-8. Module Responsibilities
-CLI (src/cli)
+## 8. Module Responsibilities
 
-Parses command-line arguments
+### CLI (`src/cli`)
+- Parses command-line arguments  
+- Applies default behavior (`-c` if no flags)  
+- Produces `cli_options_t`  
+- Does not process files or text  
 
-Applies default behavior (-c if no flags)
+### IO (`src/io`)
+- Reads files into `buffer_t`  
+- Writes output buffers to files  
+- Generates output filenames  
 
-Produces cli_options_t
+### PP_CORE (`src/pp_core`)
+- Central preprocessing engine  
+- Performs the single line-by-line pass  
+- Calls Comments / Directives / Macros as needed  
+- Tracks line numbers and context state  
 
-Does not process files or text
+### Comments (`src/comments`)
+- Removes `//` and `/* */` comments  
+- Replaces comments with spaces  
+- Preserves all newline characters  
+- Maintains state for multi-line block comments  
 
-IO (src/io)
-
-Reads files into buffer_t
-
-Writes output buffers to files
-
-Generates output filenames
-
-PP_CORE (src/pp_core)
-
-Central preprocessing engine
-
-Performs the single line-by-line pass
-
-Calls Comments / Directives / Macros as needed
-
-Tracks line numbers and context state
-
-Comments (src/comments)
-
-Removes // and /* */ comments
-
-Replaces comments with spaces
-
-Preserves all newline characters
-
-Maintains state for multi-line block comments
-
-Directives (src/directives)
-
+### Directives (`src/directives`)
 Handles directive lines:
+- `#include "file"`
+- `#define`
+- `#ifdef / #endif`  
 
-#include "file"
+Updates macro table and conditional state  
+Directive lines do not produce normal output  
 
-#define
+### Macros (`src/macros`)
+- Expands macros in non-directive lines  
+- Uses Tokens to replace only whole identifiers  
+- Avoids expansion inside string literals  
 
-#ifdef / #endif
-
-Updates macro table and conditional state
-
-Directive lines do not produce normal output
-
-Macros (src/macros)
-
-Expands macros in non-directive lines
-
-Uses Tokens to replace only whole identifiers
-
-Avoids expansion inside string literals
-
-Tokens (src/tokens)
-
-Lightweight tokenizer (P1 helper)
-
+### Tokens (`src/tokens`)
+Lightweight tokenizer (P1 helper)  
 Splits a line into:
+- identifiers  
+- string literals  
+- separators  
 
-identifiers
+Used by Directives and Macros  
+Not the full lexer (P2)  
 
-string literals
+### Errors (`src/errors`)
+- Reports errors with file name and line number  
+- Increments global error count  
+- Allows graceful error handling  
 
-separators
+---
 
-Used by Directives and Macros
-
-Not the full lexer (P2)
-
-Errors (src/errors)
-
-Reports errors with file name and line number
-
-Increments global error count
-
-Allows graceful error handling
-
-9. Comment Removal Semantics
-
-Both // and /* */ comments are removed
-
-Each removed comment is replaced by one space
-
-All newline characters are preserved
-
-Empty lines are not eliminated
+## 9. Comment Removal Semantics
+- Both `//` and `/* */` comments are removed  
+- Each removed comment is replaced by one space  
+- All newline characters are preserved  
+- Empty lines are not eliminated  
 
 This guarantees correct line numbering.
 
-10. Directive Semantics
-#include "file"
+---
 
-Replaced by the full contents of file
+## 10. Directive Semantics
 
-Only local includes are supported
+### `#include "file"`
+- Replaced by the full contents of file  
+- Only local includes are supported  
+- Included file contents are inserted into the output  
 
-Included file contents are inserted into the output
+### `#define name value`
+- Stored in the macro table  
+- The directive line itself produces no output  
 
-#define name value
+### `#ifdef name / #endif`
+- Lines are conditionally included based on macro table  
+- Nested conditionals are supported using a stack  
 
-Stored in the macro table
+---
 
-The directive line itself produces no output
+## 11. Development Rules
+- No magic constants or strings (defined in `pp_spec.h`)  
+- Functions should be short and focused  
+- Each module exposes clear services  
+- Project must always compile and run  
+- Changes to core data structures must be discussed by the team  
+- This README must be updated when interfaces change  
 
-#ifdef name / #endif
+---
 
-Lines are conditionally included based on macro table
-
-Nested conditionals are supported using a stack
-
-11. Development Rules
-
-No magic constants or strings (defined in pp_spec.h)
-
-Functions should be short and focused
-
-Each module exposes clear services
-
-Project must always compile and run
-
-Changes to core data structures must be discussed by the team
-
-This README must be updated when interfaces change
-
-12. Team Responsibilities
-
+## 12. Team Responsibilities
 Each team member owns one or more modules and is responsible for:
+- design decisions  
+- implementation  
+- keeping this README consistent with the code  
 
-design decisions
+---
 
-implementation
-
-keeping this README consistent with the code
-
-13. Status
-
-This README is a living document.
+## 13. Status
+This README is a living document.  
 It is refined as the project evolves and design decisions are finalized.
