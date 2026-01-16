@@ -90,8 +90,6 @@ errors/               // error reporting
 spec/                 // constants and shared definitions
   pp_spec.h
 
----
-
 ## 4. High-Level Architecture
 
 ### Design principles
