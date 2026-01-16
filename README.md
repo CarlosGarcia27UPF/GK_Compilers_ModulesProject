@@ -42,54 +42,52 @@ It is an **internal working specification** for the development team.
 
 ---
 
-## 3. Repository Structure
+3. Repository Structure
 
-The project is organized into independent modules under `src/`.
-
-
+The project is organized into independent modules under src/.
 
 src/
-main.c // program entry point (wrapper only)
+├── main.c              // program entry point (wrapper only)
 
-cli/ // command-line parsing
-cli.h
-cli.c
+├── cli/                // command-line parsing
+│   ├── cli.h
+│   └── cli.c
 
-pp_core/ // preprocessing engine (single pass)
-pp_core.h
-pp_core.c
-pp_context.h
+├── pp_core/            // preprocessing engine (single pass)
+│   ├── pp_core.h
+│   ├── pp_core.c
+│   └── pp_context.h
 
-buffer/ // dynamic text buffer utilities
-buffer.h
-buffer.c
+├── buffer/             // dynamic text buffer utilities
+│   ├── buffer.h
+│   └── buffer.c
 
-io/ // file input/output
-io.h
-io.c
+├── io/                 // file input/output
+│   ├── io.h
+│   └── io.c
 
-comments/ // comment removal
-comments.h
-comments.c
+├── comments/           // comment removal
+│   ├── comments.h
+│   └── comments.c
 
-directives/ // #include, #define, #ifdef/#endif
-directives.h
-directives.c
+├── directives/         // #include, #define, #ifdef / #endif
+│   ├── directives.h
+│   └── directives.c
 
-macros/ // macro table + expansion
-macros.h
-macros.c
+├── macros/             // macro table and expansion
+│   ├── macros.h
+│   └── macros.c
 
-tokens/ // lightweight tokenizer (P1 helper)
-tokens.h
-tokens.c
+├── tokens/             // lightweight tokenizer (P1 helper)
+│   ├── tokens.h
+│   └── tokens.c
 
-errors/ // error reporting
-errors.h
-errors.c
+├── errors/             // error reporting
+│   ├── errors.h
+│   └── errors.c
 
-spec/ // constants and shared definitions
-pp_spec.h
+└── spec/               // constants and shared definitions
+    └── pp_spec.h
 
 
 ---
