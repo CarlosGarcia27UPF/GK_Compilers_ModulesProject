@@ -89,6 +89,8 @@ errors/               // error reporting
 
 spec/                 // constants and shared definitions
   pp_spec.h
+```
+---
 
 ## 4. High-Level Architecture
 
@@ -180,7 +182,7 @@ typedef struct {
     long len;
     long cap;
 } buffer_t;
-
+```
 8. Module Responsibilities
 CLI (src/cli)
 
