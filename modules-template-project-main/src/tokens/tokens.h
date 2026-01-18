@@ -44,5 +44,5 @@ void tokens_init(void);
 
 void tokenize_next();
 
-char get_word(Token);
+char* get_word(Token);
 #endif // TOKENS_H

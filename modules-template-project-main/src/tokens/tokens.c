@@ -17,10 +17,10 @@ void tokens_init(void) {
 }
 
 // only used to get the wanted tokens
-char get_word(Token tok) {
+char* get_word(Token tok) {
     char *word = malloc(tok.lenght + 1);
     memcpy(word, tok.word, tok.lenght);
-    word[tok.lenght + 1] = "\0"; // string terminator
+    word[tok.lenght] = '\0'; // string terminator
     return word;
 }
 
