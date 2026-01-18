@@ -109,16 +109,36 @@ This avoids duplicated logic and keeps line counting consistent.
 
 ### Pass 0 — Setup
 - CLI parses command-line arguments into `cli_options_t`
-- Preprocessing context (`pp_context_t`) is initialized
+- Preprocessing context (`pp_context_t`), macro table, conditional (#ifdef) stack and error counter are initialized
 
 ### Pass 1 — Preprocessing (single main pass)
-- PP_CORE scans the input **line-by-line**
+- PP_CORE scans the input **line-by-line** 
 - For each line:
-  - comment removal (if enabled)
-  - directive handling (if enabled)
-  - macro expansion (if enabled)
-- Line numbers are tracked centrally
+   1. PP_CORE calls comments_process_line(raw input) from Comments Module and comments are removed (if enabled)
+   2. After comment removal, PP_CORE checks:
+      whether the first non-whitespace character is # (if directive handling enabled)
+      - If YES:
+          the line is classified as a directive line and PP_CORE calls directives_process_line(input after comments removed)
 
+        Inside Directives:
+          1. the line is tokenized using the Tokens helper (store type, lenght, line for error handling)
+          2. directive syntax is validated (#include, #define, #ifdef, #endif)
+          3. macro table and conditional stack are updated
+          4. errors are reported via the Errors module
+
+      - If NO:
+          the line is classified as a normal code line and processing continues to macro expansion (if enabled)
+
+
+  3. For normal (non-directive) lines only:
+       PP_CORE calls macros_expand_line() (if enabled)
+
+     Inside Macros:
+       1. the line is tokenized using the Tokens helper
+       2. macro expansion
+
+  5. Finally the processed line is appended to the output buffer and processing continues with the next input line
+      
 ### Pass 2 — Write
 - IO writes the output buffer to the `_pp` output file
 
