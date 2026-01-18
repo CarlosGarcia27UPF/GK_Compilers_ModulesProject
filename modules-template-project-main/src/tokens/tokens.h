@@ -39,7 +39,7 @@ typedef struct {
 } Tokenizer;
 
 
-
+// Functions that other modules should call
 void tokens_init(void);
 
 void tokenize_next();
