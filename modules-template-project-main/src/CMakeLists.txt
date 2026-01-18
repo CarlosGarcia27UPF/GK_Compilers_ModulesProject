@@ -34,6 +34,8 @@ add_subdirectory(directives)
 add_subdirectory(macros)
 add_subdirectory(errors)
 add_subdirectory(tokens)
+add_subdirectory(buffer)
+add_subdirectory(pp_core)
 message(STATUS "   - (${PROJECT_NAME}) Added modules subdirectories")
 
 message(STATUS "(${PROJECT_NAME}) Finished including module subdirectories.")

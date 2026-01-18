@@ -29,4 +29,11 @@ target_include_directories(test_errors PRIVATE ${PROJECT_SOURCE_DIR}/src)
 add_test(NAME TestErrors COMMAND test_errors)
 message(STATUS " - (${PROJECT_NAME}) Test for errors added")
 
+# Test for io module
+add_executable(test_io test_io.c)
+target_link_libraries(test_io PRIVATE io buffer)
+target_include_directories(test_io PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_test(NAME TestIO COMMAND test_io)
+message(STATUS " - (${PROJECT_NAME}) Test for io module added")
+
 message(STATUS " - (${PROJECT_NAME}) Test configuration (executables) completed.")
