@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     ctx.current_line = 0;
     ctx.error_count = 0;
 
-    pp_run(&ctx, &in, &out);
+    pp_run(&ctx, &in, &out, ".");
 
     io_write_file(out_name.data, &out);
 

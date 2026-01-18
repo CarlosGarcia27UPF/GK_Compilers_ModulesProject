@@ -1,8 +1,9 @@
 #include "pp_core.h"
 
 /* Returns 0 on success, non-zero on error */
-int pp_run(pp_context_t *ctx, const buffer_t *input, buffer_t *output)
+int pp_run(pp_context_t *ctx, const buffer_t *input, buffer_t *output, const char *base_dir)
 {
+    (void) base_dir;  /* unused for now */
     long i = 0;
     long line_start = 0;
 
