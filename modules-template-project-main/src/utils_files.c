@@ -71,7 +71,6 @@ FILE* set_output_test_file(const char* filename) {
             _putenv("TZ=GMT-2");
             _tzset();
         #else
-            // Using setenv is safer and more standard on POSIX than putenv with literals
             setenv("TZ", "GMT-2", 1);
             tzset();
         #endif
