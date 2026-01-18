@@ -1,21 +1,13 @@
-/*
- * -----------------------------------------------------------------------------
- * cli.h
- *
- * Module: cli - Command-line options
- * Responsible for: Parsing -c -d -all -help and other CLI options
- *
- * Author: [Emmanuel Cooper]
- * -----------------------------------------------------------------------------
- */
-
 #ifndef CLI_H
 #define CLI_H
 
-#include <stdio.h>
+typedef struct {
+    int do_comments;    // -c
+    int do_directives;  // -d
+    int do_help;        // -help
+} cli_options_t;
 
-extern FILE* ofile;
+cli_options_t cli_parse(int argc, char **argv);
+void cli_print_help(const char *progname);
 
-void cli_init(void);
-
-#endif // CLI_H
+#endif

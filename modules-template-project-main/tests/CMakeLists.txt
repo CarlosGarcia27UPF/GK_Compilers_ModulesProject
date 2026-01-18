@@ -22,4 +22,11 @@ target_include_directories(test_module_2 PRIVATE ${PROJECT_SOURCE_DIR}/src)
 add_test(NAME TestModule_2 COMMAND test_module_2)
 message(STATUS " - (${PROJECT_NAME}) Test for module_2 added")
 
+# Test for errors
+add_executable(test_errors test_errors.c)
+target_link_libraries(test_errors PRIVATE errors utils)
+target_include_directories(test_errors PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_test(NAME TestErrors COMMAND test_errors)
+message(STATUS " - (${PROJECT_NAME}) Test for errors added")
+
 message(STATUS " - (${PROJECT_NAME}) Test configuration (executables) completed.")

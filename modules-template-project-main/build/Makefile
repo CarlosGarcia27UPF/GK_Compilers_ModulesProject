@@ -295,6 +295,19 @@ test_module_2/fast:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/build
 .PHONY : test_module_2/fast
 
+#=============================================================================
+# Target rules for targets named test_errors
+
+# Build rule for target.
+test_errors: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_errors
+.PHONY : test_errors
+
+# fast build rule for target.
+test_errors/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/build
+.PHONY : test_errors/fast
+
 src/main.o: src/main.c.o
 .PHONY : src/main.o
 
@@ -337,6 +350,7 @@ help:
 	@echo "... module_2"
 	@echo "... module_args"
 	@echo "... modules_template_main"
+	@echo "... test_errors"
 	@echo "... test_module_2"
 	@echo "... test_module_args"
 	@echo "... tokens"

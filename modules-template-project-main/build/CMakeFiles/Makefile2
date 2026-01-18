@@ -316,11 +316,13 @@ src/tokens/clean: src/tokens/CMakeFiles/tokens.dir/clean
 # Recursive "all" directory target.
 tests/all: tests/CMakeFiles/test_module_args.dir/all
 tests/all: tests/CMakeFiles/test_module_2.dir/all
+tests/all: tests/CMakeFiles/test_errors.dir/all
 .PHONY : tests/all
 
 # Recursive "codegen" directory target.
 tests/codegen: tests/CMakeFiles/test_module_args.dir/codegen
 tests/codegen: tests/CMakeFiles/test_module_2.dir/codegen
+tests/codegen: tests/CMakeFiles/test_errors.dir/codegen
 .PHONY : tests/codegen
 
 # Recursive "preinstall" directory target.
@@ -330,6 +332,7 @@ tests/preinstall:
 # Recursive "clean" directory target.
 tests/clean: tests/CMakeFiles/test_module_args.dir/clean
 tests/clean: tests/CMakeFiles/test_module_2.dir/clean
+tests/clean: tests/CMakeFiles/test_errors.dir/clean
 .PHONY : tests/clean
 
 #=============================================================================
@@ -380,7 +383,7 @@ CMakeFiles/modules_template_main.dir/clean:
 src/CMakeFiles/utils.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/utils.dir/build.make src/CMakeFiles/utils.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/utils.dir/build.make src/CMakeFiles/utils.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=25,26 "Built target utils"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=27,28 "Built target utils"
 .PHONY : src/CMakeFiles/utils.dir/all
 
 # Build rule for subdir invocation for target.
@@ -397,7 +400,7 @@ utils: src/CMakeFiles/utils.dir/rule
 # codegen rule for target.
 src/CMakeFiles/utils.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/utils.dir/build.make src/CMakeFiles/utils.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=25,26 "Finished codegen for target utils"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=27,28 "Finished codegen for target utils"
 .PHONY : src/CMakeFiles/utils.dir/codegen
 
 # clean rule for target.
@@ -668,7 +671,7 @@ src/errors/CMakeFiles/errors.dir/clean:
 src/tokens/CMakeFiles/tokens.dir/all: src/CMakeFiles/utils.dir/all
 	$(MAKE) $(MAKESILENT) -f src/tokens/CMakeFiles/tokens.dir/build.make src/tokens/CMakeFiles/tokens.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/tokens/CMakeFiles/tokens.dir/build.make src/tokens/CMakeFiles/tokens.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=23,24 "Built target tokens"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=25,26 "Built target tokens"
 .PHONY : src/tokens/CMakeFiles/tokens.dir/all
 
 # Build rule for subdir invocation for target.
@@ -685,7 +688,7 @@ tokens: src/tokens/CMakeFiles/tokens.dir/rule
 # codegen rule for target.
 src/tokens/CMakeFiles/tokens.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f src/tokens/CMakeFiles/tokens.dir/build.make src/tokens/CMakeFiles/tokens.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=23,24 "Finished codegen for target tokens"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=25,26 "Finished codegen for target tokens"
 .PHONY : src/tokens/CMakeFiles/tokens.dir/codegen
 
 # clean rule for target.
@@ -701,7 +704,7 @@ tests/CMakeFiles/test_module_args.dir/all: src/CMakeFiles/utils.dir/all
 tests/CMakeFiles/test_module_args.dir/all: src/module_args/CMakeFiles/module_args.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=21,22 "Built target test_module_args"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=23,24 "Built target test_module_args"
 .PHONY : tests/CMakeFiles/test_module_args.dir/all
 
 # Build rule for subdir invocation for target.
@@ -718,7 +721,7 @@ test_module_args: tests/CMakeFiles/test_module_args.dir/rule
 # codegen rule for target.
 tests/CMakeFiles/test_module_args.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=21,22 "Finished codegen for target test_module_args"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=23,24 "Finished codegen for target test_module_args"
 .PHONY : tests/CMakeFiles/test_module_args.dir/codegen
 
 # clean rule for target.
@@ -734,7 +737,7 @@ tests/CMakeFiles/test_module_2.dir/all: src/CMakeFiles/utils.dir/all
 tests/CMakeFiles/test_module_2.dir/all: src/module_2/CMakeFiles/module_2.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=19,20 "Built target test_module_2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=21,22 "Built target test_module_2"
 .PHONY : tests/CMakeFiles/test_module_2.dir/all
 
 # Build rule for subdir invocation for target.
@@ -751,13 +754,46 @@ test_module_2: tests/CMakeFiles/test_module_2.dir/rule
 # codegen rule for target.
 tests/CMakeFiles/test_module_2.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=19,20 "Finished codegen for target test_module_2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=21,22 "Finished codegen for target test_module_2"
 .PHONY : tests/CMakeFiles/test_module_2.dir/codegen
 
 # clean rule for target.
 tests/CMakeFiles/test_module_2.dir/clean:
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/clean
 .PHONY : tests/CMakeFiles/test_module_2.dir/clean
+
+#=============================================================================
+# Target rules for target tests/CMakeFiles/test_errors.dir
+
+# All Build rule for target.
+tests/CMakeFiles/test_errors.dir/all: src/CMakeFiles/utils.dir/all
+tests/CMakeFiles/test_errors.dir/all: src/errors/CMakeFiles/errors.dir/all
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/depend
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=19,20 "Built target test_errors"
+.PHONY : tests/CMakeFiles/test_errors.dir/all
+
+# Build rule for subdir invocation for target.
+tests/CMakeFiles/test_errors.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_errors.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" 0
+.PHONY : tests/CMakeFiles/test_errors.dir/rule
+
+# Convenience name for target.
+test_errors: tests/CMakeFiles/test_errors.dir/rule
+.PHONY : test_errors
+
+# codegen rule for target.
+tests/CMakeFiles/test_errors.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=19,20 "Finished codegen for target test_errors"
+.PHONY : tests/CMakeFiles/test_errors.dir/codegen
+
+# clean rule for target.
+tests/CMakeFiles/test_errors.dir/clean:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/clean
+.PHONY : tests/CMakeFiles/test_errors.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

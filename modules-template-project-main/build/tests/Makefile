@@ -154,6 +154,44 @@ test_module_2/fast:
 	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/build
 .PHONY : test_module_2/fast
 
+# Convenience name for target.
+tests/CMakeFiles/test_errors.dir/rule:
+	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_errors.dir/rule
+.PHONY : tests/CMakeFiles/test_errors.dir/rule
+
+# Convenience name for target.
+test_errors: tests/CMakeFiles/test_errors.dir/rule
+.PHONY : test_errors
+
+# fast build rule for target.
+test_errors/fast:
+	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/build
+.PHONY : test_errors/fast
+
+test_errors.o: test_errors.c.o
+.PHONY : test_errors.o
+
+# target to build an object file
+test_errors.c.o:
+	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.o
+.PHONY : test_errors.c.o
+
+test_errors.i: test_errors.c.i
+.PHONY : test_errors.i
+
+# target to preprocess a source file
+test_errors.c.i:
+	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.i
+.PHONY : test_errors.c.i
+
+test_errors.s: test_errors.c.s
+.PHONY : test_errors.s
+
+# target to generate assembly for a file
+test_errors.c.s:
+	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.s
+.PHONY : test_errors.c.s
+
 test_module_2.o: test_module_2.c.o
 .PHONY : test_module_2.o
 
@@ -211,8 +249,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... test_errors"
 	@echo "... test_module_2"
 	@echo "... test_module_args"
+	@echo "... test_errors.o"
+	@echo "... test_errors.i"
+	@echo "... test_errors.s"
 	@echo "... test_module_2.o"
 	@echo "... test_module_2.i"
 	@echo "... test_module_2.s"
