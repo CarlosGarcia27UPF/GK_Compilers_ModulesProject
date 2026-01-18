@@ -1,21 +1,10 @@
-/*
- * -----------------------------------------------------------------------------
- * io.h
- *
- * Module: io - File handling + output filename rule
- * Responsible for: Reading files, writing output, _pp naming rule
- *
- * Author: [Team Member 2]
- * -----------------------------------------------------------------------------
- */
-
 #ifndef IO_H
 #define IO_H
 
-#include <stdio.h>
+#include "buffer/buffer.h"
 
-extern FILE* ofile;
+int io_read_file(const char *path, buffer_t *out);
+int io_write_file(const char *path, const buffer_t *in);
+int io_make_output_name(const char *input, buffer_t *out_name);
 
-void io_init(void);
-
-#endif // IO_H
+#endif

@@ -56,7 +56,9 @@ add_executable(modules_template_main src/main.c)
 target_link_libraries(modules_template_main PRIVATE 
     module_args 
     module_2 
-    cli 
+    cli
+    buffer
+    pp_core 
     io 
     comments 
     directives 
