@@ -44,6 +44,7 @@
 /Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens/CMakeFiles/rebuild_cache.dir
 /Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_module_args.dir
 /Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_module_2.dir
+/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_errors.dir
 /Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test.dir
 /Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/edit_cache.dir
 /Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/rebuild_cache.dir

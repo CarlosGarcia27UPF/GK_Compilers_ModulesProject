@@ -16,7 +16,11 @@ void split_path(const char *fullpath, char *path, char *filename, char *extensio
 
     if (last_dot && last_dot > last_slash) {
         strcpy(extension, last_dot + 1);
-        filename[last_dot - last_slash - 1] = '\0';  // remove extension from filename
+        if (last_slash) {
+            filename[last_dot - last_slash - 1] = '\0';  // remove extension from filename
+        } else {
+             filename[last_dot - fullpath] = '\0';
+        }
     } else {
         extension[0] = '\0';
     }
@@ -29,7 +33,7 @@ void generate_timestamped_log_filename(const char* base_name, char* output, size
 
     split_path(base_name, path, filename, extension);
 
-    if(extension == NULL || strlen(extension) == 0) {
+    if(strlen(extension) == 0) {
         snprintf(extension, sizeof(extension), "log"); // Default extension if none provided
     }
 
@@ -63,9 +67,14 @@ FILE* set_output_test_file(const char* filename) {
         // (i.e. fake it as GMT-3 if Madrid is in GMT+2 summer time)
         // When run in github actions the server is in another time zone
         // We want timestamp related to our time
-        _putenv("TZ=GMT-2");
-        //_putenv("TZ=Europe/Madrid");
-        _tzset();
+        #ifdef _WIN32
+            _putenv("TZ=GMT-2");
+            _tzset();
+        #else
+            // Using setenv is safer and more standard on POSIX than putenv with literals
+            setenv("TZ", "GMT-2", 1);
+            tzset();
+        #endif
         generate_timestamped_log_filename(filename, timestamped_filename, sizeof(timestamped_filename));
         filename = timestamped_filename;
 
