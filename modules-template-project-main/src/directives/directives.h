@@ -5,7 +5,7 @@
  * Module: directives - Directive detection and execution
  * Responsible for: #include, #define, #ifdef/#endif processing
  *
- * Author: [Team Member 4]
+ * Author: Carlos García
  * -----------------------------------------------------------------------------
  */
 
@@ -17,5 +17,6 @@
 extern FILE* ofile;
 
 void directives_init(void);
+int directives_process_line(const char *line);
 
 #endif // DIRECTIVES_H
