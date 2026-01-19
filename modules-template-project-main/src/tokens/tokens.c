@@ -23,17 +23,10 @@ int tokenize(Tokenizer *tkz, Token *token_out){
 }
 
 // only used to get the wanted tokens
-<<<<<<< HEAD
-char *get_word(Token tok) {
+char* get_word(Token tok) {
     char *word = malloc(tok.length + 1);
     memcpy(word, tok.word, tok.length);
     word[tok.length] = '\0'; // string terminator
-=======
-char* get_word(Token tok) {
-    char *word = malloc(tok.lenght + 1);
-    memcpy(word, tok.word, tok.lenght);
-    word[tok.lenght] = '\0'; // string terminator
->>>>>>> ab574046407cc7f316cea967113e34168882e6ca
     return word;
 }
 
