@@ -1,7 +1,7 @@
 # C Preprocessor - Module Architecture Documentation
 
 ## Overview
-This document provides a comprehensive explanation of the four core modules in the C preprocessor project: **cli**, **io**, **pp_core**, and **spec**. It explains how they work together to create a functional C preprocessor.
+This document provides a comprehensive explanation of the five core modules in the C preprocessor project: **buffer**, **cli**, **io**, **pp_core**, and **spec**. It explains how they work together to create a functional C preprocessor.
 
 ---
 
@@ -32,14 +32,16 @@ The C preprocessor is organized into modular components, each with a specific re
    │  SPEC  │◄──────────┤   CLI   │          │    IO    │
    └────────┘           └────┬────┘          └────┬─────┘
         │                    │                     │
-        │                    └──────────┬──────────┘
-        │                               │
-        └───────────────┐               │
-                        ▼               ▼
-                   ┌─────────────────────────┐
-                   │      PP_CORE            │
-                   │  (Preprocessing Engine) │
-                   └─────────────────────────┘
+        │                    │                ┌────┴─────┐
+        │                    │                │  BUFFER  │
+        │                    └──────────┬─────┤  (Core)  │
+        │                               │     └────┬─────┘
+        └───────────────┐               │          │
+                        ▼               ▼          ▼
+                   ┌─────────────────────────────────┐
+                   │      PP_CORE                    │
+                   │  (Preprocessing Engine)         │
+                   └─────────────────────────────────┘
                                │
                     ┌──────────┼──────────┐
                     ▼          ▼          ▼
@@ -53,7 +55,53 @@ The C preprocessor is organized into modular components, each with a specific re
 
 ## Module Summaries
 
-### 1. **spec** - Specifications and Constants
+### 1. **buffer** - Dynamic String Buffer
+**Location:** `src/buffer/`
+**Files:** `buffer.h`, `buffer.c`
+
+**Purpose:** Provides a dynamic, resizable string buffer for efficient text manipulation.
+
+**Core Data Structure:**
+```c
+typedef struct {
+    char *data;    // Dynamically allocated character array
+    long len;      // Current length (excluding null terminator)
+    long cap;      // Total allocated capacity
+} buffer_t;
+```
+
+**Main Functions:**
+- `buffer_init()` - Initialize buffer with initial capacity
+- `buffer_free()` - Release all allocated memory
+- `buffer_append_char()` - Append single character
+- `buffer_append_n()` - Append n bytes from string
+- `buffer_append_str()` - Append null-terminated string
+
+**Key Features:**
+- **Automatic Growth:** Exponential growth strategy (doubles capacity)
+- **Null Termination:** Always maintains C-string compatibility
+- **Efficient:** Amortized O(1) append operations
+- **Safe:** Defensive input validation
+
+**Growth Strategy:**
+- Initial capacity: 64 bytes
+- Growth: Doubles when capacity exceeded
+- Example: 64 → 128 → 256 → 512 → 1024...
+
+**Why It's Critical:**
+- Foundation for all text operations
+- Used by IO, PP_CORE, and other modules
+- Eliminates manual memory management
+- Prevents buffer overflow errors
+
+**Dependencies:** Standard C library only
+**Used By:** io, pp_core, main.c
+
+📖 **[Full buffer Documentation](modules-template-project-main/src/buffer/README.md)**
+
+---
+
+### 2. **spec** - Specifications and Constants
 **Location:** `src/spec/`
 **Files:** `pp_spec.h`
 
@@ -86,7 +134,7 @@ The C preprocessor is organized into modular components, each with a specific re
 
 ---
 
-### 2. **cli** - Command-Line Interface
+### 3. **cli** - Command-Line Interface
 **Location:** `src/cli/`
 **Files:** `cli.h`, `cli.c`
 
@@ -126,7 +174,7 @@ $ pp -help                # Show help
 
 ---
 
-### 3. **io** - Input/Output Operations
+### 4. **io** - Input/Output Operations
 **Location:** `src/io/`
 **Files:** `io.h`, `io.c`
 
@@ -167,7 +215,7 @@ io_write_file(outname.data, &content);
 
 ---
 
-### 4. **pp_core** - Preprocessing Engine
+### 5. **pp_core** - Preprocessing Engine
 **Location:** `src/pp_core/`
 **Files:** `pp_core.h`, `pp_core.c`, `pp_context.h`
 
@@ -302,15 +350,19 @@ Output Line
 ### Dependency Graph
 
 ```
-        spec (no dependencies)
+        buffer (no dependencies - foundation)
+          │
+          ├──► io (depends on: buffer)
+          │
+          ├──► pp_core (depends on: buffer, cli, spec)
+          │
+          └──► main.c (depends on: buffer, cli, io, pp_core)
+
+        spec (no dependencies - configuration)
           │
           ├──► cli (depends on: spec)
-          │     │
-          │     └──► pp_core (depends on: cli, spec, buffer)
           │
-          └──────────► main.c (depends on: cli, io, pp_core)
-                        │
-                        └──► io (depends on: buffer)
+          └──► pp_core (depends on: spec)
 ```
 
 ### Interaction Patterns
@@ -517,6 +569,7 @@ return (error_count > 0) ? 1 : 0;  // Exit with error status
 
 | Module | What It Does | Key Functions |
 |--------|-------------|---------------|
+| **buffer** | Dynamic string management | `buffer_init()`, `buffer_free()`, `buffer_append_*()` |
 | **spec** | Defines constants | (header-only) |
 | **cli** | Parses arguments | `cli_parse()`, `cli_print_help()` |
 | **io** | File operations | `io_read_file()`, `io_write_file()`, `io_make_output_name()` |
@@ -544,6 +597,7 @@ return (error_count > 0) ? 1 : 0;  // Exit with error status
 
 | Function | 0 | 1 | 2 | 3 |
 |----------|---|---|---|---|
+| `buffer_append_*()` | Success | NULL/invalid args | - | - |
 | `io_read_file()` | Success | Can't open | Buffer fail | - |
 | `io_write_file()` | Success | Can't open | - | - |
 | `pp_run()` | Success | Invalid args | Buffer fail (loop) | Buffer fail (last) |
@@ -656,12 +710,13 @@ typedef struct {
 
 ## Summary
 
-This C preprocessor is built from four well-designed modules:
+This C preprocessor is built from five well-designed modules:
 
-1. **spec** - The foundation (constants and limits)
-2. **cli** - The interface (user interaction)
-3. **io** - The transport (file operations)
-4. **pp_core** - The engine (processing logic)
+1. **buffer** - The foundation (dynamic string management)
+2. **spec** - The configuration (constants and limits)
+3. **cli** - The interface (user interaction)
+4. **io** - The transport (file operations)
+5. **pp_core** - The engine (processing logic)
 
 Each module:
 - Has a single, clear responsibility
@@ -676,7 +731,8 @@ Together they form a clean, maintainable architecture ready for feature expansio
 ## Further Reading
 
 For detailed information on each module:
-- 📖 [CLI Module Documentation](src/cli/README.md)
-- 📖 [IO Module Documentation](src/io/README.md)
-- 📖 [PP_CORE Module Documentation](src/pp_core/README.md)
-- 📖 [SPEC Module Documentation](src/spec/README.md)
+- 📖 [Buffer Module Documentation](modules-template-project-main/src/buffer/README.md)
+- 📖 [CLI Module Documentation](modules-template-project-main/src/cli/README.md)
+- 📖 [IO Module Documentation](modules-template-project-main/src/io/README.md)
+- 📖 [PP_CORE Module Documentation](modules-template-project-main/src/pp_core/README.md)
+- 📖 [SPEC Module Documentation](modules-template-project-main/src/spec/README.md)

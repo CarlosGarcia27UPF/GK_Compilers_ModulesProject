@@ -318,6 +318,7 @@ For in-depth explanations of the core modules, see:
 📖 **[Complete Module Architecture Guide](MODULES_EXPLAINED.md)** - Comprehensive overview of how all modules work together
 
 **Individual Module Documentation:**
+- 📖 [Buffer Module Documentation](modules-template-project-main/src/buffer/README.md) - Dynamic string buffer (foundation)
 - 📖 [CLI Module Documentation](modules-template-project-main/src/cli/README.md) - Command-line argument parsing
 - 📖 [IO Module Documentation](modules-template-project-main/src/io/README.md) - File input/output operations
 - 📖 [PP_CORE Module Documentation](modules-template-project-main/src/pp_core/README.md) - Preprocessing engine
