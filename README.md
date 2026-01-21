@@ -311,6 +311,27 @@ Each team member owns one or more modules and is responsible for:
 
 ---
 
-## 13. Status
+## 13. Detailed Module Documentation
+
+For in-depth explanations of the core modules, see:
+
+📖 **[Complete Module Architecture Guide](MODULES_EXPLAINED.md)** - Comprehensive overview of how all modules work together
+
+**Individual Module Documentation:**
+- 📖 [CLI Module Documentation](modules-template-project-main/src/cli/README.md) - Command-line argument parsing
+- 📖 [IO Module Documentation](modules-template-project-main/src/io/README.md) - File input/output operations
+- 📖 [PP_CORE Module Documentation](modules-template-project-main/src/pp_core/README.md) - Preprocessing engine
+- 📖 [SPEC Module Documentation](modules-template-project-main/src/spec/README.md) - Constants and specifications
+
+These detailed guides provide:
+- Deep code explanations with examples
+- Algorithm walkthroughs
+- Design pattern analysis
+- Testing strategies
+- Future extension points
+
+---
+
+## 14. Status
 This README is a living document.  
 It is refined as the project evolves and design decisions are finalized.
