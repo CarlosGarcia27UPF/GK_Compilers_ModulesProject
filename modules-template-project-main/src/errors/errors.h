@@ -14,10 +14,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-extern FILE* ofile;
+/* Report an error at a specific line */
+void error_report(const char *filename, int line, const char *fmt, ...);
 
-void errors_init(void);
-void error(int line, const char *fmt, ...);
-int get_error_count(void);
+/* Get total error count */
+int error_get_count(void);
+
+/* Reset error count */
+void error_reset_count(void);
 
 #endif // ERRORS_H

@@ -10,6 +10,8 @@
  */
 
 #include "tokens.h"
+#include <stdlib.h>
+#include <string.h>
 
 
 void tokens_init(Tokenizer *tk, int line_num, char *full_line) {

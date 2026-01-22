@@ -1,0 +1,22 @@
+# Build artifacts
+build/
+*.o
+*.a
+*.so
+*.dylib
+
+# Test output files
+*_pp.c
+*_pp.h
+test_input.c
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

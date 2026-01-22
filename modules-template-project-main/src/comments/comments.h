@@ -14,12 +14,22 @@
 #define COMMENTS_H
 
 #include <stdio.h>
+#include "buffer/buffer.h"
 
-/* Project-wide output log file (defined in main.c) */
-extern FILE *ofile;
+/* Comment processing state for multi-line handling */
+typedef struct {
+    int in_block_comment;
+    int prev_char;
+} comment_state_t;
 
-/* Called from main to confirm module is present/ready */
-void comments_init(void);
+/* Initialize comment processing state */
+void comments_state_init(comment_state_t *state);
+
+/* Process a single line removing comments.
+ * State is preserved across calls for multi-line block comments.
+ * Returns 0 on success, non-zero on error.
+ */
+int comments_process_line(const char *input, long input_len, buffer_t *output, comment_state_t *state);
 
 /* Remove comments from input stream and write result to output stream.
  * Returns 0 on success, non-zero on error (e.g., unterminated block comment).

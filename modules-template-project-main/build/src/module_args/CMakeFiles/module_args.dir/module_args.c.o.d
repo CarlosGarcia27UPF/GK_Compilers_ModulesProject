@@ -67,6 +67,7 @@ src/module_args/CMakeFiles/module_args.dir/module_args.c.o: \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././comments/comments.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././directives/directives.h \
+ /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/macros.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././macros/macros.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././errors/errors.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././tokens/tokens.h

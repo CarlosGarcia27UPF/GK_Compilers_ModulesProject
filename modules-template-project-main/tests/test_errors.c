@@ -13,16 +13,16 @@ void test_reporting() {
     printf("Testing error reporting functionality...\n");
     if (ofile) fprintf(ofile, "Testing error reporting functionality...\n");
 
-    errors_init();
-    assert(get_error_count() == 0);
+    error_reset_count();
+    assert(error_get_count() == 0);
 
     // Test simple error
-    error(42, "This is a test error");
-    assert(get_error_count() == 1);
+    error_report("test.c", 42, "This is a test error");
+    assert(error_get_count() == 1);
 
     // Test formatted error
-    error(100, "Validation failed for %s", "variable_x");
-    assert(get_error_count() == 2);
+    error_report("test.c", 100, "Validation failed for %s", "variable_x");
+    assert(error_get_count() == 2);
 
     printf("Error reporting tests passed!\n");
     if (ofile) fprintf(ofile, "Error reporting tests passed!\n");
