@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main"
+CMAKE_SOURCE_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build"
+CMAKE_BINARY_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build
 
 # Include any dependencies generated for this target.
 include src/tokens/CMakeFiles/tokens.dir/depend.make
@@ -73,18 +73,18 @@ src/tokens/CMakeFiles/tokens.dir/codegen:
 .PHONY : src/tokens/CMakeFiles/tokens.dir/codegen
 
 src/tokens/CMakeFiles/tokens.dir/tokens.c.o: src/tokens/CMakeFiles/tokens.dir/flags.make
-src/tokens/CMakeFiles/tokens.dir/tokens.c.o: /Users/vanesa/Desktop/Uni/3r/Sistemes\ Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c
+src/tokens/CMakeFiles/tokens.dir/tokens.c.o: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c
 src/tokens/CMakeFiles/tokens.dir/tokens.c.o: src/tokens/CMakeFiles/tokens.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/tokens/CMakeFiles/tokens.dir/tokens.c.o"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/tokens/CMakeFiles/tokens.dir/tokens.c.o -MF CMakeFiles/tokens.dir/tokens.c.o.d -o CMakeFiles/tokens.dir/tokens.c.o -c "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/tokens/CMakeFiles/tokens.dir/tokens.c.o"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/tokens/CMakeFiles/tokens.dir/tokens.c.o -MF CMakeFiles/tokens.dir/tokens.c.o.d -o CMakeFiles/tokens.dir/tokens.c.o -c /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c
 
 src/tokens/CMakeFiles/tokens.dir/tokens.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/tokens.dir/tokens.c.i"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c" > CMakeFiles/tokens.dir/tokens.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c > CMakeFiles/tokens.dir/tokens.c.i
 
 src/tokens/CMakeFiles/tokens.dir/tokens.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/tokens.dir/tokens.c.s"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c" -o CMakeFiles/tokens.dir/tokens.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.c -o CMakeFiles/tokens.dir/tokens.c.s
 
 # Object files for target tokens
 tokens_OBJECTS = \
@@ -96,19 +96,19 @@ tokens_EXTERNAL_OBJECTS =
 src/tokens/libtokens.a: src/tokens/CMakeFiles/tokens.dir/tokens.c.o
 src/tokens/libtokens.a: src/tokens/CMakeFiles/tokens.dir/build.make
 src/tokens/libtokens.a: src/tokens/CMakeFiles/tokens.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libtokens.a"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" && $(CMAKE_COMMAND) -P CMakeFiles/tokens.dir/cmake_clean_target.cmake
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/tokens.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libtokens.a"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens && $(CMAKE_COMMAND) -P CMakeFiles/tokens.dir/cmake_clean_target.cmake
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/tokens.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/tokens/CMakeFiles/tokens.dir/build: src/tokens/libtokens.a
 .PHONY : src/tokens/CMakeFiles/tokens.dir/build
 
 src/tokens/CMakeFiles/tokens.dir/clean:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" && $(CMAKE_COMMAND) -P CMakeFiles/tokens.dir/cmake_clean.cmake
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens && $(CMAKE_COMMAND) -P CMakeFiles/tokens.dir/cmake_clean.cmake
 .PHONY : src/tokens/CMakeFiles/tokens.dir/clean
 
 src/tokens/CMakeFiles/tokens.dir/depend:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens/CMakeFiles/tokens.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens/CMakeFiles/tokens.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : src/tokens/CMakeFiles/tokens.dir/depend
 

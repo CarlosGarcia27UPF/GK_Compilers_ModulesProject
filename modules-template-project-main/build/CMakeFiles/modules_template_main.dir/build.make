@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main"
+CMAKE_SOURCE_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build"
+CMAKE_BINARY_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/modules_template_main.dir/depend.make
@@ -73,18 +73,18 @@ CMakeFiles/modules_template_main.dir/codegen:
 .PHONY : CMakeFiles/modules_template_main.dir/codegen
 
 CMakeFiles/modules_template_main.dir/src/main.c.o: CMakeFiles/modules_template_main.dir/flags.make
-CMakeFiles/modules_template_main.dir/src/main.c.o: /Users/vanesa/Desktop/Uni/3r/Sistemes\ Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c
+CMakeFiles/modules_template_main.dir/src/main.c.o: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c
 CMakeFiles/modules_template_main.dir/src/main.c.o: CMakeFiles/modules_template_main.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/modules_template_main.dir/src/main.c.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/modules_template_main.dir/src/main.c.o -MF CMakeFiles/modules_template_main.dir/src/main.c.o.d -o CMakeFiles/modules_template_main.dir/src/main.c.o -c "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/modules_template_main.dir/src/main.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/modules_template_main.dir/src/main.c.o -MF CMakeFiles/modules_template_main.dir/src/main.c.o.d -o CMakeFiles/modules_template_main.dir/src/main.c.o -c /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c
 
 CMakeFiles/modules_template_main.dir/src/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/modules_template_main.dir/src/main.c.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c" > CMakeFiles/modules_template_main.dir/src/main.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c > CMakeFiles/modules_template_main.dir/src/main.c.i
 
 CMakeFiles/modules_template_main.dir/src/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/modules_template_main.dir/src/main.c.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c" -o CMakeFiles/modules_template_main.dir/src/main.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c -o CMakeFiles/modules_template_main.dir/src/main.c.s
 
 # Object files for target modules_template_main
 modules_template_main_OBJECTS = \
@@ -95,9 +95,12 @@ modules_template_main_EXTERNAL_OBJECTS =
 
 modules_template_main: CMakeFiles/modules_template_main.dir/src/main.c.o
 modules_template_main: CMakeFiles/modules_template_main.dir/build.make
+modules_template_main: CMakeFiles/modules_template_main.dir/compiler_depend.ts
 modules_template_main: src/module_args/libmodule_args.a
 modules_template_main: src/module_2/libmodule_2.a
 modules_template_main: src/cli/libcli.a
+modules_template_main: src/buffer/libbuffer.a
+modules_template_main: src/pp_core/libpp_core.a
 modules_template_main: src/io/libio.a
 modules_template_main: src/comments/libcomments.a
 modules_template_main: src/directives/libdirectives.a
@@ -105,8 +108,10 @@ modules_template_main: src/macros/libmacros.a
 modules_template_main: src/errors/liberrors.a
 modules_template_main: src/tokens/libtokens.a
 modules_template_main: src/libutils.a
+modules_template_main: src/buffer/libbuffer.a
+modules_template_main: src/libutils.a
 modules_template_main: CMakeFiles/modules_template_main.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable modules_template_main"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable modules_template_main"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/modules_template_main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -118,6 +123,6 @@ CMakeFiles/modules_template_main.dir/clean:
 .PHONY : CMakeFiles/modules_template_main.dir/clean
 
 CMakeFiles/modules_template_main.dir/depend:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles/modules_template_main.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles/modules_template_main.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/modules_template_main.dir/depend
 

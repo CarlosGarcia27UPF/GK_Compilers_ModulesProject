@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main"
+CMAKE_SOURCE_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build"
+CMAKE_BINARY_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compile
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
-	/opt/homebrew/bin/ctest --force-new-ctest-process $(ARGS)
+	/usr/local/bin/ctest --force-new-ctest-process $(ARGS)
 .PHONY : test
 
 # Special rule for the target test
@@ -78,7 +78,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -88,7 +88,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/opt/homebrew/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -97,14 +97,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/cli//CMakeFiles/progress.marks"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" 0
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/cli//CMakeFiles/progress.marks
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/clean
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/clean
 .PHONY : clean
 
 # The main clean target
@@ -113,22 +113,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/preinstall
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/preinstall
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/cli/CMakeFiles/cli.dir/rule:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/CMakeFiles/cli.dir/rule
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/cli/CMakeFiles/cli.dir/rule
 .PHONY : src/cli/CMakeFiles/cli.dir/rule
 
 # Convenience name for target.
@@ -137,7 +137,7 @@ cli: src/cli/CMakeFiles/cli.dir/rule
 
 # fast build rule for target.
 cli/fast:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/build
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/build
 .PHONY : cli/fast
 
 cli.o: cli.c.o
@@ -145,7 +145,7 @@ cli.o: cli.c.o
 
 # target to build an object file
 cli.c.o:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/cli.c.o
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/cli.c.o
 .PHONY : cli.c.o
 
 cli.i: cli.c.i
@@ -153,7 +153,7 @@ cli.i: cli.c.i
 
 # target to preprocess a source file
 cli.c.i:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/cli.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/cli.c.i
 .PHONY : cli.c.i
 
 cli.s: cli.c.s
@@ -161,7 +161,7 @@ cli.s: cli.c.s
 
 # target to generate assembly for a file
 cli.c.s:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/cli.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f src/cli/CMakeFiles/cli.dir/build.make src/cli/CMakeFiles/cli.dir/cli.c.s
 .PHONY : cli.c.s
 
 # Help Target
@@ -188,6 +188,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

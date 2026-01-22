@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main"
+CMAKE_SOURCE_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build"
+CMAKE_BINARY_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compile
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
-	/opt/homebrew/bin/ctest --force-new-ctest-process $(ARGS)
+	/usr/local/bin/ctest --force-new-ctest-process $(ARGS)
 .PHONY : test
 
 # Special rule for the target test
@@ -78,7 +78,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -88,7 +88,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/opt/homebrew/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -97,14 +97,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -E cmake_progress_start "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests//CMakeFiles/progress.marks"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" 0
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests//CMakeFiles/progress.marks
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/clean
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/clean
 .PHONY : clean
 
 # The main clean target
@@ -113,22 +113,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/preinstall
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/preinstall
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 tests/CMakeFiles/test_module_args.dir/rule:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_module_args.dir/rule
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_module_args.dir/rule
 .PHONY : tests/CMakeFiles/test_module_args.dir/rule
 
 # Convenience name for target.
@@ -137,12 +137,12 @@ test_module_args: tests/CMakeFiles/test_module_args.dir/rule
 
 # fast build rule for target.
 test_module_args/fast:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/build
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/build
 .PHONY : test_module_args/fast
 
 # Convenience name for target.
 tests/CMakeFiles/test_module_2.dir/rule:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_module_2.dir/rule
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_module_2.dir/rule
 .PHONY : tests/CMakeFiles/test_module_2.dir/rule
 
 # Convenience name for target.
@@ -151,12 +151,12 @@ test_module_2: tests/CMakeFiles/test_module_2.dir/rule
 
 # fast build rule for target.
 test_module_2/fast:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/build
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/build
 .PHONY : test_module_2/fast
 
 # Convenience name for target.
 tests/CMakeFiles/test_errors.dir/rule:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_errors.dir/rule
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_errors.dir/rule
 .PHONY : tests/CMakeFiles/test_errors.dir/rule
 
 # Convenience name for target.
@@ -165,15 +165,29 @@ test_errors: tests/CMakeFiles/test_errors.dir/rule
 
 # fast build rule for target.
 test_errors/fast:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/build
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/build
 .PHONY : test_errors/fast
+
+# Convenience name for target.
+tests/CMakeFiles/test_io.dir/rule:
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_io.dir/rule
+.PHONY : tests/CMakeFiles/test_io.dir/rule
+
+# Convenience name for target.
+test_io: tests/CMakeFiles/test_io.dir/rule
+.PHONY : test_io
+
+# fast build rule for target.
+test_io/fast:
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_io.dir/build.make tests/CMakeFiles/test_io.dir/build
+.PHONY : test_io/fast
 
 test_errors.o: test_errors.c.o
 .PHONY : test_errors.o
 
 # target to build an object file
 test_errors.c.o:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.o
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.o
 .PHONY : test_errors.c.o
 
 test_errors.i: test_errors.c.i
@@ -181,7 +195,7 @@ test_errors.i: test_errors.c.i
 
 # target to preprocess a source file
 test_errors.c.i:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.i
 .PHONY : test_errors.c.i
 
 test_errors.s: test_errors.c.s
@@ -189,15 +203,39 @@ test_errors.s: test_errors.c.s
 
 # target to generate assembly for a file
 test_errors.c.s:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/test_errors.c.s
 .PHONY : test_errors.c.s
+
+test_io.o: test_io.c.o
+.PHONY : test_io.o
+
+# target to build an object file
+test_io.c.o:
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_io.dir/build.make tests/CMakeFiles/test_io.dir/test_io.c.o
+.PHONY : test_io.c.o
+
+test_io.i: test_io.c.i
+.PHONY : test_io.i
+
+# target to preprocess a source file
+test_io.c.i:
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_io.dir/build.make tests/CMakeFiles/test_io.dir/test_io.c.i
+.PHONY : test_io.c.i
+
+test_io.s: test_io.c.s
+.PHONY : test_io.s
+
+# target to generate assembly for a file
+test_io.c.s:
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_io.dir/build.make tests/CMakeFiles/test_io.dir/test_io.c.s
+.PHONY : test_io.c.s
 
 test_module_2.o: test_module_2.c.o
 .PHONY : test_module_2.o
 
 # target to build an object file
 test_module_2.c.o:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/test_module_2.c.o
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/test_module_2.c.o
 .PHONY : test_module_2.c.o
 
 test_module_2.i: test_module_2.c.i
@@ -205,7 +243,7 @@ test_module_2.i: test_module_2.c.i
 
 # target to preprocess a source file
 test_module_2.c.i:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/test_module_2.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/test_module_2.c.i
 .PHONY : test_module_2.c.i
 
 test_module_2.s: test_module_2.c.s
@@ -213,7 +251,7 @@ test_module_2.s: test_module_2.c.s
 
 # target to generate assembly for a file
 test_module_2.c.s:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/test_module_2.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_2.dir/build.make tests/CMakeFiles/test_module_2.dir/test_module_2.c.s
 .PHONY : test_module_2.c.s
 
 test_module_args.o: test_module_args.c.o
@@ -221,7 +259,7 @@ test_module_args.o: test_module_args.c.o
 
 # target to build an object file
 test_module_args.c.o:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.o
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.o
 .PHONY : test_module_args.c.o
 
 test_module_args.i: test_module_args.c.i
@@ -229,7 +267,7 @@ test_module_args.i: test_module_args.c.i
 
 # target to preprocess a source file
 test_module_args.c.i:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.i
 .PHONY : test_module_args.c.i
 
 test_module_args.s: test_module_args.c.s
@@ -237,7 +275,7 @@ test_module_args.s: test_module_args.c.s
 
 # target to generate assembly for a file
 test_module_args.c.s:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.s
 .PHONY : test_module_args.c.s
 
 # Help Target
@@ -250,11 +288,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... test_errors"
+	@echo "... test_io"
 	@echo "... test_module_2"
 	@echo "... test_module_args"
 	@echo "... test_errors.o"
 	@echo "... test_errors.i"
 	@echo "... test_errors.s"
+	@echo "... test_io.o"
+	@echo "... test_io.i"
+	@echo "... test_io.s"
 	@echo "... test_module_2.o"
 	@echo "... test_module_2.i"
 	@echo "... test_module_2.s"
@@ -272,6 +314,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

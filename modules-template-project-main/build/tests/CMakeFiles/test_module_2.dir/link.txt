@@ -1,1 +1,1 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_module_2.dir/test_module_2.c.o -o test_module_2  ../src/module_2/libmodule_2.a ../src/libutils.a
+/usr/bin/cc -g -Wl,--dependency-file=CMakeFiles/test_module_2.dir/link.d CMakeFiles/test_module_2.dir/test_module_2.c.o -o test_module_2  ../src/module_2/libmodule_2.a ../src/libutils.a

@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main"
+CMAKE_SOURCE_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build"
+CMAKE_BINARY_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build
 
 # Include any dependencies generated for this target.
 include tests/CMakeFiles/test_module_args.dir/depend.make
@@ -73,18 +73,18 @@ tests/CMakeFiles/test_module_args.dir/codegen:
 .PHONY : tests/CMakeFiles/test_module_args.dir/codegen
 
 tests/CMakeFiles/test_module_args.dir/test_module_args.c.o: tests/CMakeFiles/test_module_args.dir/flags.make
-tests/CMakeFiles/test_module_args.dir/test_module_args.c.o: /Users/vanesa/Desktop/Uni/3r/Sistemes\ Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c
+tests/CMakeFiles/test_module_args.dir/test_module_args.c.o: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c
 tests/CMakeFiles/test_module_args.dir/test_module_args.c.o: tests/CMakeFiles/test_module_args.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object tests/CMakeFiles/test_module_args.dir/test_module_args.c.o"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT tests/CMakeFiles/test_module_args.dir/test_module_args.c.o -MF CMakeFiles/test_module_args.dir/test_module_args.c.o.d -o CMakeFiles/test_module_args.dir/test_module_args.c.o -c "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object tests/CMakeFiles/test_module_args.dir/test_module_args.c.o"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT tests/CMakeFiles/test_module_args.dir/test_module_args.c.o -MF CMakeFiles/test_module_args.dir/test_module_args.c.o.d -o CMakeFiles/test_module_args.dir/test_module_args.c.o -c /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c
 
 tests/CMakeFiles/test_module_args.dir/test_module_args.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/test_module_args.dir/test_module_args.c.i"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c" > CMakeFiles/test_module_args.dir/test_module_args.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c > CMakeFiles/test_module_args.dir/test_module_args.c.i
 
 tests/CMakeFiles/test_module_args.dir/test_module_args.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/test_module_args.dir/test_module_args.c.s"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c" -o CMakeFiles/test_module_args.dir/test_module_args.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_module_args.c -o CMakeFiles/test_module_args.dir/test_module_args.c.s
 
 # Object files for target test_module_args
 test_module_args_OBJECTS = \
@@ -95,21 +95,22 @@ test_module_args_EXTERNAL_OBJECTS =
 
 tests/test_module_args: tests/CMakeFiles/test_module_args.dir/test_module_args.c.o
 tests/test_module_args: tests/CMakeFiles/test_module_args.dir/build.make
+tests/test_module_args: tests/CMakeFiles/test_module_args.dir/compiler_depend.ts
 tests/test_module_args: src/module_args/libmodule_args.a
 tests/test_module_args: src/libutils.a
 tests/test_module_args: tests/CMakeFiles/test_module_args.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable test_module_args"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_module_args.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable test_module_args"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_module_args.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 tests/CMakeFiles/test_module_args.dir/build: tests/test_module_args
 .PHONY : tests/CMakeFiles/test_module_args.dir/build
 
 tests/CMakeFiles/test_module_args.dir/clean:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests" && $(CMAKE_COMMAND) -P CMakeFiles/test_module_args.dir/cmake_clean.cmake
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests && $(CMAKE_COMMAND) -P CMakeFiles/test_module_args.dir/cmake_clean.cmake
 .PHONY : tests/CMakeFiles/test_module_args.dir/clean
 
 tests/CMakeFiles/test_module_args.dir/depend:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/tests" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_module_args.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/tests /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_module_args.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : tests/CMakeFiles/test_module_args.dir/depend
 

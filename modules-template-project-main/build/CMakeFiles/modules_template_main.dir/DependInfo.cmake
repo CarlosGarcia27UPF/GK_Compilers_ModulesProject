@@ -8,7 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c" "CMakeFiles/modules_template_main.dir/src/main.c.o" "gcc" "CMakeFiles/modules_template_main.dir/src/main.c.o.d"
+  "/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/main.c" "CMakeFiles/modules_template_main.dir/src/main.c.o" "gcc" "CMakeFiles/modules_template_main.dir/src/main.c.o.d"
+  "" "modules_template_main" "gcc" "CMakeFiles/modules_template_main.dir/link.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

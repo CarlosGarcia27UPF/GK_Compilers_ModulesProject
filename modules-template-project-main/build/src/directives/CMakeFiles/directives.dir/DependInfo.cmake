@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/directives/directives.c" "src/directives/CMakeFiles/directives.dir/directives.c.o" "gcc" "src/directives/CMakeFiles/directives.dir/directives.c.o.d"
+  "/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/directives/directives.c" "src/directives/CMakeFiles/directives.dir/directives.c.o" "gcc" "src/directives/CMakeFiles/directives.dir/directives.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

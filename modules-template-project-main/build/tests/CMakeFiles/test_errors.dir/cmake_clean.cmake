@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/test_errors.dir/link.d"
   "CMakeFiles/test_errors.dir/test_errors.c.o"
   "CMakeFiles/test_errors.dir/test_errors.c.o.d"
   "test_errors"

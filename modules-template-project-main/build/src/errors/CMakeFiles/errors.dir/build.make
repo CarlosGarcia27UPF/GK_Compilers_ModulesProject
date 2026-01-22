@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/local/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/local/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main"
+CMAKE_SOURCE_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build"
+CMAKE_BINARY_DIR = /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build
 
 # Include any dependencies generated for this target.
 include src/errors/CMakeFiles/errors.dir/depend.make
@@ -73,18 +73,18 @@ src/errors/CMakeFiles/errors.dir/codegen:
 .PHONY : src/errors/CMakeFiles/errors.dir/codegen
 
 src/errors/CMakeFiles/errors.dir/errors.c.o: src/errors/CMakeFiles/errors.dir/flags.make
-src/errors/CMakeFiles/errors.dir/errors.c.o: /Users/vanesa/Desktop/Uni/3r/Sistemes\ Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c
+src/errors/CMakeFiles/errors.dir/errors.c.o: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c
 src/errors/CMakeFiles/errors.dir/errors.c.o: src/errors/CMakeFiles/errors.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/errors/CMakeFiles/errors.dir/errors.c.o"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/errors/CMakeFiles/errors.dir/errors.c.o -MF CMakeFiles/errors.dir/errors.c.o.d -o CMakeFiles/errors.dir/errors.c.o -c "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object src/errors/CMakeFiles/errors.dir/errors.c.o"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/errors/CMakeFiles/errors.dir/errors.c.o -MF CMakeFiles/errors.dir/errors.c.o.d -o CMakeFiles/errors.dir/errors.c.o -c /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c
 
 src/errors/CMakeFiles/errors.dir/errors.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/errors.dir/errors.c.i"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c" > CMakeFiles/errors.dir/errors.c.i
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c > CMakeFiles/errors.dir/errors.c.i
 
 src/errors/CMakeFiles/errors.dir/errors.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/errors.dir/errors.c.s"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" && /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c" -o CMakeFiles/errors.dir/errors.c.s
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.c -o CMakeFiles/errors.dir/errors.c.s
 
 # Object files for target errors
 errors_OBJECTS = \
@@ -96,19 +96,19 @@ errors_EXTERNAL_OBJECTS =
 src/errors/liberrors.a: src/errors/CMakeFiles/errors.dir/errors.c.o
 src/errors/liberrors.a: src/errors/CMakeFiles/errors.dir/build.make
 src/errors/liberrors.a: src/errors/CMakeFiles/errors.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir="/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library liberrors.a"
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" && $(CMAKE_COMMAND) -P CMakeFiles/errors.dir/cmake_clean_target.cmake
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/errors.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library liberrors.a"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors && $(CMAKE_COMMAND) -P CMakeFiles/errors.dir/cmake_clean_target.cmake
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/errors.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/errors/CMakeFiles/errors.dir/build: src/errors/liberrors.a
 .PHONY : src/errors/CMakeFiles/errors.dir/build
 
 src/errors/CMakeFiles/errors.dir/clean:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" && $(CMAKE_COMMAND) -P CMakeFiles/errors.dir/cmake_clean.cmake
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors && $(CMAKE_COMMAND) -P CMakeFiles/errors.dir/cmake_clean.cmake
 .PHONY : src/errors/CMakeFiles/errors.dir/clean
 
 src/errors/CMakeFiles/errors.dir/depend:
-	cd "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/errors" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors" "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors/CMakeFiles/errors.dir/DependInfo.cmake" "--color=$(COLOR)"
+	cd /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/errors /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors/CMakeFiles/errors.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : src/errors/CMakeFiles/errors.dir/depend
 
