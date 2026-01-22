@@ -139,12 +139,18 @@ int directives_process_line(const char *line, long line_len,
             return 1;
         }
         
-        /* Build full path */
-        char full_path[512];
+        /* Build full path with bounds checking */
+        char full_path[PP_MAX_PATH_LEN];
+        int path_len;
         if (base_dir && base_dir[0]) {
-            snprintf(full_path, sizeof(full_path), "%s/%s", base_dir, filename);
+            path_len = snprintf(full_path, sizeof(full_path), "%s/%s", base_dir, filename);
         } else {
-            snprintf(full_path, sizeof(full_path), "%s", filename);
+            path_len = snprintf(full_path, sizeof(full_path), "%s", filename);
+        }
+        
+        if (path_len < 0 || path_len >= (int)sizeof(full_path)) {
+            error_report(current_file, line_num, "Include path too long: %s", filename);
+            return 1;
         }
         
         /* Read the included file */
@@ -166,6 +172,7 @@ int directives_process_line(const char *line, long line_len,
         
         /* Process included file line by line */
         long i = 0, line_start = 0;
+        int included_line_num = 1;
         while (i < included.len) {
             if (included.data[i] == '\n' || i == included.len - 1) {
                 long len = (i - line_start) + 1;
@@ -183,7 +190,7 @@ int directives_process_line(const char *line, long line_len,
                 const char *lp = skip_whitespace(line_buf.data);
                 if (*lp == '#') {
                     directives_process_line(line_buf.data, line_buf.len, base_dir, full_path, 
-                                          (int)((i - line_start) / 10), macros, ifdef_stack, &processed);
+                                          included_line_num, macros, ifdef_stack, &processed);
                 } else {
                     /* Expand macros if not inside false ifdef */
                     if (ifdef_should_include(ifdef_stack)) {
@@ -199,6 +206,7 @@ int directives_process_line(const char *line, long line_len,
                 
                 i++;
                 line_start = i;
+                included_line_num++;
             } else {
                 i++;
             }
@@ -246,7 +254,7 @@ int directives_process_line(const char *line, long line_len,
         }
         
         /* Push onto stack */
-        if (ifdef_stack->top >= 63) {
+        if (ifdef_stack->top >= PP_MAX_IF_DEPTH - 1) {
             error_report(current_file, line_num, "#ifdef nesting too deep");
             return 1;
         }

@@ -14,10 +14,11 @@
 
 #include "buffer/buffer.h"
 #include "macros/macros.h"
+#include "spec/pp_spec.h"
 
 /* Conditional stack for #ifdef/#endif */
 typedef struct {
-    int stack[64];  /* 1 = include code, 0 = skip code */
+    int stack[PP_MAX_IF_DEPTH];  /* 1 = include code, 0 = skip code */
     int top;
 } ifdef_stack_t;
 

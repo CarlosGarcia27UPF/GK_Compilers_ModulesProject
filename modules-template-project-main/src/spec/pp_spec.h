@@ -2,6 +2,7 @@
 #define PP_SPEC_H
 
 #define PP_MAX_IF_DEPTH 64
+#define PP_MAX_PATH_LEN 512
 
 #define PP_FLAG_C    "-c"
 #define PP_FLAG_D    "-d"

@@ -1,5 +1,5 @@
-TestModuleArgs 1 0.00159996
-TestModule_2 1 0.000943071
-TestErrors 1 0.000949152
-TestIO 1 0.00109548
+TestModuleArgs 3 0.000362309
+TestModule_2 3 0.00032146
+TestErrors 3 0.000303442
+TestIO 3 0.000346967
 ---

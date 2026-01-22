@@ -4,6 +4,7 @@ src/directives/CMakeFiles/directives.dir/directives.c.o: \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/directives/directives.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/macros.h \
+ /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/spec/pp_spec.h \
  /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.h \
  /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \

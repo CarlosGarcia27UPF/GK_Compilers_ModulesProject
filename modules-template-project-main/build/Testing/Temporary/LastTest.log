@@ -1,17 +1,17 @@
-Start testing: Jan 22 15:01 UTC
+Start testing: Jan 22 15:12 UTC
 ----------------------------------------------------------
 1/4 Testing: TestModuleArgs
 1/4 Test: TestModuleArgs
 Command: "/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_module_args" "arg90" "arg91" "arg92"
 Directory: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestModuleArgs" start time: Jan 22 15:01 UTC
+"TestModuleArgs" start time: Jan 22 15:12 UTC
 Output:
 ----------------------------------------------------------
-Error opening output file ./logs/2026_01_22_17_01_test_module_args.log. Check if subdirectory exists, otherwise create it and run again
-Machine remote time Generated log filename (with time stamp): ./logs/2026_01_22_15_01_test_module_args.log
-Generated log filename (with time stamp): ./logs/2026_01_22_17_01_test_module_args.log
-See log of execution in stdout (filename ./logs/2026_01_22_17_01_test_module_args.log)
-See log of execution in stdout (filename ./logs/2026_01_22_17_01_test_module_args.log)
+Error opening output file ./logs/2026_01_22_17_12_test_module_args.log. Check if subdirectory exists, otherwise create it and run again
+Machine remote time Generated log filename (with time stamp): ./logs/2026_01_22_15_12_test_module_args.log
+Generated log filename (with time stamp): ./logs/2026_01_22_17_12_test_module_args.log
+See log of execution in stdout (filename ./logs/2026_01_22_17_12_test_module_args.log)
+See log of execution in stdout (filename ./logs/2026_01_22_17_12_test_module_args.log)
 Starting tests for Module args...
 Starting tests for Module args...
 Testing of module arguments not implemented. Not done. Here put all tests of process_arguments
@@ -28,7 +28,7 @@ Finished tests for Module args...
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestModuleArgs" end time: Jan 22 15:01 UTC
+"TestModuleArgs" end time: Jan 22 15:12 UTC
 "TestModuleArgs" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -36,14 +36,14 @@ Test Passed.
 2/4 Test: TestModule_2
 Command: "/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_module_2"
 Directory: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestModule_2" start time: Jan 22 15:01 UTC
+"TestModule_2" start time: Jan 22 15:12 UTC
 Output:
 ----------------------------------------------------------
-Error opening output file ./logs/2026_01_22_17_01_test_module_2.log. Check if subdirectory exists, otherwise create it and run again
-Machine remote time Generated log filename (with time stamp): ./logs/2026_01_22_15_01_test_module_2.log
-Generated log filename (with time stamp): ./logs/2026_01_22_17_01_test_module_2.log
-See log of execution in stdout (filename ./logs/2026_01_22_17_01_test_module_2.log)
-See log of execution in stdout (filename ./logs/2026_01_22_17_01_test_module_2.log)
+Error opening output file ./logs/2026_01_22_17_12_test_module_2.log. Check if subdirectory exists, otherwise create it and run again
+Machine remote time Generated log filename (with time stamp): ./logs/2026_01_22_15_12_test_module_2.log
+Generated log filename (with time stamp): ./logs/2026_01_22_17_12_test_module_2.log
+See log of execution in stdout (filename ./logs/2026_01_22_17_12_test_module_2.log)
+See log of execution in stdout (filename ./logs/2026_01_22_17_12_test_module_2.log)
 Running tests for Module 2: Fibonacci function
 Testing Module 2: Fibonacci Function
 Fibonacci negative test passed!: fig(-3) = -1
@@ -60,7 +60,7 @@ Finished tests for Module 2: Fibonacci function
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestModule_2" end time: Jan 22 15:01 UTC
+"TestModule_2" end time: Jan 22 15:12 UTC
 "TestModule_2" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -68,25 +68,22 @@ Test Passed.
 3/4 Test: TestErrors
 Command: "/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_errors"
 Directory: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestErrors" start time: Jan 22 15:01 UTC
+"TestErrors" start time: Jan 22 15:12 UTC
 Output:
 ----------------------------------------------------------
-Error opening output file ./logs/2026_01_22_17_01_test_errors.log. Check if subdirectory exists, otherwise create it and run again
+Error opening output file ./logs/2026_01_22_17_12_test_errors.log. Check if subdirectory exists, otherwise create it and run again
 Starting test_errors main...
 Setting output file...
-Machine remote time Generated log filename (with time stamp): ./logs/2026_01_22_15_01_test_errors.log
-Generated log filename (with time stamp): ./logs/2026_01_22_17_01_test_errors.log
-See log of execution in stdout (filename ./logs/2026_01_22_17_01_test_errors.log)
-See log of execution in stdout (filename ./logs/2026_01_22_17_01_test_errors.log)
+Machine remote time Generated log filename (with time stamp): ./logs/2026_01_22_15_12_test_errors.log
+Generated log filename (with time stamp): ./logs/2026_01_22_17_12_test_errors.log
+See log of execution in stdout (filename ./logs/2026_01_22_17_12_test_errors.log)
+See log of execution in stdout (filename ./logs/2026_01_22_17_12_test_errors.log)
+Error in test.c:42: This is a test error
+Error in test.c:100: Validation failed for variable_x
 Output file set. Running tests...
 === Test Run: Errors Module ===
 Testing error reporting functionality...
 Testing error reporting functionality...
-[errors] OK
-Error on line 42: This is a test error
-Error on line 42: This is a test error
-Error on line 100: Validation failed for variable_x
-Error on line 100: Validation failed for variable_x
 Error reporting tests passed!
 Error reporting tests passed!
 === Test Run Finished ===
@@ -94,7 +91,7 @@ Error reporting tests passed!
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestErrors" end time: Jan 22 15:01 UTC
+"TestErrors" end time: Jan 22 15:12 UTC
 "TestErrors" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -102,7 +99,7 @@ Test Passed.
 4/4 Test: TestIO
 Command: "/home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_io"
 Directory: /home/runner/work/GK_Compilers_ModulesProject/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestIO" start time: Jan 22 15:01 UTC
+"TestIO" start time: Jan 22 15:12 UTC
 Output:
 ----------------------------------------------------------
 === IO Module Test Suite ===
@@ -126,8 +123,8 @@ Test 6: Round-trip (read -> write -> read)
 Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestIO" end time: Jan 22 15:01 UTC
+"TestIO" end time: Jan 22 15:12 UTC
 "TestIO" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jan 22 15:01 UTC
+End testing: Jan 22 15:12 UTC
