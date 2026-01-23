@@ -14,6 +14,9 @@
 #define TOKENS_H
 
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 extern FILE* ofile;
 
