@@ -12,11 +12,36 @@
 #ifndef DIRECTIVES_H
 #define DIRECTIVES_H
 
-#include <stdio.h>
+#include "buffer/buffer.h"
+#include "macros/macros.h"
+#include "comments/comments.h"
+#include "spec/pp_spec.h"
 
-extern FILE* ofile;
+/* Conditional stack for #ifdef/#endif */
+typedef struct {
+    int stack[PP_MAX_IF_DEPTH];  /* 1 = include code, 0 = skip code */
+    int top;
+} ifdef_stack_t;
 
-void directives_init(void);
-int directives_process_line(const char *line);
+/* Initialize ifdef stack */
+void ifdef_stack_init(ifdef_stack_t *stack);
+
+/* Check if we should currently include code */
+int ifdef_should_include(const ifdef_stack_t *stack);
+
+/* Process a directive line
+ * Returns: 
+ *   0 if directive was processed successfully
+ *   1 if there was an error
+ *   2 if line should be skipped (inside false #ifdef)
+ */
+int directives_process_line(const char *line, long line_len, 
+                           const char *base_dir,
+                           const char *current_file, int line_num,
+                           macro_table_t *macros, 
+                           ifdef_stack_t *ifdef_stack,
+                           int do_comments,
+                           comment_state_t *comment_state,
+                           buffer_t *output);
 
 #endif // DIRECTIVES_H
