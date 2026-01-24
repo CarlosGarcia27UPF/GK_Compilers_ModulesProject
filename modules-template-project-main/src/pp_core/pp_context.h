@@ -30,9 +30,6 @@ typedef struct {
     /* Current 1-based line number within current_file. */
     int current_line;
 
-    /* Total number of errors reported so far. */
-    int error_count;
-
     /* Comment processing state. */
     comment_state_t comment_state;
 
