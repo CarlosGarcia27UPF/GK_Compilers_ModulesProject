@@ -1,0 +1,2 @@
+/usr/bin/ar qc libdirectives.a CMakeFiles/directives.dir/directives.c.o
+/usr/bin/ranlib libdirectives.a

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libpp_core.a CMakeFiles/pp_core.dir/pp_core.c.o
+/usr/bin/ranlib libpp_core.a

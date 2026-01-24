@@ -1,0 +1,2 @@
+/usr/bin/ar qc libio.a CMakeFiles/io.dir/io.c.o
+/usr/bin/ranlib libio.a

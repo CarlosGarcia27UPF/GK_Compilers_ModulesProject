@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmodule_args.a CMakeFiles/module_args.dir/module_args.c.o
+/usr/bin/ranlib libmodule_args.a

@@ -1,0 +1,1 @@
+/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_cli.dir/test_cli.c.o -o test_cli  ../src/cli/libcli.a ../src/libutils.a

@@ -8,6 +8,13 @@
  
 message(STATUS "(${PROJECT_NAME}) Configuring test executables for modules...")
 
+# Test for cli
+add_executable(test_cli test_cli.c)
+target_link_libraries(test_cli PRIVATE cli)
+target_include_directories(test_cli PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_test(NAME TestCLI COMMAND test_cli)
+message(STATUS " - (${PROJECT_NAME}) Test for cli added")
+
 # Test for module_args
 add_executable(test_module_args test_module_args.c)
 target_link_libraries(test_module_args PRIVATE module_args utils)
