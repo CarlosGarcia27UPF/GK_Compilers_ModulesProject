@@ -49,3 +49,7 @@ void error(int line, const char *fmt, ...) {
 int get_error_count(void) {
     return error_count;
 }
+
+void reset_count(int count) {
+    error_count = 0;
+}
