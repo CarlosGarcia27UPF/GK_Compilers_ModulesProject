@@ -17,6 +17,7 @@
  *     Active - core application entry point.
  * -------------------------------------------------------------------------- */
 
+#include "main.h"
 #include "cli/cli.h"
 #include "pp_core/pp_core.h"
 #include "pp_core/pp_context.h"
@@ -26,6 +27,8 @@
 #include "spec/pp_spec.h"
 
 #include <string.h>
+
+FILE* ofile = NULL;
 
 /* Compute the base directory of the input path (for resolving includes). */
 static void compute_base_dir(const char *path, char *out, size_t out_sz)
@@ -71,6 +74,10 @@ static const char *get_input_path(int argc, char **argv)
 /* Orchestrate CLI parsing, file IO, and preprocessing. */
 static int run_preprocessor(int argc, char **argv)
 {
+    // Initialize logging
+    ofile = set_output_test_file(PROJOUTFILENAME);
+    errors_init();
+
     cli_options_t opt = cli_parse(argc, argv);
 
     if (opt.do_help) {
@@ -108,6 +115,10 @@ static int run_preprocessor(int argc, char **argv)
     buffer_free(&in);
     buffer_free(&out);
     buffer_free(&out_name);
+
+    if (ofile && ofile != stdout) {
+        fclose(ofile);
+    }
 
     return (ctx.error_count > 0) ? 1 : 0;
 }
