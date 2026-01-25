@@ -121,8 +121,7 @@ static int handle_non_directive_line(pp_context_t *ctx,
         buffer_t expanded;
         buffer_init(&expanded);
 
-        if (macros_expand_line(&ctx->macros, line_buf->data, line_buf->len, &expanded,
-                               ctx->opt.do_comments ? NULL : &ctx->comment_state) != 0) {
+        if (macros_expand_line(&ctx->macros, line_buf->data, line_buf->len, &expanded) != 0) {
             error_report(ctx->current_file, ctx->current_line, PP_ERR_MACRO_EXPANSION);
             buffer_free(&expanded);
             return err_code;
