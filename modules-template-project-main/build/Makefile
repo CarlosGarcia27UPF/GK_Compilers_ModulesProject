@@ -296,6 +296,19 @@ pp_core/fast:
 .PHONY : pp_core/fast
 
 #=============================================================================
+# Target rules for targets named test_pp_core
+
+# Build rule for target.
+test_pp_core: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_pp_core
+.PHONY : test_pp_core
+
+# fast build rule for target.
+test_pp_core/fast:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/build
+.PHONY : test_pp_core/fast
+
+#=============================================================================
 # Target rules for targets named test_cli
 
 # Build rule for target.
@@ -423,6 +436,7 @@ help:
 	@echo "... test_macros"
 	@echo "... test_module_2"
 	@echo "... test_module_args"
+	@echo "... test_pp_core"
 	@echo "... tokens"
 	@echo "... utils"
 	@echo "... src/main.o"

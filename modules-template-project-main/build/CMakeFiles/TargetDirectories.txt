@@ -50,6 +50,7 @@
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/pp_core/CMakeFiles/test.dir
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/pp_core/CMakeFiles/edit_cache.dir
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/pp_core/CMakeFiles/rebuild_cache.dir
+/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_pp_core.dir
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_cli.dir
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_module_args.dir
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/CMakeFiles/test_module_2.dir

@@ -1,0 +1,20 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/module_args/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/module_2/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/cli/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/io/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/comments/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/directives/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/macros/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/errors/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/tokens/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/buffer/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/src/pp_core/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

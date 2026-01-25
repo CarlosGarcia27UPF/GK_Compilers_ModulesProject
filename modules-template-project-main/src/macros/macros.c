@@ -80,18 +80,19 @@ int macros_expand_line(const macro_table_t *table,
     Tokenizer tk;
     Token tok;
 
-    (void)line_len;
     tokens_init(&tk, 0, (char *)line);
 
+    long last = 0;
     while (tokenize(&tk, &tok)) {
+        long start = (long)(tok.word - line);
+        if (start > last) {
+            buffer_append_n(output, line + last, start - last);
+        }
 
         /* Never expand inside strings */
         if (tok.type == STRING) {
             buffer_append_n(output, tok.word, tok.length);
-            continue;
-        }
-
-        if (tok.type == IDENTIFIER) {
+        } else if (tok.type == IDENTIFIER) {
             const char *val = macros_get(table, tok.word, tok.length);
             if (val) {
                 buffer_append_n(output, val, (long)strlen(val));
@@ -101,6 +102,12 @@ int macros_expand_line(const macro_table_t *table,
         } else {
             buffer_append_n(output, tok.word, tok.length);
         }
+
+        last = start + tok.length;
+    }
+
+    if (line_len > last) {
+        buffer_append_n(output, line + last, line_len - last);
     }
 
     return 0;

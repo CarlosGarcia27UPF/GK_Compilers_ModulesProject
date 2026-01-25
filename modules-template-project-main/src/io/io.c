@@ -13,6 +13,7 @@
 
 #include "io.h"
 #include "buffer/buffer.h"
+#include "spec/pp_spec.h"
 
 // Reads the entire contents of a file into a buffer
 // Returns 0 on success, 1 if file cannot be opened, 2 if buffer append fails
@@ -21,7 +22,7 @@ int io_read_file(const char *path, buffer_t *out)
     FILE *f = fopen(path, "rb");
     if (!f) return 1;
 
-    char tmp[4096];
+    char tmp[PP_IO_READ_CHUNK];
     size_t n;
 
     while ((n = fread(tmp, 1, sizeof(tmp), f)) > 0) {
@@ -65,3 +66,32 @@ int io_make_output_name(const char *input, buffer_t *out_name)
     return 0;
 }
 
+void io_compute_base_dir(const char *path, char *out, size_t out_sz)
+{
+    if (!out || out_sz == 0) return;
+    out[0] = '\0';
+
+    if (!path || path[0] == '\0') {
+        strncpy(out, ".", out_sz - 1);
+        out[out_sz - 1] = '\0';
+        return;
+    }
+
+    const char *slash = strrchr(path, '/');
+    if (!slash) {
+        strncpy(out, ".", out_sz - 1);
+        out[out_sz - 1] = '\0';
+        return;
+    }
+
+    if (slash == path) {
+        strncpy(out, "/", out_sz - 1);
+        out[out_sz - 1] = '\0';
+        return;
+    }
+
+    size_t n = (size_t)(slash - path);
+    if (n >= out_sz) n = out_sz - 1;
+    memcpy(out, path, n);
+    out[n] = '\0';
+}

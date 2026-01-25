@@ -49,6 +49,7 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/secure/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/secure/_string.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/secure/_strings.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stddef.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdint.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdlib.h \
@@ -107,12 +108,22 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_arg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_copy.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_list.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_header_macro.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_null.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_offsetof.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_ptrdiff_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_rsize_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_size_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_wchar_t.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/ptrcheck.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdarg.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stddef.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdint.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/comments/comments.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/comments/comments.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/macros.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/cli/cli.h \
@@ -147,9 +158,25 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
 
 /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdint.h:
 
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/stddef.h:
+
 /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdarg.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/17/include/ptrcheck.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_wchar_t.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_size_t.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_rsize_t.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_ptrdiff_t.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_offsetof.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_null.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_header_macro.h:
 
 /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_copy.h:
 
@@ -188,8 +215,6 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_size_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_sigaltstack.h:
-
-/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_pid_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_null.h:
 
@@ -239,6 +264,8 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
 
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/main.h:
 
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stddef.h:
+
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdlib.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdio.h:
@@ -252,6 +279,8 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_off_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdint.h:
+
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_pid_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/secure/_strings.h:
 
@@ -290,6 +319,8 @@ src/module_2/CMakeFiles/module_2.dir/module_2.c.o: /Users/cabello/Desktop/Kobby/
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/machine/signal.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_sigset_t.h:
+
+/Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_max_align_t.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/libkern/_OSByteOrder.h:
 

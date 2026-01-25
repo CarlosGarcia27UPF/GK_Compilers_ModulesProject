@@ -1,0 +1,22 @@
+Start testing: Jan 25 19:54 CET
+----------------------------------------------------------
+1/7 Testing: TestPPCore
+1/7 Test: TestPPCore
+Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/tests/test_pp_core"
+Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build_ppcore/tests
+"TestPPCore" start time: Jan 25 19:54 CET
+Output:
+----------------------------------------------------------
+=== pp_core Test Suite ===
+
+=== All pp_core tests passed! ===
+
+<end of output>
+Test time =   1.10 sec
+----------------------------------------------------------
+Test Passed.
+"TestPPCore" end time: Jan 25 19:54 CET
+"TestPPCore" time elapsed: 00:00:01
+----------------------------------------------------------
+
+End testing: Jan 25 19:54 CET

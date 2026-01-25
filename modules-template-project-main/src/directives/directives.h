@@ -23,6 +23,14 @@ typedef struct {
     int top;
 } ifdef_stack_t;
 
+/* Result codes for directive processing. */
+typedef enum {
+    DIR_OK = 0,
+    DIR_ERROR = 1,
+    DIR_SKIP = 2,
+    DIR_INCLUDE = 3
+} directive_result_t;
+
 /* Initialize ifdef stack */
 void ifdef_stack_init(ifdef_stack_t *stack);
 
@@ -42,6 +50,7 @@ int directives_process_line(const char *line, long line_len,
                            ifdef_stack_t *ifdef_stack,
                            int do_comments,
                            comment_state_t *comment_state,
-                           buffer_t *output);
+                           buffer_t *output,
+                           buffer_t *include_name);
 
 #endif // DIRECTIVES_H

@@ -360,6 +360,7 @@ src/tokens/clean: src/tokens/CMakeFiles/tokens.dir/clean
 # Directory level rules for directory tests
 
 # Recursive "all" directory target.
+tests/all: tests/CMakeFiles/test_pp_core.dir/all
 tests/all: tests/CMakeFiles/test_cli.dir/all
 tests/all: tests/CMakeFiles/test_module_args.dir/all
 tests/all: tests/CMakeFiles/test_module_2.dir/all
@@ -369,6 +370,7 @@ tests/all: tests/CMakeFiles/test_macros.dir/all
 .PHONY : tests/all
 
 # Recursive "codegen" directory target.
+tests/codegen: tests/CMakeFiles/test_pp_core.dir/codegen
 tests/codegen: tests/CMakeFiles/test_cli.dir/codegen
 tests/codegen: tests/CMakeFiles/test_module_args.dir/codegen
 tests/codegen: tests/CMakeFiles/test_module_2.dir/codegen
@@ -382,6 +384,7 @@ tests/preinstall:
 .PHONY : tests/preinstall
 
 # Recursive "clean" directory target.
+tests/clean: tests/CMakeFiles/test_pp_core.dir/clean
 tests/clean: tests/CMakeFiles/test_cli.dir/clean
 tests/clean: tests/CMakeFiles/test_module_args.dir/clean
 tests/clean: tests/CMakeFiles/test_module_2.dir/clean
@@ -440,7 +443,7 @@ CMakeFiles/modules_template_main.dir/clean:
 src/CMakeFiles/utils.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/utils.dir/build.make src/CMakeFiles/utils.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/utils.dir/build.make src/CMakeFiles/utils.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=37,38 "Built target utils"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=39,40 "Built target utils"
 .PHONY : src/CMakeFiles/utils.dir/all
 
 # Build rule for subdir invocation for target.
@@ -457,7 +460,7 @@ utils: src/CMakeFiles/utils.dir/rule
 # codegen rule for target.
 src/CMakeFiles/utils.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/utils.dir/build.make src/CMakeFiles/utils.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=37,38 "Finished codegen for target utils"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=39,40 "Finished codegen for target utils"
 .PHONY : src/CMakeFiles/utils.dir/codegen
 
 # clean rule for target.
@@ -728,7 +731,7 @@ src/errors/CMakeFiles/errors.dir/clean:
 src/tokens/CMakeFiles/tokens.dir/all: src/CMakeFiles/utils.dir/all
 	$(MAKE) $(MAKESILENT) -f src/tokens/CMakeFiles/tokens.dir/build.make src/tokens/CMakeFiles/tokens.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/tokens/CMakeFiles/tokens.dir/build.make src/tokens/CMakeFiles/tokens.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=35,36 "Built target tokens"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=37,38 "Built target tokens"
 .PHONY : src/tokens/CMakeFiles/tokens.dir/all
 
 # Build rule for subdir invocation for target.
@@ -745,7 +748,7 @@ tokens: src/tokens/CMakeFiles/tokens.dir/rule
 # codegen rule for target.
 src/tokens/CMakeFiles/tokens.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f src/tokens/CMakeFiles/tokens.dir/build.make src/tokens/CMakeFiles/tokens.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=35,36 "Finished codegen for target tokens"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=37,38 "Finished codegen for target tokens"
 .PHONY : src/tokens/CMakeFiles/tokens.dir/codegen
 
 # clean rule for target.
@@ -821,6 +824,46 @@ src/pp_core/CMakeFiles/pp_core.dir/codegen:
 src/pp_core/CMakeFiles/pp_core.dir/clean:
 	$(MAKE) $(MAKESILENT) -f src/pp_core/CMakeFiles/pp_core.dir/build.make src/pp_core/CMakeFiles/pp_core.dir/clean
 .PHONY : src/pp_core/CMakeFiles/pp_core.dir/clean
+
+#=============================================================================
+# Target rules for target tests/CMakeFiles/test_pp_core.dir
+
+# All Build rule for target.
+tests/CMakeFiles/test_pp_core.dir/all: src/CMakeFiles/utils.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/io/CMakeFiles/io.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/comments/CMakeFiles/comments.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/directives/CMakeFiles/directives.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/macros/CMakeFiles/macros.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/errors/CMakeFiles/errors.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/tokens/CMakeFiles/tokens.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/buffer/CMakeFiles/buffer.dir/all
+tests/CMakeFiles/test_pp_core.dir/all: src/pp_core/CMakeFiles/pp_core.dir/all
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/depend
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=35,36 "Built target test_pp_core"
+.PHONY : tests/CMakeFiles/test_pp_core.dir/all
+
+# Build rule for subdir invocation for target.
+tests/CMakeFiles/test_pp_core.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 20
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_pp_core.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
+.PHONY : tests/CMakeFiles/test_pp_core.dir/rule
+
+# Convenience name for target.
+test_pp_core: tests/CMakeFiles/test_pp_core.dir/rule
+.PHONY : test_pp_core
+
+# codegen rule for target.
+tests/CMakeFiles/test_pp_core.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=35,36 "Finished codegen for target test_pp_core"
+.PHONY : tests/CMakeFiles/test_pp_core.dir/codegen
+
+# clean rule for target.
+tests/CMakeFiles/test_pp_core.dir/clean:
+	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/clean
+.PHONY : tests/CMakeFiles/test_pp_core.dir/clean
 
 #=============================================================================
 # Target rules for target tests/CMakeFiles/test_cli.dir

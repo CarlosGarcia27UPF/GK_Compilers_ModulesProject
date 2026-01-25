@@ -127,6 +127,20 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+tests/CMakeFiles/test_pp_core.dir/rule:
+	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_pp_core.dir/rule
+.PHONY : tests/CMakeFiles/test_pp_core.dir/rule
+
+# Convenience name for target.
+test_pp_core: tests/CMakeFiles/test_pp_core.dir/rule
+.PHONY : test_pp_core
+
+# fast build rule for target.
+test_pp_core/fast:
+	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/build
+.PHONY : test_pp_core/fast
+
+# Convenience name for target.
 tests/CMakeFiles/test_cli.dir/rule:
 	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_cli.dir/rule
 .PHONY : tests/CMakeFiles/test_cli.dir/rule
@@ -354,6 +368,30 @@ test_module_args.c.s:
 	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_module_args.dir/build.make tests/CMakeFiles/test_module_args.dir/test_module_args.c.s
 .PHONY : test_module_args.c.s
 
+test_pp_core.o: test_pp_core.c.o
+.PHONY : test_pp_core.o
+
+# target to build an object file
+test_pp_core.c.o:
+	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/test_pp_core.c.o
+.PHONY : test_pp_core.c.o
+
+test_pp_core.i: test_pp_core.c.i
+.PHONY : test_pp_core.i
+
+# target to preprocess a source file
+test_pp_core.c.i:
+	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/test_pp_core.c.i
+.PHONY : test_pp_core.c.i
+
+test_pp_core.s: test_pp_core.c.s
+.PHONY : test_pp_core.s
+
+# target to generate assembly for a file
+test_pp_core.c.s:
+	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build && $(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_pp_core.dir/build.make tests/CMakeFiles/test_pp_core.dir/test_pp_core.c.s
+.PHONY : test_pp_core.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -369,6 +407,7 @@ help:
 	@echo "... test_macros"
 	@echo "... test_module_2"
 	@echo "... test_module_args"
+	@echo "... test_pp_core"
 	@echo "... test_cli.o"
 	@echo "... test_cli.i"
 	@echo "... test_cli.s"
@@ -387,6 +426,9 @@ help:
 	@echo "... test_module_args.o"
 	@echo "... test_module_args.i"
 	@echo "... test_module_args.s"
+	@echo "... test_pp_core.o"
+	@echo "... test_pp_core.i"
+	@echo "... test_pp_core.s"
 .PHONY : help
 
 

@@ -8,6 +8,13 @@
  
 message(STATUS "(${PROJECT_NAME}) Configuring test executables for modules...")
 
+# Test for pp_core
+add_executable(test_pp_core test_pp_core.c)
+target_link_libraries(test_pp_core PRIVATE pp_core comments directives macros errors buffer tokens io)
+target_include_directories(test_pp_core PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_test(NAME TestPPCore COMMAND test_pp_core)
+message(STATUS " - (${PROJECT_NAME}) Test for pp_core added")
+
 # Test for cli
 add_executable(test_cli test_cli.c)
 target_link_libraries(test_cli PRIVATE cli)

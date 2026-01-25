@@ -101,6 +101,7 @@ src/directives/CMakeFiles/directives.dir/directives.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_dev_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_mode_t.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/../buffer/buffer.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/../comments/comments.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/comments/comments.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/spec/pp_spec.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.h \
@@ -112,4 +113,14 @@ src/directives/CMakeFiles/directives.dir/directives.c.o: \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg___va_copy.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_copy.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/io/io.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stddef.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stddef.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_header_macro.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_ptrdiff_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_size_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_rsize_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_wchar_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_null.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_offsetof.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/tokens/tokens.h

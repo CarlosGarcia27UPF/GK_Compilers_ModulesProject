@@ -18,19 +18,19 @@
 #ifndef CLI_H
 #define CLI_H
 
-/* Parsed CLI options controlling preprocessing stages. */
+// Parsed CLI options controlling preprocessing stages.
 typedef struct {
-    /* Enable comment removal (-c). */
+    // Enable comment removal (-c).
     int do_comments;
-    /* Enable directive processing and macro expansion (-d). */
+    // Enable directive processing and macro expansion (-d).
     int do_directives;
-    /* Print help and exit (-help). */
+    // Print help and exit (-help).
     int do_help;
 } cli_options_t;
 
-/* Parse argv into structured CLI options. */
+// Parse argv into structured CLI options.
 cli_options_t cli_parse(int argc, char **argv);
-/* Print the user-facing help text (man page). */
+// Print the user-facing help text (man page).
 void cli_print_help(const char *progname);
 
 #endif

@@ -2,6 +2,15 @@ tests/CMakeFiles/test_io.dir/test_io.c.o: \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_io.c \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_io.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/tests/../src/io/io.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stddef.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stddef.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_header_macro.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_ptrdiff_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_size_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_wchar_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_null.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_max_align_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stddef_offsetof.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/tests/../src/buffer/buffer.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/assert.h \

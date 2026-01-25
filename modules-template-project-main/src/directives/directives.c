@@ -21,8 +21,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define PP_MAX_PATH_LEN 4096
-
 void ifdef_stack_init(ifdef_stack_t *stack) {
     stack->top = -1;
 }
@@ -57,6 +55,54 @@ static int token_is_ident(const Token *t, const char *kw)
     return strncmp(t->word, kw, kw_len) == 0;
 }
 
+/* Trim value at start of comment markers (// or block-comment) outside strings/chars. */
+static const char *trim_define_value_end(const char *start, const char *end)
+{
+    int in_string = 0;
+    int in_char = 0;
+    int escaped = 0;
+
+    for (const char *p = start; p < end; p++) {
+        char c = *p;
+        if (in_string) {
+            if (escaped) {
+                escaped = 0;
+            } else if (c == '\\') {
+                escaped = 1;
+            } else if (c == '"') {
+                in_string = 0;
+            }
+            continue;
+        }
+        if (in_char) {
+            if (escaped) {
+                escaped = 0;
+            } else if (c == '\\') {
+                escaped = 1;
+            } else if (c == '\'') {
+                in_char = 0;
+            }
+            continue;
+        }
+
+        if (c == '"') {
+            in_string = 1;
+            continue;
+        }
+        if (c == '\'') {
+            in_char = 1;
+            continue;
+        }
+        if (c == '/' && (p + 1) < end) {
+            if (p[1] == '/' || p[1] == '*') {
+                return p;
+            }
+        }
+    }
+
+    return end;
+}
+
 int directives_process_line(const char *line, long line_len, 
                            const char *base_dir,
                            const char *current_file, int line_num,
@@ -64,8 +110,12 @@ int directives_process_line(const char *line, long line_len,
                            ifdef_stack_t *ifdef_stack,
                            int do_comments,
                            comment_state_t *comment_state,
-                           buffer_t *output) {
+                           buffer_t *output,
+                           buffer_t *include_name) {
     if (!line || !macros || !ifdef_stack) return 1;
+    (void)base_dir;
+    (void)do_comments;
+    (void)comment_state;
     
     const char *hash = skip_whitespace(line);
     
@@ -93,168 +143,67 @@ int directives_process_line(const char *line, long line_len,
     if (token_is_ident(&tok, "include")) {
         /* Only process if we're in an active #ifdef context */
         if (!ifdef_should_include(ifdef_stack)) {
-            return 2;  /* Skip this directive */
+            return DIR_SKIP;  /* Skip this directive */
         }
 
-        char filename[256];
+        char filename[PP_MAX_INCLUDE_NAME];
 
         Token arg;
-        if (!tokenize(&tk, &arg) || arg.type != STRING) {
+        if (!tokenize(&tk, &arg)) {
             error(line_num, "%s: Invalid #include syntax", current_file);
-            return 1;
+            return DIR_ERROR;
         }
 
         /* Per P1PP handout: #include <...> is not required; leave it unchanged */
         if (arg.type != STRING) {
-            /* <...> form not supported → leave unchanged */
             buffer_append_n(output, line, line_len);
-            return 0;
+            return DIR_OK;
         }
 
-        if (arg.length <= 0 || arg.length >= (int)sizeof(filename)) {
+        int name_len = arg.length;
+        const char *name_start = arg.word;
+        if (name_len >= 2 && arg.word[0] == '"' && arg.word[name_len - 1] == '"') {
+            name_start = arg.word + 1;
+            name_len -= 2;
+        }
+
+        if (name_len <= 0 || name_len >= (int)sizeof(filename)) {
             error(line_num, "%s: Include path too long", current_file);
-            return 1;
+            return DIR_ERROR;
         }
-        memcpy(filename, arg.word, (size_t)arg.length);
-        filename[arg.length] = '\0';
-        
-        /* Build full path with bounds checking */
-        char full_path[PP_MAX_PATH_LEN];
-        int path_len;
-        if (base_dir && base_dir[0]) {
-            path_len = snprintf(full_path, sizeof(full_path), "%s/%s", base_dir, filename);
-        } else {
-            path_len = snprintf(full_path, sizeof(full_path), "%s", filename);
-        }
-        
-        if (path_len < 0 || path_len >= (int)sizeof(full_path)) {
-            error(line_num, "%s: Include path too long: %s", current_file, filename);
-            return 1;
-        }
-        
-        /* Read the included file */
-        buffer_t included;
-        buffer_init(&included);
-        
-        if (io_read_file(full_path, &included) != 0) {
-            error(line_num, "%s: Cannot open included file: %s", current_file, full_path);
-            buffer_free(&included);
-            return 1;
+        memcpy(filename, name_start, (size_t)name_len);
+        filename[name_len] = '\0';
+
+        if (include_name) {
+            buffer_append_str(include_name, filename);
         }
 
-        /* Base dir for nested includes inside this included file */
-        char included_base_dir[PP_MAX_PATH_LEN];
-        {
-            const char *slash = strrchr(full_path, '/');
-            if (!slash) {
-                snprintf(included_base_dir, sizeof(included_base_dir), ".");
-            } else if (slash == full_path) {
-                snprintf(included_base_dir, sizeof(included_base_dir), "/");
-            } else {
-                size_t n = (size_t)(slash - full_path);
-                if (n >= sizeof(included_base_dir)) n = sizeof(included_base_dir) - 1;
-                memcpy(included_base_dir, full_path, n);
-                included_base_dir[n] = '\0';
-            }
-        }
-        
-        /* Process the included file recursively */
-        comment_state_t local_comment_state;
-        if (!comment_state) {
-            comments_state_init(&local_comment_state);
-            comment_state = &local_comment_state;
-        }
-        
-        buffer_t processed;
-        buffer_init(&processed);
-        
-        /* Process included file line by line */
-        long i = 0, line_start = 0;
-        int included_line_num = 1;
-        while (i < included.len) {
-            if (included.data[i] == '\n' || i == included.len - 1) {
-                long len = (i - line_start) + 1;
-                if (i == included.len - 1 && included.data[i] != '\n') {
-                    len = included.len - line_start;
-                }
-                
-                buffer_t line_buf;
-                buffer_init(&line_buf);
-
-                const char *raw_line = included.data + line_start;
-
-                int start_in_block_comment = comment_state->in_block_comment;
-
-                /* Apply comment removal only if enabled; otherwise preserve comments */
-                if (do_comments) {
-                    comments_process_line(raw_line, len, &line_buf, comment_state);
-                } else {
-                    buffer_append_n(&line_buf, raw_line, len);
-                }
-                /* Check if it's a directive and process recursively */
-                const char *lp = skip_whitespace(line_buf.data);
-                if (!start_in_block_comment && *lp == '#') {
-                    directives_process_line(line_buf.data, line_buf.len, included_base_dir, full_path, 
-                                          included_line_num, macros, ifdef_stack,
-                                          do_comments, comment_state, &processed);
-
-                        if (!do_comments) {
-                            comments_update_state(raw_line, len, comment_state);
-                        }
-                } else {
-                    /* Expand macros if not inside false ifdef */
-                    if (ifdef_should_include(ifdef_stack)) {
-                        buffer_t expanded;
-                        buffer_init(&expanded);
-
-                        macros_expand_line(macros, line_buf.data, line_buf.len, &expanded);
-                        buffer_append_n(&processed, expanded.data, expanded.len);
-                        buffer_free(&expanded);
-                    } else {
-                        /* Not including this branch, but still keep comments state consistent */
-                            if (!do_comments) {
-                                comments_update_state(raw_line, len, comment_state);
-                            }
-                    }
-                }
-                
-                buffer_free(&line_buf);
-                
-                i++;
-                line_start = i;
-                included_line_num++;
-            } else {
-                i++;
-            }
-        }
-        
-        /* Append processed included content to output */
-        buffer_append_n(output, processed.data, processed.len);
-        
-        buffer_free(&processed);
-        buffer_free(&included);
-        
-        return 0;  /* Directive processed */
+        return DIR_INCLUDE;  /* Include directive handled by caller */
     }
     
     /* Handle #define */
     if (token_is_ident(&tok, "define")) {
         /* Only process if we're in an active #ifdef context */
         if (!ifdef_should_include(ifdef_stack)) {
-            return 2;  /* Skip this directive */
+            return DIR_SKIP;  /* Skip this directive */
         }
 
-        char name[128];
-        char value[512];
+        char name[PP_MAX_DEFINE_NAME];
+        char value[PP_MAX_DEFINE_VALUE];
 
         Token name_tok;
         if (!tokenize(&tk, &name_tok) || name_tok.type != IDENTIFIER) {
             error(line_num, "%s: Invalid #define syntax", current_file);
-            return 1;
+            return DIR_ERROR;
         }
         if (name_tok.length <= 0 || name_tok.length >= (int)sizeof(name)) {
             error(line_num, "%s: Invalid #define syntax", current_file);
-            return 1;
+            return DIR_ERROR;
+        }
+        /* Function-like macros (NAME(...)) are not supported: keep directive unchanged. */
+        if (name_tok.word[name_tok.length] == '(') {
+            buffer_append_n(output, line, line_len);
+            return DIR_OK;
         }
         memcpy(name, name_tok.word, (size_t)name_tok.length);
         name[name_tok.length] = '\0';
@@ -265,6 +214,7 @@ int directives_process_line(const char *line, long line_len,
 
         const char *value_start = valp;
         const char *value_end = value_start + strlen(value_start);
+        value_end = trim_define_value_end(value_start, value_end);
         while (value_end > value_start && isspace((unsigned char)*(value_end - 1))) {
             value_end--;
         }
@@ -279,31 +229,31 @@ int directives_process_line(const char *line, long line_len,
         /* Add to macro table */
         if (macros_define(macros, name, value) != 0) {
             error(line_num, "%s: Failed to define macro", current_file);
-            return 1;
+            return DIR_ERROR;
         }
         
-        return 0;  /* Directive processed, don't output it */
+        return DIR_OK;  /* Directive processed, don't output it */
     }
     
     /* Handle #ifdef */
     if (token_is_ident(&tok, "ifdef")) {
-        char name[128];
+        char name[PP_MAX_DEFINE_NAME];
 
         Token name_tok;
         if (!tokenize(&tk, &name_tok) || name_tok.type != IDENTIFIER ||
             name_tok.length <= 0 || name_tok.length >= (int)sizeof(name)) {
             /* Not the supported form '#ifdef IDENTIFIER' -> keep unchanged (or skip if inactive) */
-            if (!ifdef_should_include(ifdef_stack)) return 2;
+            if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
             buffer_append_n(output, line, line_len);
-            return 0;
+            return DIR_OK;
         }
 
         /* Reject trailing tokens: only '#ifdef IDENTIFIER' is supported */
         Token extra;
         if (tokenize(&tk, &extra)) {
-            if (!ifdef_should_include(ifdef_stack)) return 2;
+            if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
             buffer_append_n(output, line, line_len);
-            return 0;
+            return DIR_OK;
         }
         memcpy(name, name_tok.word, (size_t)name_tok.length);
         name[name_tok.length] = '\0';
@@ -311,7 +261,7 @@ int directives_process_line(const char *line, long line_len,
         /* Push onto stack */
         if (ifdef_stack->top >= PP_MAX_IF_DEPTH - 1) {
             error(line_num, "%s: #ifdef nesting too deep", current_file);
-            return 1;
+            return DIR_ERROR;
         }
         
         /* Only check if macro is defined if parent context is active */
@@ -320,7 +270,7 @@ int directives_process_line(const char *line, long line_len,
         ifdef_stack->top++;
         ifdef_stack->stack[ifdef_stack->top] = should_include;
         
-        return 0;  /* Directive processed */
+        return DIR_OK;  /* Directive processed */
     }
     
     /* Handle #endif */
@@ -328,26 +278,26 @@ int directives_process_line(const char *line, long line_len,
         /* Reject trailing tokens: only '#endif' is supported */
         Token extra;
         if (tokenize(&tk, &extra)) {
-            if (!ifdef_should_include(ifdef_stack)) return 2;
+            if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
             buffer_append_n(output, line, line_len);
-            return 0;
+            return DIR_OK;
         }
 
         if (ifdef_stack->top >= 0) {
             ifdef_stack->top--;
-            return 0;  /* Directive processed */
+            return DIR_OK;  /* Directive processed */
         }
 
         /* Otherwise, this #endif belongs to an unsupported directive - keep it */
-        if (!ifdef_should_include(ifdef_stack)) return 2;
+        if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
         buffer_append_n(output, line, line_len);
-        return 0;
+        return DIR_OK;
     }
     
     /* Unknown directive - keep it in output */
     if (!ifdef_should_include(ifdef_stack)) {
-        return 2;
+        return DIR_SKIP;
     }
     buffer_append_n(output, line, line_len);
-    return 0;
+    return DIR_OK;
 }

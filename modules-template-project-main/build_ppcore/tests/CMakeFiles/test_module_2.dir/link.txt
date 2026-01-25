@@ -1,0 +1,1 @@
+/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_module_2.dir/test_module_2.c.o -o test_module_2  ../src/module_2/libmodule_2.a ../src/libutils.a
