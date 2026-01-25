@@ -1,3 +1,12 @@
+/**
+ * io.c
+ * 
+ * Input/output file operations
+ *  Reads a specified file into a buffer and writes a buffer to a new file that ends in _pp.
+ * 
+ * author: Emil Svensson
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -5,6 +14,8 @@
 #include "io.h"
 #include "buffer/buffer.h"
 
+// Reads the entire contents of a file into a buffer
+// Returns 0 on success, 1 if file cannot be opened, 2 if buffer append fails
 int io_read_file(const char *path, buffer_t *out)
 {
     FILE *f = fopen(path, "rb");
@@ -24,6 +35,8 @@ int io_read_file(const char *path, buffer_t *out)
     return 0;
 }
 
+// Writes the contents of a buffer to a file
+// Returns 0 on success, 1 if file cannot be opened
 int io_write_file(const char *path, const buffer_t *in)
 {
     FILE *f = fopen(path, "wb");
@@ -35,6 +48,8 @@ int io_write_file(const char *path, const buffer_t *in)
     return 0;
 }
 
+// Creates an output filename by inserting "_pp" before the file extension
+// Returns 0 on success, 1 if buffer operations fail
 int io_make_output_name(const char *input, buffer_t *out_name)
 {
     /* rule: insert _pp before extension */
