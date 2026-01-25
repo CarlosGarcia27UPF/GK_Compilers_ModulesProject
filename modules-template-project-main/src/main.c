@@ -103,7 +103,6 @@ static int run_preprocessor(int argc, char **argv)
     ctx.opt = opt;
     ctx.current_file = in_path;
     ctx.current_line = 0;
-    ctx.error_count = 0;
 
     char base_dir[PP_MAX_PATH_LEN];
     compute_base_dir(in_path, base_dir, sizeof(base_dir));
@@ -120,7 +119,8 @@ static int run_preprocessor(int argc, char **argv)
         fclose(ofile);
     }
 
-    return (ctx.error_count > 0) ? 1 : 0;
+    return error_get_count() > 0 ? 1 : 0;
+    
 }
 
 /* Minimal wrapper for program entry point. */

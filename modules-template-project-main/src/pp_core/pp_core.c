@@ -194,7 +194,6 @@ int pp_run(pp_context_t *ctx, const buffer_t *input, buffer_t *output, const cha
     }
 
     /* Initialize state. */
-    errors_init();
     comments_state_init(&ctx->comment_state);
     macros_init(&ctx->macros);
     ifdef_stack_init(&ctx->ifdef_stack);
