@@ -39,7 +39,7 @@ static int is_directive_line(const char *line, long line_len)
 static int append_or_report(pp_context_t *ctx, buffer_t *dst, const char *data, long len, int err_code)
 {
     if (buffer_append_n(dst, data, len) != 0) {
-        error_report(ctx->current_file, ctx->current_line, PP_ERR_OUT_OF_MEMORY);
+        error(ctx->current_line, "%s: %s", ctx->current_file, PP_ERR_OUT_OF_MEMORY);
         return err_code;
     }
     return PP_RUN_SUCCESS;
@@ -54,7 +54,7 @@ static int build_line_buffer(pp_context_t *ctx,
 {
     if (ctx->opt.do_comments) {
         if (comments_process_line(line_data, line_len, line_buf, &ctx->comment_state) != 0) {
-            error_report(ctx->current_file, ctx->current_line, PP_ERR_COMMENTS_PROCESS);
+            error(ctx->current_line, "%s: %s", ctx->current_file, PP_ERR_COMMENTS_PROCESS);
             return err_code;
         }
         return PP_RUN_SUCCESS;
@@ -122,7 +122,7 @@ static int handle_non_directive_line(pp_context_t *ctx,
         buffer_init(&expanded);
 
         if (macros_expand_line(&ctx->macros, line_buf->data, line_buf->len, &expanded) != 0) {
-            error_report(ctx->current_file, ctx->current_line, PP_ERR_MACRO_EXPANSION);
+            error(ctx->current_line, "%s: %s", ctx->current_file, PP_ERR_MACRO_EXPANSION);
             buffer_free(&expanded);
             return err_code;
         }
@@ -194,9 +194,9 @@ int pp_run(pp_context_t *ctx, const buffer_t *input, buffer_t *output, const cha
     }
 
     /* Initialize state. */
-    error_reset_count();
+    errors_init();
     comments_state_init(&ctx->comment_state);
-    macros_table_init(&ctx->macros);
+    macros_init(&ctx->macros);
     ifdef_stack_init(&ctx->ifdef_stack);
 
     ctx->current_line = 0;
@@ -231,6 +231,6 @@ int pp_run(pp_context_t *ctx, const buffer_t *input, buffer_t *output, const cha
         }
     }
 
-    macros_table_free(&ctx->macros);
+    macros_free(&ctx->macros);
     return PP_RUN_SUCCESS;
 }

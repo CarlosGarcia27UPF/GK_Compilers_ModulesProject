@@ -23,6 +23,19 @@
 
 #define PP_MAX_PATH_LEN 4096
 
+/* Local helpers to align with macros API in macros.c */
+static int macros_define(macro_table_t *table, const char *name, const char *value)
+{
+    if (!table || !name || !value) return 1;
+    return macros_add(table, name, (int)strlen(name), value, (int)strlen(value));
+}
+
+static int macros_is_defined(const macro_table_t *table, const char *name)
+{
+    if (!table || !name) return 0;
+    return macros_get(table, name, (int)strlen(name)) != NULL;
+}
+
 void ifdef_stack_init(ifdef_stack_t *stack) {
     stack->top = -1;
 }
@@ -100,7 +113,7 @@ int directives_process_line(const char *line, long line_len,
 
         Token arg;
         if (!tokenize(&tk, &arg) || arg.type != STRING) {
-            error_report(current_file, line_num, "Invalid #include syntax");
+            error(line_num, "%s: Invalid #include syntax", current_file);
             return 1;
         }
 
@@ -112,7 +125,7 @@ int directives_process_line(const char *line, long line_len,
         }
 
         if (arg.length <= 0 || arg.length >= (int)sizeof(filename)) {
-            error_report(current_file, line_num, "Include path too long");
+            error(line_num, "%s: Include path too long", current_file);
             return 1;
         }
         memcpy(filename, arg.word, (size_t)arg.length);
@@ -128,7 +141,7 @@ int directives_process_line(const char *line, long line_len,
         }
         
         if (path_len < 0 || path_len >= (int)sizeof(full_path)) {
-            error_report(current_file, line_num, "Include path too long: %s", filename);
+            error(line_num, "%s: Include path too long: %s", current_file, filename);
             return 1;
         }
         
@@ -137,7 +150,7 @@ int directives_process_line(const char *line, long line_len,
         buffer_init(&included);
         
         if (io_read_file(full_path, &included) != 0) {
-            error_report(current_file, line_num, "Cannot open included file: %s", full_path);
+            error(line_num, "%s: Cannot open included file: %s", current_file, full_path);
             buffer_free(&included);
             return 1;
         }
@@ -207,8 +220,7 @@ int directives_process_line(const char *line, long line_len,
                         buffer_t expanded;
                         buffer_init(&expanded);
 
-                        macros_expand_line(macros, line_buf.data, line_buf.len, &expanded,
-                                          do_comments ? NULL : comment_state);
+                        macros_expand_line(macros, line_buf.data, line_buf.len, &expanded);
                         buffer_append_n(&processed, expanded.data, expanded.len);
                         buffer_free(&expanded);
                     } else {
@@ -250,11 +262,11 @@ int directives_process_line(const char *line, long line_len,
 
         Token name_tok;
         if (!tokenize(&tk, &name_tok) || name_tok.type != IDENTIFIER) {
-            error_report(current_file, line_num, "Invalid #define syntax");
+            error(line_num, "%s: Invalid #define syntax", current_file);
             return 1;
         }
         if (name_tok.length <= 0 || name_tok.length >= (int)sizeof(name)) {
-            error_report(current_file, line_num, "Invalid #define syntax");
+            error(line_num, "%s: Invalid #define syntax", current_file);
             return 1;
         }
         memcpy(name, name_tok.word, (size_t)name_tok.length);
@@ -308,7 +320,7 @@ int directives_process_line(const char *line, long line_len,
         
         /* Push onto stack */
         if (ifdef_stack->top >= PP_MAX_IF_DEPTH - 1) {
-            error_report(current_file, line_num, "#ifdef nesting too deep");
+            error(line_num, "%s: #ifdef nesting too deep", current_file);
             return 1;
         }
         
