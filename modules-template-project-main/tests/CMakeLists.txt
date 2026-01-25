@@ -43,4 +43,11 @@ target_include_directories(test_io PRIVATE ${PROJECT_SOURCE_DIR}/src)
 add_test(NAME TestIO COMMAND test_io)
 message(STATUS " - (${PROJECT_NAME}) Test for io module added")
 
+# Test for macros module
+add_executable(test_macros test_macros.c)
+target_link_libraries(test_macros PRIVATE macros tokens buffer)
+target_include_directories(test_macros PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_test(NAME TestMacros COMMAND test_macros)
+message(STATUS " - (${PROJECT_NAME}) Test for macros module added")
+
 message(STATUS " - (${PROJECT_NAME}) Test configuration (executables) completed.")
