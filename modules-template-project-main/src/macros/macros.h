@@ -7,8 +7,8 @@
 
 /* Single macro entry */
 typedef struct {
-    char name;    
-    char value;   
+    char *name;    
+    char *value;   
 } macro_t;
 
 /* Macro table */

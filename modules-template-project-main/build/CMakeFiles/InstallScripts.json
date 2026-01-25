@@ -1,0 +1,20 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/module_args/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/module_2/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/cli/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/io/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/comments/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/directives/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/macros/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/errors/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/tokens/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/buffer/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/src/pp_core/cmake_install.cmake",
+		"/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

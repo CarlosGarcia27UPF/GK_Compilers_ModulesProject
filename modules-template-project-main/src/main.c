@@ -119,7 +119,7 @@ static int run_preprocessor(int argc, char **argv)
         fclose(ofile);
     }
 
-    return error_get_count() > 0 ? 1 : 0;
+    return get_error_count() > 0 ? 1 : 0;
     
 }
 

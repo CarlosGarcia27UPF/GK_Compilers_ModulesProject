@@ -19,6 +19,9 @@
 
 #include "cli/cli.h"
 #include "spec/pp_spec.h"
+#include "comments/comments.h"
+#include "macros/macros.h"
+#include "directives/directives.h"
 
 /* Shared state for a preprocessing run. */
 typedef struct {

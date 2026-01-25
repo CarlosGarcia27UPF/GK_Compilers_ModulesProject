@@ -86,19 +86,19 @@ int macros_expand_line(const macro_table_t *table,
 
         /* Never expand inside strings */
         if (tok.type == STRING) {
-            buffer_append(output, tok.word, tok.length);
+            buffer_append_n(output, tok.word, tok.length);
             continue;
         }
 
         if (tok.type == IDENTIFIER) {
             const char *val = macros_get(table, tok.word, tok.length);
             if (val) {
-                buffer_append(output, val, strlen(val));
+                buffer_append_n(output, val, (long)strlen(val));
             } else {
-                buffer_append(output, tok.word, tok.length);
+                buffer_append_n(output, tok.word, tok.length);
             }
         } else {
-            buffer_append(output, tok.word, tok.length);
+            buffer_append_n(output, tok.word, tok.length);
         }
     }
 

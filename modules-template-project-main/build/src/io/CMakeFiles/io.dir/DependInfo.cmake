@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/vanesa/Desktop/Uni/3r/Sistemes Distribuits/GK_Compilers_ModulesProject/modules-template-project-main/src/io/io.c" "src/io/CMakeFiles/io.dir/io.c.o" "gcc" "src/io/CMakeFiles/io.dir/io.c.o.d"
+  "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/io/io.c" "src/io/CMakeFiles/io.dir/io.c.o" "gcc" "src/io/CMakeFiles/io.dir/io.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

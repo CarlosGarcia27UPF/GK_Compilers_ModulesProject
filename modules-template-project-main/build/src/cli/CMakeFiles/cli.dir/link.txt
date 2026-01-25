@@ -1,2 +1,2 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc libcli.a CMakeFiles/cli.dir/cli.c.o
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib libcli.a
+/usr/bin/ar qc libcli.a CMakeFiles/cli.dir/cli.c.o
+/usr/bin/ranlib libcli.a

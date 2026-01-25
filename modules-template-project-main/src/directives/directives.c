@@ -23,19 +23,6 @@
 
 #define PP_MAX_PATH_LEN 4096
 
-/* Local helpers to align with macros API in macros.c */
-static int macros_define(macro_table_t *table, const char *name, const char *value)
-{
-    if (!table || !name || !value) return 1;
-    return macros_add(table, name, (int)strlen(name), value, (int)strlen(value));
-}
-
-static int macros_is_defined(const macro_table_t *table, const char *name)
-{
-    if (!table || !name) return 0;
-    return macros_get(table, name, (int)strlen(name)) != NULL;
-}
-
 void ifdef_stack_init(ifdef_stack_t *stack) {
     stack->top = -1;
 }
@@ -290,7 +277,10 @@ int directives_process_line(const char *line, long line_len,
         value[vlen] = '\0';
         
         /* Add to macro table */
-        macros_define(macros, name, value);
+        if (macros_define(macros, name, value) != 0) {
+            error(line_num, "%s: Failed to define macro", current_file);
+            return 1;
+        }
         
         return 0;  /* Directive processed, don't output it */
     }
@@ -325,7 +315,7 @@ int directives_process_line(const char *line, long line_len,
         }
         
         /* Only check if macro is defined if parent context is active */
-        int should_include = ifdef_should_include(ifdef_stack) && macros_is_defined(macros, name);
+        int should_include = ifdef_should_include(ifdef_stack) && macros_is_defined(macros, name, name_tok.length);
         
         ifdef_stack->top++;
         ifdef_stack->stack[ifdef_stack->top] = should_include;
