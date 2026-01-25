@@ -1,52 +1,48 @@
-/*
- * -----------------------------------------------------------------------------
- * macros.h
- *
- * Module: macros - Macro table + replacements
- * Responsible for: Storing #define mappings, replacing tokens
- *
- * Author: [Team Member 5]
- * -----------------------------------------------------------------------------
- */
-
 #ifndef MACROS_H
 #define MACROS_H
 
 #include <stdio.h>
-#include "../spec/pp_spec.h"
 #include "../tokens/tokens.h"
 #include "../buffer/buffer.h"
 
-extern FILE* ofile;
-
-/* Estructura para almacenar una macro: nombre y valor */
+/* Single macro entry */
 typedef struct {
-    char *name;     
-    char *value;     
+    char name;    
+    char value;   
 } macro_t;
 
-/* Tabla de macros: array dinámico */
+/* Macro table */
 typedef struct {
-    macro_t *items;  /* Array de macros */
-    int size;        /* Cantidad de macros actualmente almacenadas */
-    int capacity;    /* Capacidad actual del array */
+    macro_t *items;
+    int size;
+    int capacity;
 } macro_table_t;
 
-/* Inicializar la tabla de macros vacía */
+/* Initialize macro table */
 void macros_init(macro_table_t *table);
 
-/* Agregar una macro a la tabla (nombre y valor) */
-int macros_add(macro_table_t *table, const char *name, int name_len, 
-               const char *value, int value_len);
+/* Define a macro (called by Directives) */
+int macros_define(macro_table_t *table,
+                  const char *name,
+                  const char *value);
 
-/* Buscar una macro por nombre */
-const char* macros_get(const macro_table_t *table, const char *name, int name_len);
+/* Check if macro exists */
+int macros_is_defined(const macro_table_t *table,
+                      const char *name,
+                      int name_len);
 
-/* Expandir macros en una línea de código */
-int macros_expand_line(const macro_table_t *table, const char *input_line, 
-                       int line_len, buffer_t *output);
+/* Get macro value (NULL if not found) */
+const char *macros_get(const macro_table_t *table,
+                       const char *name,
+                       int name_len);
 
-/* Liberar memoria de la tabla de macros */
+/* Expand macros in a normal code line */
+int macros_expand_line(const macro_table_t *table,
+                       const char *line,
+                       int line_num,
+                       buffer_t *output);
+
+/* Free all macro memory */
 void macros_free(macro_table_t *table);
 
-#endif 
+#endif
