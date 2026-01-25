@@ -74,13 +74,14 @@ const char *macros_get(const macro_table_t *table,
 /* -------------------------------------------------- */
 int macros_expand_line(const macro_table_t *table,
                        const char *line,
-                       int line_num,
+                       long line_len,
                        buffer_t *output)
 {
     Tokenizer tk;
     Token tok;
 
-    tokens_init(&tk, line_num, (char *)line);
+    (void)line_len;
+    tokens_init(&tk, 0, (char *)line);
 
     while (tokenize(&tk, &tok)) {
 

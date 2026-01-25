@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "../tokens/tokens.h"
 #include "../buffer/buffer.h"
+#include "../comments/comments.h"
 
 /* Single macro entry */
 typedef struct {
@@ -39,7 +40,7 @@ const char *macros_get(const macro_table_t *table,
 /* Expand macros in a normal code line */
 int macros_expand_line(const macro_table_t *table,
                        const char *line,
-                       int line_num,
+                       long line_len,
                        buffer_t *output);
 
 /* Free all macro memory */
