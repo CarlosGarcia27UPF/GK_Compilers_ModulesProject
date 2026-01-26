@@ -8,7 +8,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include "errors/errors.h"
 
 typedef enum {
     ST_NORMAL = 0,
@@ -137,40 +136,3 @@ int comments_process_line(const char *input, long input_len, buffer_t *output, c
     
     return 0;
 }
-
-int comments_remove_stream(FILE *in, FILE *out) {
-    if (!in || !out) return 1;
-
-    comment_state_t state;
-    comments_state_init(&state);
-
-    buffer_t line_out;
-    buffer_init(&line_out);
-
-    char *line = NULL;
-    size_t cap = 0;
-    ssize_t nread;
-
-    int line_num = 1;
-    while ((nread = getline(&line, &cap, in)) != -1) {
-        line_out.len = 0;
-        if (line_out.data) line_out.data[0] = '\0';
-        comments_process_line(line, (long)nread, &line_out, &state);
-        if (line_out.len > 0) {
-            fwrite(line_out.data, 1, (size_t)line_out.len, out);
-        }
-        line_num++;
-    }
-
-    free(line);
-    buffer_free(&line_out);
-
-    if (state.in_block_comment) {
-        error(line_num, "Unterminated block comment (reached EOF)");
-        return 1;
-    }
-
-    return 0;
-}
-
-/* To call the function do comments_remove_stream(input_file, output_file); */

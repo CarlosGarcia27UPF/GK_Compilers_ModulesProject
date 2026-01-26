@@ -5,7 +5,6 @@
 
 
 #ifndef PP_H  
-#define	PP_H
 
  
  
@@ -13,15 +12,8 @@
  
  
 
-#define ON              1
-#define OFF             0
 
-#define PRINTDESTFILE       "out.txt"     
-#define PRINTERRORFILE      "errmsg.txt"    
 
-#define N               2   
-#define PRINTWARNING    ON       
-#define PRINTERROR      ON      
 
  
  
@@ -39,4 +31,3 @@
 FILE    *errfile;         
 FILE    *ofile;           
 
-#endif	 
