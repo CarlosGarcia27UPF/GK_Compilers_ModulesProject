@@ -13,10 +13,10 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-
-extern FILE* ofile;
+#include "../buffer/buffer.h"
 
 void errors_init(void);
+void errors_set_buffer(buffer_t *buffer);
 void error(int line, const char *fmt, ...);
 int get_error_count(void);
 

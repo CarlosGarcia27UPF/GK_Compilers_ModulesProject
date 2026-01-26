@@ -17,6 +17,4 @@
 //#define PROJOUTFILENAME "./proj_modules_template.log"
 #define PROJOUTFILENAME "stdout"
 
-extern FILE* ofile; // The output handler for the project run (same variable name as in modules)
-
 #endif // MAIN_H

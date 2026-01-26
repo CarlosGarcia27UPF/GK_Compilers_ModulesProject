@@ -6,46 +6,52 @@
 
 #include "test_modules.h"
 #include "../src/errors/errors.h"
+#include "../src/buffer/buffer.h"
 
-FILE *ofile = NULL; // file handler to send the module's output (to a file or stdout)
+// We perform pure testing here, so no external logging file needed for this module's logic verification
+// We rely on assertions and buffer inspection.
 
 void test_reporting() {
     printf("Testing error reporting functionality...\n");
-    if (ofile) fprintf(ofile, "Testing error reporting functionality...\n");
+
+    buffer_t error_buf;
+    buffer_init(&error_buf);
 
     errors_init();
+    errors_set_buffer(&error_buf);
+
     assert(get_error_count() == 0);
 
     // Test simple error
     error(42, "This is a test error");
     assert(get_error_count() == 1);
+    
+    // Check buffer content
+    const char *expected = "Error on line 42: This is a test error\n";
+    assert(strstr(error_buf.data, expected) != NULL);
 
     // Test formatted error
     error(100, "Validation failed for %s", "variable_x");
     assert(get_error_count() == 2);
+    
+    // Check buffer content again
+    const char *expected2 = "Error on line 100: Validation failed for variable_x\n";
+    assert(strstr(error_buf.data, expected2) != NULL);
+    
+    buffer_free(&error_buf);
 
     printf("Error reporting tests passed!\n");
-    if (ofile) fprintf(ofile, "Error reporting tests passed!\n");
 }
 
 int main(void) {
     printf("Starting test_errors main...\n");
-    ofile = stdout; // Default output to stdout
-    printf("Setting output file...\n");
-    ofile = set_output_test_file("test_errors.log");
-    
-    if (ofile == NULL) {
-        printf("Failed to open output file!\n");
-        return 1;
-    }
-    printf("Output file set. Running tests...\n");
+    printf("Running tests...\n");
 
-    fprintf(ofile, "=== Test Run: Errors Module ===\n");
+    printf("=== Test Run: Errors Module ===\n");
     
     test_reporting();
     
-    fprintf(ofile, "=== Test Run Finished ===\n");
+    printf("=== Test Run Finished ===\n");
     
-    if (ofile && ofile != stdout) fclose(ofile); 
     return 0;
 }

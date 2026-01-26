@@ -27,8 +27,6 @@
 
 #include <string.h>
 
-FILE* ofile = NULL;
-
 /* Return the last non-flag argument, assumed to be the input path. */
 static const char *get_input_path(int argc, char **argv)
 {
@@ -43,9 +41,7 @@ static const char *get_input_path(int argc, char **argv)
 /* Orchestrate CLI parsing, file IO, and preprocessing. */
 static int run_preprocessor(int argc, char **argv)
 {
-    // Initialize logging using configuration from main.h
-    ofile = stdout;
-    ofile = set_output_test_file(PROJOUTFILENAME);
+    // Initialize error handling
     errors_init();
 
     // Parse command-line options (help, comments-only, directives/macros)
@@ -93,11 +89,6 @@ static int run_preprocessor(int argc, char **argv)
     buffer_free(&in);
     buffer_free(&out);
     buffer_free(&out_name);
-
-    // Close output file if it was redirected
-    if (ofile && ofile != stdout) {
-        fclose(ofile);
-    }
 
     return get_error_count() > 0 ? 1 : 0;
     
