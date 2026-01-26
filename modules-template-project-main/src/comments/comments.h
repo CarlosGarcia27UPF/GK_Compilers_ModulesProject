@@ -37,9 +37,4 @@ int comments_process_line(const char *input, long input_len, buffer_t *output, c
  */
 void comments_update_state(const char *input, long input_len, comment_state_t *state);
 
-/* Remove comments from input stream and write result to output stream.
- * Returns 0 on success, non-zero on error (e.g., unterminated block comment).
- */
-int comments_remove_stream(FILE *in, FILE *out);
-
 #endif /* COMMENTS_H */
