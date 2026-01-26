@@ -112,6 +112,7 @@ src/directives/CMakeFiles/directives.dir/directives.c.o: \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_arg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg___va_copy.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_copy.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/../buffer/buffer.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/io/io.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stddef.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stddef.h \

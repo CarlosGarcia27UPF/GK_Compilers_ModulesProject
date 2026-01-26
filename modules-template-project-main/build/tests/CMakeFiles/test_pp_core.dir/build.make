@@ -103,6 +103,8 @@ tests/test_pp_core: src/errors/liberrors.a
 tests/test_pp_core: src/buffer/libbuffer.a
 tests/test_pp_core: src/tokens/libtokens.a
 tests/test_pp_core: src/io/libio.a
+tests/test_pp_core: src/errors/liberrors.a
+tests/test_pp_core: src/buffer/libbuffer.a
 tests/test_pp_core: src/libutils.a
 tests/test_pp_core: tests/CMakeFiles/test_pp_core.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable test_pp_core"

@@ -137,4 +137,5 @@ src/module_args/CMakeFiles/module_args.dir/module_args.c.o: \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_arg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg___va_copy.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/__stdarg_va_copy.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././errors/../buffer/buffer.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/module_args/./.././tokens/tokens.h

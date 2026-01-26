@@ -109,6 +109,8 @@ tests/CMakeFiles/test_errors.dir/test_errors.c.o: /Users/cabello/Desktop/Kobby/G
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/ptrcheck.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdarg.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/17/include/stdint.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/utils_files.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_modules.h
@@ -333,5 +335,7 @@ tests/CMakeFiles/test_errors.dir/test_errors.c.o: /Users/cabello/Desktop/Kobby/G
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/_assert.h:
 
 /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/_types/_pid_t.h:
+
+/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h:
 
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/tests/test_errors.c:

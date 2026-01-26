@@ -7,5 +7,5 @@
 
 add_library(comments STATIC comments.c)
 target_include_directories(comments PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(comments PRIVATE utils)
+target_link_libraries(comments PRIVATE utils errors)
 message(STATUS "(${PROJECT_NAME}) comments configured: Added as static library")

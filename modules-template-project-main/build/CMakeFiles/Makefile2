@@ -569,6 +569,8 @@ src/cli/CMakeFiles/cli.dir/clean:
 
 # All Build rule for target.
 src/io/CMakeFiles/io.dir/all: src/CMakeFiles/utils.dir/all
+src/io/CMakeFiles/io.dir/all: src/errors/CMakeFiles/errors.dir/all
+src/io/CMakeFiles/io.dir/all: src/buffer/CMakeFiles/buffer.dir/all
 	$(MAKE) $(MAKESILENT) -f src/io/CMakeFiles/io.dir/build.make src/io/CMakeFiles/io.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/io/CMakeFiles/io.dir/build.make src/io/CMakeFiles/io.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=11,12 "Built target io"
@@ -576,7 +578,7 @@ src/io/CMakeFiles/io.dir/all: src/CMakeFiles/utils.dir/all
 
 # Build rule for subdir invocation for target.
 src/io/CMakeFiles/io.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/io/CMakeFiles/io.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : src/io/CMakeFiles/io.dir/rule
@@ -601,6 +603,8 @@ src/io/CMakeFiles/io.dir/clean:
 
 # All Build rule for target.
 src/comments/CMakeFiles/comments.dir/all: src/CMakeFiles/utils.dir/all
+src/comments/CMakeFiles/comments.dir/all: src/errors/CMakeFiles/errors.dir/all
+src/comments/CMakeFiles/comments.dir/all: src/buffer/CMakeFiles/buffer.dir/all
 	$(MAKE) $(MAKESILENT) -f src/comments/CMakeFiles/comments.dir/build.make src/comments/CMakeFiles/comments.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/comments/CMakeFiles/comments.dir/build.make src/comments/CMakeFiles/comments.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=5,6 "Built target comments"
@@ -608,7 +612,7 @@ src/comments/CMakeFiles/comments.dir/all: src/CMakeFiles/utils.dir/all
 
 # Build rule for subdir invocation for target.
 src/comments/CMakeFiles/comments.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/comments/CMakeFiles/comments.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : src/comments/CMakeFiles/comments.dir/rule
@@ -697,6 +701,7 @@ src/macros/CMakeFiles/macros.dir/clean:
 
 # All Build rule for target.
 src/errors/CMakeFiles/errors.dir/all: src/CMakeFiles/utils.dir/all
+src/errors/CMakeFiles/errors.dir/all: src/buffer/CMakeFiles/buffer.dir/all
 	$(MAKE) $(MAKESILENT) -f src/errors/CMakeFiles/errors.dir/build.make src/errors/CMakeFiles/errors.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/errors/CMakeFiles/errors.dir/build.make src/errors/CMakeFiles/errors.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=9,10 "Built target errors"
@@ -704,7 +709,7 @@ src/errors/CMakeFiles/errors.dir/all: src/CMakeFiles/utils.dir/all
 
 # Build rule for subdir invocation for target.
 src/errors/CMakeFiles/errors.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 6
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/errors/CMakeFiles/errors.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : src/errors/CMakeFiles/errors.dir/rule
@@ -970,6 +975,7 @@ tests/CMakeFiles/test_module_2.dir/clean:
 # All Build rule for target.
 tests/CMakeFiles/test_errors.dir/all: src/CMakeFiles/utils.dir/all
 tests/CMakeFiles/test_errors.dir/all: src/errors/CMakeFiles/errors.dir/all
+tests/CMakeFiles/test_errors.dir/all: src/buffer/CMakeFiles/buffer.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_errors.dir/build.make tests/CMakeFiles/test_errors.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=25,26 "Built target test_errors"
@@ -977,7 +983,7 @@ tests/CMakeFiles/test_errors.dir/all: src/errors/CMakeFiles/errors.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/test_errors.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 6
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 8
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_errors.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/test_errors.dir/rule
@@ -1003,6 +1009,7 @@ tests/CMakeFiles/test_errors.dir/clean:
 # All Build rule for target.
 tests/CMakeFiles/test_io.dir/all: src/CMakeFiles/utils.dir/all
 tests/CMakeFiles/test_io.dir/all: src/io/CMakeFiles/io.dir/all
+tests/CMakeFiles/test_io.dir/all: src/errors/CMakeFiles/errors.dir/all
 tests/CMakeFiles/test_io.dir/all: src/buffer/CMakeFiles/buffer.dir/all
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_io.dir/build.make tests/CMakeFiles/test_io.dir/depend
 	$(MAKE) $(MAKESILENT) -f tests/CMakeFiles/test_io.dir/build.make tests/CMakeFiles/test_io.dir/build
@@ -1011,7 +1018,7 @@ tests/CMakeFiles/test_io.dir/all: src/buffer/CMakeFiles/buffer.dir/all
 
 # Build rule for subdir invocation for target.
 tests/CMakeFiles/test_io.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 8
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 10
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tests/CMakeFiles/test_io.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles 0
 .PHONY : tests/CMakeFiles/test_io.dir/rule

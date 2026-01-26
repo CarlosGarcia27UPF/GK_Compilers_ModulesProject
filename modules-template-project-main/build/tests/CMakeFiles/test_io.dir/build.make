@@ -97,6 +97,8 @@ tests/test_io: tests/CMakeFiles/test_io.dir/test_io.c.o
 tests/test_io: tests/CMakeFiles/test_io.dir/build.make
 tests/test_io: src/io/libio.a
 tests/test_io: src/buffer/libbuffer.a
+tests/test_io: src/errors/liberrors.a
+tests/test_io: src/buffer/libbuffer.a
 tests/test_io: src/libutils.a
 tests/test_io: tests/CMakeFiles/test_io.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable test_io"

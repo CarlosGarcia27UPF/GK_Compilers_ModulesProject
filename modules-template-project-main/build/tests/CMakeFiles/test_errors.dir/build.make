@@ -97,6 +97,8 @@ tests/test_errors: tests/CMakeFiles/test_errors.dir/test_errors.c.o
 tests/test_errors: tests/CMakeFiles/test_errors.dir/build.make
 tests/test_errors: src/errors/liberrors.a
 tests/test_errors: src/libutils.a
+tests/test_errors: src/buffer/libbuffer.a
+tests/test_errors: src/libutils.a
 tests/test_errors: tests/CMakeFiles/test_errors.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable test_errors"
 	cd /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_errors.dir/link.txt --verbose=$(VERBOSE)

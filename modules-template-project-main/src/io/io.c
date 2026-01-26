@@ -14,13 +14,18 @@
 #include "io.h"
 #include "buffer/buffer.h"
 #include "spec/pp_spec.h"
+#include "errors/errors.h"
 
 // Reads the entire contents of a file into a buffer
 // Returns 0 on success, 1 if file cannot be opened, 2 if buffer append fails
 int io_read_file(const char *path, buffer_t *out)
 {
     FILE *f = fopen(path, "rb");
-    if (!f) return 1;
+    if (!f) {
+        const char *p = path ? path : "(null)";
+        error(0, "Cannot open file: %s", p);
+        return 1;
+    }
 
     char tmp[PP_IO_READ_CHUNK];
     size_t n;
@@ -28,6 +33,10 @@ int io_read_file(const char *path, buffer_t *out)
     while ((n = fread(tmp, 1, sizeof(tmp), f)) > 0) {
         if (buffer_append_n(out, tmp, (long)n) != 0) {
             fclose(f);
+            {
+                const char *p = path ? path : "(null)";
+                error(0, "Out of memory while reading file: %s", p);
+            }
             return 2;
         }
     }
@@ -41,7 +50,11 @@ int io_read_file(const char *path, buffer_t *out)
 int io_write_file(const char *path, const buffer_t *in)
 {
     FILE *f = fopen(path, "wb");
-    if (!f) return 1;
+    if (!f) {
+        const char *p = path ? path : "(null)";
+        error(0, "Cannot open output file: %s", p);
+        return 1;
+    }
 
     if (in->len > 0) fwrite(in->data, 1, (size_t)in->len, f);
 
@@ -55,13 +68,32 @@ int io_make_output_name(const char *input, buffer_t *out_name)
 {
     /* rule: insert _pp before extension */
     const char *dot = strrchr(input, '.');
-    if (!dot) return buffer_append_str(out_name, input);
+    if (!dot) {
+        int rc = buffer_append_str(out_name, input);
+        if (rc != 0) {
+            const char *p = input ? input : "(null)";
+            error(0, "Out of memory while building output filename for: %s", p);
+        }
+        return rc;
+    }
 
     long base_len = (long)(dot - input);
 
-    if (buffer_append_n(out_name, input, base_len) != 0) return 1;
-    if (buffer_append_str(out_name, "_pp") != 0) return 1;
-    if (buffer_append_str(out_name, dot) != 0) return 1;
+    if (buffer_append_n(out_name, input, base_len) != 0) {
+        const char *p = input ? input : "(null)";
+        error(0, "Out of memory while building output filename for: %s", p);
+        return 1;
+    }
+    if (buffer_append_str(out_name, "_pp") != 0) {
+        const char *p = input ? input : "(null)";
+        error(0, "Out of memory while building output filename for: %s", p);
+        return 1;
+    }
+    if (buffer_append_str(out_name, dot) != 0) {
+        const char *p = input ? input : "(null)";
+        error(0, "Out of memory while building output filename for: %s", p);
+        return 1;
+    }
 
     return 0;
 }

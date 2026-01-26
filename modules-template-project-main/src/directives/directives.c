@@ -242,18 +242,18 @@ int directives_process_line(const char *line, long line_len,
         Token name_tok;
         if (!tokenize(&tk, &name_tok) || name_tok.type != IDENTIFIER ||
             name_tok.length <= 0 || name_tok.length >= (int)sizeof(name)) {
-            /* Not the supported form '#ifdef IDENTIFIER' -> keep unchanged (or skip if inactive) */
+            /* Malformed #ifdef. Report if this region is active; otherwise skip silently. */
             if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
-            buffer_append_n(output, line, line_len);
-            return DIR_OK;
+            error(line_num, "%s: Invalid #ifdef syntax", current_file);
+            return DIR_ERROR;
         }
 
         /* Reject trailing tokens: only '#ifdef IDENTIFIER' is supported */
         Token extra;
         if (tokenize(&tk, &extra)) {
             if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
-            buffer_append_n(output, line, line_len);
-            return DIR_OK;
+            error(line_num, "%s: Invalid #ifdef syntax", current_file);
+            return DIR_ERROR;
         }
         memcpy(name, name_tok.word, (size_t)name_tok.length);
         name[name_tok.length] = '\0';
@@ -279,8 +279,8 @@ int directives_process_line(const char *line, long line_len,
         Token extra;
         if (tokenize(&tk, &extra)) {
             if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
-            buffer_append_n(output, line, line_len);
-            return DIR_OK;
+            error(line_num, "%s: Invalid #endif syntax", current_file);
+            return DIR_ERROR;
         }
 
         if (ifdef_stack->top >= 0) {
@@ -288,10 +288,10 @@ int directives_process_line(const char *line, long line_len,
             return DIR_OK;  /* Directive processed */
         }
 
-        /* Otherwise, this #endif belongs to an unsupported directive - keep it */
+        /* Unmatched #endif is an error in supported syntax. */
         if (!ifdef_should_include(ifdef_stack)) return DIR_SKIP;
-        buffer_append_n(output, line, line_len);
-        return DIR_OK;
+        error(line_num, "%s: #endif without matching #ifdef", current_file);
+        return DIR_ERROR;
     }
     
     /* Unknown directive - keep it in output */

@@ -6,6 +6,9 @@
 
 #include "comments.h"
 #include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include "errors/errors.h"
 
 typedef enum {
     ST_NORMAL = 0,
@@ -24,73 +27,11 @@ void comments_update_state(const char *input, long input_len, comment_state_t *s
 {
     if (!input || !state) return;
 
-    CommentState st = state->in_block_comment ? ST_BLOCK_COMMENT : ST_NORMAL;
-    int prev = state->prev_char;
-    int escaped = 0;
-
-    for (long i = 0; i < input_len; i++) {
-        int c = (unsigned char)input[i];
-
-        switch (st) {
-        case ST_NORMAL:
-            if (c == '"') {
-                st = ST_STRING;
-                escaped = 0;
-            } else if (c == '\'') {
-                st = ST_CHAR;
-                escaped = 0;
-            } else if (c == '/' && i + 1 < input_len) {
-                int n = (unsigned char)input[i + 1];
-                if (n == '/') {
-                    st = ST_LINE_COMMENT;
-                    i++; /* consume second '/' */
-                } else if (n == '*') {
-                    st = ST_BLOCK_COMMENT;
-                    prev = 0;
-                    i++; /* consume '*' */
-                }
-            }
-            break;
-
-        case ST_LINE_COMMENT:
-            if (c == '\n') {
-                st = ST_NORMAL;
-            }
-            break;
-
-        case ST_BLOCK_COMMENT:
-            if (prev == '*' && c == '/') {
-                st = ST_NORMAL;
-                prev = 0;
-            } else {
-                prev = c;
-            }
-            break;
-
-        case ST_STRING:
-            if (escaped) {
-                escaped = 0;
-            } else if (c == '\\') {
-                escaped = 1;
-            } else if (c == '"') {
-                st = ST_NORMAL;
-            }
-            break;
-
-        case ST_CHAR:
-            if (escaped) {
-                escaped = 0;
-            } else if (c == '\\') {
-                escaped = 1;
-            } else if (c == '\'') {
-                st = ST_NORMAL;
-            }
-            break;
-        }
-    }
-
-    state->in_block_comment = (st == ST_BLOCK_COMMENT);
-    state->prev_char = prev;
+    /* Reuse the main comment-processing logic and discard output. */
+    buffer_t sink;
+    buffer_init(&sink);
+    comments_process_line(input, input_len, &sink, state);
+    buffer_free(&sink);
 }
 
 /* Process a single line removing comments while preserving state */
@@ -196,3 +137,40 @@ int comments_process_line(const char *input, long input_len, buffer_t *output, c
     
     return 0;
 }
+
+int comments_remove_stream(FILE *in, FILE *out) {
+    if (!in || !out) return 1;
+
+    comment_state_t state;
+    comments_state_init(&state);
+
+    buffer_t line_out;
+    buffer_init(&line_out);
+
+    char *line = NULL;
+    size_t cap = 0;
+    ssize_t nread;
+
+    int line_num = 1;
+    while ((nread = getline(&line, &cap, in)) != -1) {
+        line_out.len = 0;
+        if (line_out.data) line_out.data[0] = '\0';
+        comments_process_line(line, (long)nread, &line_out, &state);
+        if (line_out.len > 0) {
+            fwrite(line_out.data, 1, (size_t)line_out.len, out);
+        }
+        line_num++;
+    }
+
+    free(line);
+    buffer_free(&line_out);
+
+    if (state.in_block_comment) {
+        error(line_num, "Unterminated block comment (reached EOF)");
+        return 1;
+    }
+
+    return 0;
+}
+
+/* To call the function do comments_remove_stream(input_file, output_file); */

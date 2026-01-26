@@ -7,5 +7,5 @@
 
 add_library(io STATIC io.c)
 target_include_directories(io PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(io PRIVATE utils)
+target_link_libraries(io PRIVATE utils errors)
 message(STATUS "(${PROJECT_NAME}) io configured: Added as static library")

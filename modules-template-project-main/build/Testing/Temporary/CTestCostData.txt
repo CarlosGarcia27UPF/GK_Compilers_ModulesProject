@@ -1,8 +1,8 @@
-TestPPCore 1 0.306717
-TestCLI 1 0.354061
-TestModuleArgs 1 0.356888
-TestModule_2 1 0.339694
-TestErrors 1 0.323609
-TestIO 1 0.372671
-TestMacros 1 0.347562
+TestPPCore 3 0.10999
+TestCLI 3 0.0012226
+TestModuleArgs 3 0.00182418
+TestModule_2 3 0.00185032
+TestErrors 3 0.00163053
+TestIO 3 0.0941914
+TestMacros 3 0.00110171
 ---

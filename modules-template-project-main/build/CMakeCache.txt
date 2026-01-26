@@ -207,16 +207,16 @@ buffer_LIB_DEPENDS:STATIC=general;utils;
 cli_LIB_DEPENDS:STATIC=general;utils;
 
 //Dependencies for the target
-comments_LIB_DEPENDS:STATIC=general;utils;
+comments_LIB_DEPENDS:STATIC=general;utils;general;errors;
 
 //Dependencies for the target
 directives_LIB_DEPENDS:STATIC=general;utils;
 
 //Dependencies for the target
-errors_LIB_DEPENDS:STATIC=general;utils;
+errors_LIB_DEPENDS:STATIC=general;utils;general;buffer;
 
 //Dependencies for the target
-io_LIB_DEPENDS:STATIC=general;utils;
+io_LIB_DEPENDS:STATIC=general;utils;general;errors;
 
 //Dependencies for the target
 macros_LIB_DEPENDS:STATIC=general;utils;

@@ -145,8 +145,6 @@ static int handle_directive_line(pp_context_t *ctx,
         buffer_t included;
         buffer_init(&included);
         if (io_read_file(full_path, &included) != 0) {
-            // If the file can't be opened, report an error
-            error(ctx->current_line, "%s: Cannot open included file: %s", ctx->current_file, full_path);
             buffer_free(&included);
             buffer_free(&include_name);
             buffer_free(&directive_output);

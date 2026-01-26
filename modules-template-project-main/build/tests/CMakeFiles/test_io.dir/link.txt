@@ -1,1 +1,1 @@
-/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_io.dir/test_io.c.o -o test_io  ../src/io/libio.a ../src/buffer/libbuffer.a ../src/libutils.a
+/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_io.dir/test_io.c.o -o test_io  ../src/io/libio.a ../src/buffer/libbuffer.a ../src/errors/liberrors.a ../src/buffer/libbuffer.a ../src/libutils.a

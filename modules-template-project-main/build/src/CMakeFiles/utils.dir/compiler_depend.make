@@ -123,6 +123,7 @@ src/CMakeFiles/utils.dir/utils_files.c.o: /Users/cabello/Desktop/Kobby/GK_Compil
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/cli/cli.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/comments/comments.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/directives/directives.h \
+  /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/io/io.h \
   /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/macros.h \
@@ -144,8 +145,6 @@ src/CMakeFiles/utils.dir/utils_files.c.o: /Users/cabello/Desktop/Kobby/GK_Compil
 
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/spec/pp_spec.h:
 
-/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h:
-
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/utils_files.h:
 
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/macros/macros.h:
@@ -153,6 +152,8 @@ src/CMakeFiles/utils.dir/utils_files.c.o: /Users/cabello/Desktop/Kobby/GK_Compil
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/io/io.h:
 
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/errors/errors.h:
+
+/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/buffer/buffer.h:
 
 /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/src/directives/directives.h:
 

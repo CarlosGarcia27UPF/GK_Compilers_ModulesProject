@@ -1,10 +1,10 @@
-Start testing: Jan 25 21:14 CET
+Start testing: Jan 26 12:19 CET
 ----------------------------------------------------------
 1/7 Testing: TestPPCore
 1/7 Test: TestPPCore
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_pp_core"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestPPCore" start time: Jan 25 21:14 CET
+"TestPPCore" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
 === pp_core Test Suite ===
@@ -12,10 +12,10 @@ Output:
 === All pp_core tests passed! ===
 
 <end of output>
-Test time =   0.31 sec
+Test time =   0.33 sec
 ----------------------------------------------------------
 Test Passed.
-"TestPPCore" end time: Jan 25 21:14 CET
+"TestPPCore" end time: Jan 26 12:19 CET
 "TestPPCore" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -23,7 +23,7 @@ Test Passed.
 2/7 Test: TestCLI
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_cli"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestCLI" start time: Jan 25 21:14 CET
+"TestCLI" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
 === CLI Module Test Suite ===
@@ -31,10 +31,10 @@ Output:
 === All CLI tests passed! ===
 
 <end of output>
-Test time =   0.35 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestCLI" end time: Jan 25 21:14 CET
+"TestCLI" end time: Jan 26 12:19 CET
 "TestCLI" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -42,14 +42,14 @@ Test Passed.
 3/7 Test: TestModuleArgs
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_module_args" "arg90" "arg91" "arg92"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestModuleArgs" start time: Jan 25 21:14 CET
+"TestModuleArgs" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
-Error opening output file ./logs/2026_01_25_22_14_test_module_args.log. Check if subdirectory exists, otherwise create it and run again
-Machine remote time Generated log filename (with time stamp): ./logs/2026_01_25_21_14_test_module_args.log
-Generated log filename (with time stamp): ./logs/2026_01_25_22_14_test_module_args.log
-See log of execution in stdout (filename ./logs/2026_01_25_22_14_test_module_args.log)
-See log of execution in stdout (filename ./logs/2026_01_25_22_14_test_module_args.log)
+Error opening output file ./logs/2026_01_26_13_19_test_module_args.log. Check if subdirectory exists, otherwise create it and run again
+Machine remote time Generated log filename (with time stamp): ./logs/2026_01_26_12_19_test_module_args.log
+Generated log filename (with time stamp): ./logs/2026_01_26_13_19_test_module_args.log
+See log of execution in stdout (filename ./logs/2026_01_26_13_19_test_module_args.log)
+See log of execution in stdout (filename ./logs/2026_01_26_13_19_test_module_args.log)
 Starting tests for Module args...
 Starting tests for Module args...
 Testing of module arguments not implemented. Not done. Here put all tests of process_arguments
@@ -63,10 +63,10 @@ Finished tests for Module args...
 Finished tests for Module args...
 
 <end of output>
-Test time =   0.36 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"TestModuleArgs" end time: Jan 25 21:14 CET
+"TestModuleArgs" end time: Jan 26 12:19 CET
 "TestModuleArgs" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -74,14 +74,14 @@ Test Passed.
 4/7 Test: TestModule_2
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_module_2"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestModule_2" start time: Jan 25 21:14 CET
+"TestModule_2" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
-Error opening output file ./logs/2026_01_25_22_14_test_module_2.log. Check if subdirectory exists, otherwise create it and run again
-Machine remote time Generated log filename (with time stamp): ./logs/2026_01_25_21_14_test_module_2.log
-Generated log filename (with time stamp): ./logs/2026_01_25_22_14_test_module_2.log
-See log of execution in stdout (filename ./logs/2026_01_25_22_14_test_module_2.log)
-See log of execution in stdout (filename ./logs/2026_01_25_22_14_test_module_2.log)
+Error opening output file ./logs/2026_01_26_13_19_test_module_2.log. Check if subdirectory exists, otherwise create it and run again
+Machine remote time Generated log filename (with time stamp): ./logs/2026_01_26_12_19_test_module_2.log
+Generated log filename (with time stamp): ./logs/2026_01_26_13_19_test_module_2.log
+See log of execution in stdout (filename ./logs/2026_01_26_13_19_test_module_2.log)
+See log of execution in stdout (filename ./logs/2026_01_26_13_19_test_module_2.log)
 Running tests for Module 2: Fibonacci function
 Testing Module 2: Fibonacci Function
 Fibonacci negative test passed!: fig(-3) = -1
@@ -95,10 +95,10 @@ Finished tests for Module 2: Fibonacci function
 Finished tests for Module 2: Fibonacci function
 
 <end of output>
-Test time =   0.34 sec
+Test time =   0.01 sec
 ----------------------------------------------------------
 Test Passed.
-"TestModule_2" end time: Jan 25 21:14 CET
+"TestModule_2" end time: Jan 26 12:19 CET
 "TestModule_2" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -106,33 +106,22 @@ Test Passed.
 5/7 Test: TestErrors
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_errors"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestErrors" start time: Jan 25 21:14 CET
+"TestErrors" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
-Error opening output file ./logs/2026_01_25_22_14_test_errors.log. Check if subdirectory exists, otherwise create it and run again
+Error on line 42: This is a test error
+Error on line 100: Validation failed for variable_x
 Starting test_errors main...
-Setting output file...
-Machine remote time Generated log filename (with time stamp): ./logs/2026_01_25_21_14_test_errors.log
-Generated log filename (with time stamp): ./logs/2026_01_25_22_14_test_errors.log
-See log of execution in stdout (filename ./logs/2026_01_25_22_14_test_errors.log)
-See log of execution in stdout (filename ./logs/2026_01_25_22_14_test_errors.log)
-Output file set. Running tests...
+Running tests...
 === Test Run: Errors Module ===
 Testing error reporting functionality...
-Testing error reporting functionality...
-[errors] OK
-Error on line 42: This is a test error
-Error on line 42: This is a test error
-Error on line 100: Validation failed for variable_x
-Error on line 100: Validation failed for variable_x
-Error reporting tests passed!
 Error reporting tests passed!
 === Test Run Finished ===
 <end of output>
-Test time =   0.32 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestErrors" end time: Jan 25 21:14 CET
+"TestErrors" end time: Jan 26 12:19 CET
 "TestErrors" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -140,7 +129,7 @@ Test Passed.
 6/7 Test: TestIO
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_io"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestIO" start time: Jan 25 21:14 CET
+"TestIO" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
 === IO Module Test Suite ===
@@ -161,10 +150,10 @@ Test 6: Round-trip (read -> write -> read)
 === All IO tests passed! ===
 
 <end of output>
-Test time =   0.37 sec
+Test time =   0.28 sec
 ----------------------------------------------------------
 Test Passed.
-"TestIO" end time: Jan 25 21:14 CET
+"TestIO" end time: Jan 26 12:19 CET
 "TestIO" time elapsed: 00:00:00
 ----------------------------------------------------------
 
@@ -172,18 +161,18 @@ Test Passed.
 7/7 Test: TestMacros
 Command: "/Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests/test_macros"
 Directory: /Users/cabello/Desktop/Kobby/GK_Compilers_ModulesProject/modules-template-project-main/build/tests
-"TestMacros" start time: Jan 25 21:14 CET
+"TestMacros" start time: Jan 26 12:19 CET
 Output:
 ----------------------------------------------------------
 [PASS] Macro add and get works
 [PASS] Macro expansion succeeded
 Output: int a = 10;
 <end of output>
-Test time =   0.35 sec
+Test time =   0.00 sec
 ----------------------------------------------------------
 Test Passed.
-"TestMacros" end time: Jan 25 21:14 CET
+"TestMacros" end time: Jan 26 12:19 CET
 "TestMacros" time elapsed: 00:00:00
 ----------------------------------------------------------
 
-End testing: Jan 25 21:14 CET
+End testing: Jan 26 12:19 CET
