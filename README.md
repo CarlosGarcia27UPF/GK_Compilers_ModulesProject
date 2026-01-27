@@ -19,8 +19,8 @@ The focus of P1 is:
 - well-defined data structures
 - modular responsibilities
 
-This README is **not a user manual**.  
-It is an **internal working specification** for the development team.
+This README is an **internal working specification** for the development team.  
+The User's Manual is available in `modules-template-project-main/documentation/user_manual.md`.
 
 ---
 
