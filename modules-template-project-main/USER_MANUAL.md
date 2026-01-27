@@ -404,7 +404,534 @@ int main() {
 
 ### Error Messages
 
-P1PP reports errors with file name and line number:
+P1PP reports errors with clear, informative messages that include:
+- **Line number** where the error occurred
+- **Error description** explaining what went wrong
+- **File context** (when processing includes)
 
+**Format:**
 ```
-Error in file.c:15
+Error on line <line_number>: <error_message>
+```
+
+### Common Error Types
+
+#### 8.1 File Errors
+
+**File Not Found:**
+```
+Error on line 1: Could not open include file "missing.h"
+```
+**Cause:** The included file doesn't exist in the expected location  
+**Solution:** Verify the filename and path are correct
+
+**Cannot Read File:**
+```
+Error: Unable to read input file "input.c"
+```
+**Cause:** File permissions or path issues  
+**Solution:** Check file permissions and verify the path
+
+**Cannot Write Output:**
+```
+Error: Unable to write output file "output_pp.c"
+```
+**Cause:** Insufficient permissions or disk space  
+**Solution:** Check write permissions for the output directory
+
+#### 8.2 Preprocessing Errors
+
+**Unterminated Comment:**
+```
+Error on line 45: Unterminated /* comment at end of file
+```
+**Cause:** Multi-line comment `/* ... */` is not closed  
+**Solution:** Add closing `*/` to the comment block
+
+**Invalid Directive Syntax:**
+```
+Error on line 12: Malformed #include directive
+```
+**Cause:** Incorrect syntax in preprocessor directive  
+**Solution:** Verify directive follows correct format (e.g., `#include "file.h"`)
+
+**Missing Macro Name:**
+```
+Error on line 8: #define missing macro name
+```
+**Cause:** `#define` directive without a macro name  
+**Solution:** Add macro name: `#define NAME value`
+
+**Unmatched #endif:**
+```
+Error on line 30: #endif without matching #ifdef
+```
+**Cause:** More `#endif` directives than `#ifdef` directives  
+**Solution:** Remove extra `#endif` or add missing `#ifdef`
+
+**Missing #endif:**
+```
+Error on line 100: Unterminated #ifdef at end of file
+```
+**Cause:** `#ifdef` block not closed with `#endif`  
+**Solution:** Add `#endif` to close all conditional blocks
+
+#### 8.3 Memory Errors
+
+**Out of Memory:**
+```
+Error on line 150: Out of memory
+```
+**Cause:** System ran out of available memory during processing  
+**Solution:** 
+- Process smaller files
+- Close other applications
+- Increase available system memory
+
+**Buffer Overflow:**
+```
+Error on line 75: Macro expansion failed
+```
+**Cause:** Macro value or expanded text exceeds internal limits  
+**Solution:** Reduce macro complexity or size
+
+### Error Behavior
+
+**Graceful Handling:**
+- P1PP continues processing after most errors
+- Multiple errors are reported in a single run
+- Error count is tracked throughout execution
+
+**Exit Codes:**
+- `0` - Success (no errors)
+- `1` - Errors occurred (check stderr for details)
+
+**Output on Error:**
+- Errors are written to **stderr** (standard error stream)
+- Partial output may be written to the output file
+- The output file may be incomplete if errors occurred
+
+---
+
+## 9. Limitations
+
+P1PP implements a **subset** of standard C preprocessor functionality. Understanding these limitations is important for effective use.
+
+### 9.1 Unsupported Preprocessor Directives
+
+The following standard C preprocessor directives are **not supported**:
+
+| Directive | Status | Behavior |
+|-----------|--------|----------|
+| `#include <...>` | Not supported | Left unchanged in output |
+| `#ifndef` | Not supported | Left unchanged in output |
+| `#else` | Not supported | Left unchanged in output |
+| `#elif` | Not supported | Left unchanged in output |
+| `#undef` | Not supported | Left unchanged in output |
+| `#pragma` | Not supported | Left unchanged in output |
+| `#error` | Not supported | Left unchanged in output |
+| `#warning` | Not supported | Left unchanged in output |
+| `#line` | Not supported | Left unchanged in output |
+
+**Note:** Unsupported directives are passed through to the output without processing or error messages.
+
+### 9.2 Macro Limitations
+
+**Function-Like Macros:**
+- **Not Supported:** Parametrized macros like `#define FUNC(x) ((x) * 2)`
+- **Behavior:** Definition is stored but parameters are not handled
+- **Workaround:** Use object-like macros only
+
+**Macro Features Not Implemented:**
+- `##` (token concatenation operator)
+- `#` (stringification operator)
+- Variadic macros (`...`)
+- Macro redefinition warnings
+- Recursive macro expansion protection
+
+**Macro Constraints:**
+- **Maximum macro name length:** 128 characters
+- **Maximum macro value length:** 512 characters
+- Exceeding these limits may cause truncation or errors
+
+### 9.3 Include Limitations
+
+**System Includes:**
+- Syntax `#include <stdio.h>` is **not processed**
+- These directives remain in the output unchanged
+
+**Include Behavior:**
+- Only local includes with quotes are supported: `#include "file.h"`
+- Relative paths are resolved from the input file's directory
+- No include guard detection
+- No circular include protection (may cause infinite loops)
+
+**Path Constraints:**
+- **Maximum path length:** 4096 characters
+- **Maximum include filename:** 256 characters
+
+### 9.4 Conditional Compilation Limitations
+
+**Supported:**
+- `#ifdef NAME` ... `#endif` (basic conditional inclusion)
+
+**Not Supported:**
+- `#ifndef` (inverse conditional)
+- `#else` (alternative branch)
+- `#elif` (else-if chain)
+- Expression evaluation in conditionals
+- Defined operator: `#if defined(NAME)`
+
+**Nesting Limit:**
+- **Maximum nesting depth:** 64 levels
+- Exceeding this limit may cause unpredictable behavior
+
+### 9.5 Comment Processing Limitations
+
+**Proper Handling:**
+- Single-line comments: `//`
+- Multi-line comments: `/* ... */`
+
+**Edge Cases:**
+- Comments in string literals are **not** protected (they are removed)
+- Comments in character literals may be incorrectly processed
+- Nested `/* /* */ */` comments are not handled correctly
+
+### 9.6 General Limitations
+
+**No Preprocessing Symbols:**
+- Predefined macros like `__FILE__`, `__LINE__`, `__DATE__` are not available
+
+**No Operator Support:**
+- The `defined` operator is not supported
+- Macro expansion does not handle operators
+
+**Single-Pass Processing:**
+- The preprocessor makes a single pass through the input
+- Some complex preprocessing scenarios may not work correctly
+
+**Character Encoding:**
+- Only ASCII and UTF-8 text files are supported
+- Other encodings may produce incorrect results
+
+**Line Number Preservation:**
+- Original line numbers are maintained by preserving newlines
+- No `#line` directives are generated in the output
+
+---
+
+## 10. Troubleshooting
+
+### 10.1 Build Issues
+
+#### Problem: CMake Configuration Fails
+
+**Symptoms:**
+```
+CMake Error: Could not find CMAKE_ROOT
+```
+
+**Solutions:**
+1. Verify CMake is installed:
+   ```bash
+   cmake --version
+   ```
+2. Ensure CMake version is 3.10 or higher
+3. Reinstall CMake if necessary
+
+#### Problem: Compiler Not Found
+
+**Symptoms:**
+```
+CMake Error: CMAKE_C_COMPILER not set
+```
+
+**Solutions:**
+1. Install GCC compiler:
+   ```bash
+   # On MSYS2
+   pacman -S mingw-w64-ucrt-x86_64-gcc
+   
+   # On Ubuntu/Debian
+   sudo apt-get install gcc
+   
+   # On macOS
+   xcode-select --install
+   ```
+
+2. Verify compiler is in PATH:
+   ```bash
+   gcc --version
+   ```
+
+#### Problem: Build Fails with Linking Errors
+
+**Symptoms:**
+```
+undefined reference to `buffer_init'
+```
+
+**Solutions:**
+1. Clean and rebuild:
+   ```bash
+   cd build
+   rm -rf *
+   cmake ..
+   cmake --build .
+   ```
+
+2. Verify all source files are present in `src/` directory
+
+### 10.2 Runtime Issues
+
+#### Problem: "Command not found"
+
+**Symptoms:**
+```bash
+./modules_template_main input.c
+bash: ./modules_template_main: No such file or directory
+```
+
+**Solutions:**
+1. Verify you're in the correct directory (should contain the executable)
+2. Check the executable name matches your platform:
+   - Windows: `modules_template_main.exe`
+   - Linux/Mac: `modules_template_main`
+3. Build the project if not already done
+
+#### Problem: Input File Not Found
+
+**Symptoms:**
+```
+Error: Unable to read input file "test.c"
+```
+
+**Solutions:**
+1. Verify file exists:
+   ```bash
+   ls test.c
+   ```
+2. Check file permissions:
+   ```bash
+   chmod +r test.c
+   ```
+3. Use absolute path or correct relative path
+4. Verify file extension is `.c` or `.h`
+
+#### Problem: No Output Generated
+
+**Symptoms:**
+- Program runs but no `_pp.c` file is created
+
+**Solutions:**
+1. Check for error messages in the console
+2. Verify write permissions in the output directory
+3. Check disk space availability
+4. Look for the output file in the same directory as input:
+   ```bash
+   ls -la *_pp.c
+   ```
+
+#### Problem: Output File is Empty or Incorrect
+
+**Symptoms:**
+- Output file created but contains no content or wrong content
+
+**Solutions:**
+1. Verify correct flags are used:
+   ```bash
+   # For comment removal only
+   ./modules_template_main -c input.c
+   
+   # For full preprocessing
+   ./modules_template_main -all input.c
+   ```
+
+2. Check input file is valid C source code
+3. Review error messages for preprocessing failures
+4. Test with a simple input file first
+
+### 10.3 Preprocessing Issues
+
+#### Problem: Macros Not Expanded
+
+**Symptoms:**
+- Macro names appear in output instead of their values
+
+**Solutions:**
+1. Ensure `-d` or `-all` flag is used:
+   ```bash
+   ./modules_template_main -d input.c
+   ```
+2. Verify macro is defined before use with `#define`
+3. Check macro name doesn't exceed 128 characters
+4. Verify macro value doesn't exceed 512 characters
+
+#### Problem: Comments Still Visible in Output
+
+**Symptoms:**
+- Comments remain in the `_pp.c` file
+
+**Solutions:**
+1. Verify `-c` flag is active (it's default if no flags provided)
+2. If using `-d` alone, comments are preserved; use `-all` instead:
+   ```bash
+   ./modules_template_main -all input.c
+   ```
+
+#### Problem: Include Files Not Found
+
+**Symptoms:**
+```
+Error on line 1: Could not open include file "header.h"
+```
+
+**Solutions:**
+1. Verify included file exists in the same directory as input file
+2. Use correct relative path in `#include` directive
+3. Check filename spelling and case (case-sensitive on Linux/Mac)
+4. Verify file permissions allow reading
+5. Remember: system includes `<...>` are not supported
+
+#### Problem: Circular Include Loop
+
+**Symptoms:**
+- Program hangs or crashes
+- Memory usage grows rapidly
+- Stack overflow error
+
+**Solutions:**
+1. P1PP does **not** detect circular includes
+2. Add include guards manually to header files:
+   ```c
+   #ifndef HEADER_H
+   #define HEADER_H
+   
+   // header content
+   
+   #endif
+   ```
+3. Restructure includes to avoid circular dependencies
+
+#### Problem: #ifdef Blocks Behaving Incorrectly
+
+**Symptoms:**
+- Code included when it should be excluded, or vice versa
+
+**Solutions:**
+1. Verify the macro is defined before `#ifdef`:
+   ```c
+   #define DEBUG
+   #ifdef DEBUG
+       // This will be included
+   #endif
+   ```
+
+2. Remember: `#ifndef` is not supported, use `#ifdef` only
+3. Ensure all `#ifdef` blocks have matching `#endif`
+4. Check nesting doesn't exceed 64 levels
+
+### 10.4 Common Usage Mistakes
+
+#### Mistake: Wrong Flag Combination
+
+**Incorrect:**
+```bash
+./modules_template_main -c -d input.c    # Works but redundant
+```
+
+**Correct:**
+```bash
+./modules_template_main -all input.c     # Cleaner equivalent
+```
+
+#### Mistake: Trying to Use System Includes
+
+**Incorrect:**
+```c
+#include <stdio.h>    // Not supported
+```
+
+**Correct:**
+```c
+// Either accept it remains unprocessed, or
+// Create local header files instead
+#include "mystdio.h"
+```
+
+#### Mistake: Using Function-Like Macros
+
+**Incorrect:**
+```c
+#define SQUARE(x) ((x) * (x))    // Not fully supported
+```
+
+**Correct:**
+```c
+#define MAX_SIZE 100             // Use object-like macros
+```
+
+### 10.5 Getting Help
+
+If you encounter issues not covered here:
+
+1. **Check error messages carefully** - they usually indicate the problem
+2. **Review the input file** - ensure it's valid C syntax
+3. **Test with simplified input** - isolate the problematic section
+4. **Check the examples** - compare with working examples in Section 6
+5. **Verify build environment** - ensure all prerequisites are installed
+6. **Review limitations** - the issue may be due to unsupported features (Section 9)
+
+**For course-related help:**
+- Consult the course instructor or teaching assistants
+- Review the `COMP_P1PP_handout.txt` document
+- Check the README.md for internal design details
+
+---
+
+## Appendix: Quick Reference
+
+### Command Summary
+
+```bash
+# Show help
+./modules_template_main -help
+
+# Remove comments only (default)
+./modules_template_main input.c
+./modules_template_main -c input.c
+
+# Process directives and macros only (keeps comments)
+./modules_template_main -d input.c
+
+# Full preprocessing (comments + directives + macros)
+./modules_template_main -all input.c
+```
+
+### Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success |
+| 1 | Errors occurred |
+
+### File Extensions
+
+| Input | Output |
+|-------|--------|
+| `file.c` | `file_pp.c` |
+| `file.h` | `file_pp.h` |
+
+### Maximum Limits
+
+| Limit | Value |
+|-------|-------|
+| Macro name length | 128 characters |
+| Macro value length | 512 characters |
+| Include path length | 4096 characters |
+| Include filename | 256 characters |
+| `#ifdef` nesting depth | 64 levels |
+
+---
+
+**End of User Manual**
