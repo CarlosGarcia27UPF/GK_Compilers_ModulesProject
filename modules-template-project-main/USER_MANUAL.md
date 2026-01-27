@@ -8,7 +8,7 @@
 ---
 
 ## Table of Contents
-1. [Introduction](#introduction)
+1. [Introduction](#Introduction)
 2. [Installation](#installation)
 3. [Quick Start](#quick-start)
 4. [Command-Line Usage](#command-line-usage)
