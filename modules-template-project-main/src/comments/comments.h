@@ -8,6 +8,8 @@
  *  - Each comment is replaced by a single space ' '.
  *  - Newlines are preserved (including newlines inside block comments).
  *  - Comment markers inside string/char literals are ignored.
+ * 
+ * Author: Francesc Baiget Altemir
  * -------------------------------------------------------------------------- */
 
 #ifndef COMMENTS_H

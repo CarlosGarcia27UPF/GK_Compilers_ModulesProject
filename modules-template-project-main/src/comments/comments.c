@@ -2,6 +2,8 @@
  * comments.c
  *
  * Module: comments - Comment removal
+ * 
+ * Author: Francesc Baiget Altemir
  * -------------------------------------------------------------------------- */
 
 #include "comments.h"
