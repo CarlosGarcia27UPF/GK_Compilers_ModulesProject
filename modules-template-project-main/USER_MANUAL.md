@@ -9,15 +9,15 @@
 
 ## Table of Contents
 1. [Introduction](#1-introduction)
-2. [Installation](#installation)
-3. [Quick Start](#quick-start)
-4. [Command-Line Usage](#command-line-usage)
-5. [Features](#features)
-6. [Examples](#examples)
-7. [Input/Output Files](#inputoutput-files)
-8. [Error Handling](#error-handling)
-9. [Limitations](#limitations)
-10. [Troubleshooting](#troubleshooting)
+2. [Installation](#2-installation)
+3. [Quick Start](#3-quick-start)
+4. [Command-Line Usage](#4-command-line-usage)
+5. [Features](#5-features)
+6. [Examples](#6-examples)
+7. [Input/Output Files](#7-inputoutput-files)
+8. [Error Handling](#8-error-handling)
+9. [Limitations](#9-limitations)
+10. [Troubleshooting](#10-troubleshooting)
 
 ---
 
