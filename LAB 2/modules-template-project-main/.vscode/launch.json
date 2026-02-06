@@ -1,0 +1,122 @@
+{
+  // -----------------------------------------------------------------------------
+  // launch.json
+  // VS Code Debugging Configuration for CMake-built C/C++ Projects with GDB
+  // 
+  // This configuration allows debugging:
+  // - The main application (modules_template_main.exe)
+  // - Each module’s test executable (e.g., test_module1.exe, test_module2.exe)
+  //
+  // GDB is used from MSYS2 (UCRT64) toolchain.
+  // The "args" field can be edited to test with different program arguments.
+  // -----------------------------------------------------------------------------
+
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug main modules_template (GDB)",
+      "type": "cppdbg",
+      "request": "launch",
+
+      // Path to the executable built by CMake
+      "program": "${workspaceFolder}/build/modules_template_main.exe",
+
+      // Command-line arguments to the program (leave empty or edit)
+      "args": ["mainarg1dbg", "mainarg2dbg"],
+
+      // If true, stop at main before executing
+      "stopAtEntry": false,
+
+      // Working directory when the program runs
+      "cwd": "${workspaceFolder}",
+
+      // Environment variables for the debug session
+      "environment": [],
+
+      // If true, opens an external console; set false for integrated terminal
+      "externalConsole": true,
+
+      // Use GDB for debugging (MinGW or MSYS2-compatible)
+      "MIMode": "gdb",
+
+      // Path to the GDB executable
+      "miDebuggerPath": "C:/MyPrograms/msys64/ucrt64/bin/gdb.exe",
+
+      // Opens the integrated debug console automatically when debugging starts,
+      // so you can immediately see program output and interact if needed.
+      "internalConsoleOptions": "openOnSessionStart",
+     
+      // Runs the 'build' task (usually CMake build) automatically before starting the debugger.
+      // Ensures the executable is up to date before debugging begins.
+      "preLaunchTask": "Build project modules-template",
+
+      // Enables better formatting of variables in debug view
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for GDB",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+
+      // Optional: minimal logging; enable for debug of launch issues
+      "logging": {
+        "engineLogging": false
+      }
+    },
+    {
+      "name": "Debug test_module_args (GDB)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/tests/test_module_args.exe",
+      "args": ["modargs_arg1dbg", "modargs_arg2dbg", "modargs_arg3dbg"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/MyPrograms/msys64/ucrt64/bin/gdb.exe",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "Build project modules-template",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+ 
+      // Optional: minimal logging; enable for debug of launch issues
+      "logging": {
+        "engineLogging": true // turn it to false for less verbosity
+      }
+    },
+    {
+      "name": "Debug test_module_2 (GDB)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/tests/test_module_2.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb",
+      "miDebuggerPath": "C:/MyPrograms/msys64/ucrt64/bin/gdb.exe",
+      "internalConsoleOptions": "openOnSessionStart",
+      "preLaunchTask": "Build project modules-template",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+
+      // Optional: minimal logging; enable for debug of launch issues
+      "logging": {
+        "engineLogging": false
+      }
+    }
+  ]
+}
