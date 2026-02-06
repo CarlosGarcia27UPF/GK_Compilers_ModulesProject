@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmacros.a CMakeFiles/macros.dir/macros.c.o
-/usr/bin/ranlib libmacros.a

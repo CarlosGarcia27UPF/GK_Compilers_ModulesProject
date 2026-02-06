@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmodule_2.a CMakeFiles/module_2.dir/module_2.c.o
-/usr/bin/ranlib libmodule_2.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcomments.a CMakeFiles/comments.dir/comments.c.o
-/usr/bin/ranlib libcomments.a

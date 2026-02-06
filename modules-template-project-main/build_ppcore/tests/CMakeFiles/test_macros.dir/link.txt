@@ -1,1 +1,0 @@
-/usr/bin/cc -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_macros.dir/test_macros.c.o -o test_macros  ../src/macros/libmacros.a ../src/tokens/libtokens.a ../src/buffer/libbuffer.a ../src/libutils.a
