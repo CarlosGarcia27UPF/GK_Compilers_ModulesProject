@@ -49,9 +49,5 @@ message(STATUS " - (${PROJECT_NAME}) Added src/ directory")
 add_subdirectory(tests)
 message(STATUS " - (${PROJECT_NAME}) Added tests/ directory")
 
-# Optionally build main executable if needed 
-# This executable links together all module libraries.
-# (to have modular test for each module in parallel)
-add_executable(modules_template_main src/main.c)
-target_link_libraries(modules_template_main PRIVATE module_args module_2 utils)
-message(STATUS " - (${PROJECT_NAME}) Modules Template Main executable 'modules_template_main' linked with module_args and module_2")
+# Main executable is now defined in src/CMakeLists.txt
+message(STATUS " - (${PROJECT_NAME}) Main executable 'modules_template_main' configured in src/")

@@ -1,4 +1,4 @@
-#include "./main.h"
+#include "./utils_files.h"
  
 void split_path(const char *fullpath, char *path, char *filename, char *extension) {
     const char *last_slash = strrchr(fullpath, '/');
@@ -44,7 +44,7 @@ void generate_timestamped_log_filename(const char* base_name, char* output, size
              filename,
              extension);
 
-    fprintf(ofile, "Generated log filename (with time stamp): %s\n", output);
+    printf("Generated log filename (with time stamp): %s\n", output);
 
 }
 
@@ -63,9 +63,9 @@ FILE* set_output_test_file(const char* filename) {
         // (i.e. fake it as GMT-3 if Madrid is in GMT+2 summer time)
         // When run in github actions the server is in another time zone
         // We want timestamp related to our time
-        _putenv("TZ=GMT-2");
-        //_putenv("TZ=Europe/Madrid");
-        _tzset();
+        putenv("TZ=GMT-2");
+        //putenv("TZ=Europe/Madrid");
+        tzset();
         generate_timestamped_log_filename(filename, timestamped_filename, sizeof(timestamped_filename));
         filename = timestamped_filename;
 
