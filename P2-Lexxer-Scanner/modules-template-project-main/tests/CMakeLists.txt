@@ -23,10 +23,9 @@ add_test(NAME TestModule_2 COMMAND test_module_2)
 message(STATUS " - (${PROJECT_NAME}) Test for module_2 added")
 
 # ===== SCANNER/LEXER TESTS =====
-# Test for P2 scanner (using new module structure)
-add_executable(test_scanner test_scanner_new.c)
+# Test for P2 scanner (lexical analysis)
+add_executable(test_scanner test_scanner.c)
 target_link_libraries(test_scanner PRIVATE 
-    driver
     automata
     token_list
     token
@@ -34,7 +33,7 @@ target_link_libraries(test_scanner PRIVATE
     lang_spec
     out_writer
     logger
-    error
+    error_mod
     counter
 )
 target_include_directories(test_scanner PRIVATE ${PROJECT_SOURCE_DIR}/src)

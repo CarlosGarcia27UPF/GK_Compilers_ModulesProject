@@ -1,11 +1,22 @@
-#ifndef MODULE1_H
-#define MODULE1_H
+/*
+ * -----------------------------------------------------------------------------
+ * module_2.h
+ *
+ * Public interface for the template Fibonacci function.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
+ */
+
+#ifndef MODULE_2_H
+#define MODULE_2_H
 
 #include "../main.h"
 
-#define FIBNUM 4 // A number to use in real program (not for testing)
+// Default Fibonacci number used by template flows.
+#define FIBNUM 4
 
 int fib(int n);
 
-#endif
+#endif /* MODULE_2_H */
  

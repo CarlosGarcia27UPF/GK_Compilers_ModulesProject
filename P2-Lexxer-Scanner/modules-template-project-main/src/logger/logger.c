@@ -1,96 +1,47 @@
-/**
- * @file logger.c
- * @brief Logger Module Implementation - STUB
- * 
- * TODO: This is a STUB - implement full functionality
+/*
+ * -----------------------------------------------------------------------------
+ * logger.c
+ *
+ * Logger implementation. Routes messages through fprintf to either
+ * stdout or the output file based on the DEBUG_FLAG compile-time setting.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #include "logger.h"
 #include <stdarg.h>
 
-/* Global logger state */
-static FILE* g_log_output = NULL;
-static bool g_debug_enabled = false;
-
-void logger_init(FILE* output, bool debug_enabled) {
-    g_log_output = (output != NULL) ? output : stdout;
-    g_debug_enabled = debug_enabled;
-    
-    printf("[LOGGER STUB] Logger initialized (debug=%s)\n", 
-           debug_enabled ? "ON" : "OFF");
-}
-
-void logger_log(LogLevel level, const char* format, ...) {
-    if (g_log_output == NULL) g_log_output = stdout;
-    
-    /* Skip debug if not enabled */
-    if (level == LOG_DEBUG && !g_debug_enabled) return;
-    
-    const char* prefix;
-    switch (level) {
-        case LOG_DEBUG:   prefix = "[DEBUG]"; break;
-        case LOG_INFO:    prefix = "[INFO]"; break;
-        case LOG_WARNING: prefix = "[WARN]"; break;
-        case LOG_ERROR:   prefix = "[ERROR]"; break;
-        default:          prefix = "[???]"; break;
+// Chooses logger destination based on DEBUG_FLAG.
+void logger_init(logger_t *lg, FILE *outfile) {
+    if (lg == NULL) {
+        return;
     }
-    
-    fprintf(g_log_output, "%s ", prefix);
-    
-    va_list args;
-    va_start(args, format);
-    vfprintf(g_log_output, format, args);
-    va_end(args);
-    
-    fprintf(g_log_output, "\n");
+    if (DEBUG_FLAG == DEBUG_ON && outfile != NULL) {
+        lg->dest = outfile;
+    } else {
+        lg->dest = stdout;
+    }
 }
 
-void logger_debug(const char* format, ...) {
-    if (!g_debug_enabled) return;
-    if (g_log_output == NULL) g_log_output = stdout;
-    
-    fprintf(g_log_output, "[DEBUG] ");
-    va_list args;
-    va_start(args, format);
-    vfprintf(g_log_output, format, args);
-    va_end(args);
-    fprintf(g_log_output, "\n");
+// Returns current destination stream.
+FILE* logger_get_dest(const logger_t *lg) {
+    if (lg == NULL || lg->dest == NULL) {
+        return stdout;
+    }
+    return lg->dest;
 }
 
-void logger_info(const char* format, ...) {
-    if (g_log_output == NULL) g_log_output = stdout;
-    
-    fprintf(g_log_output, "[INFO] ");
+// Writes one formatted message.
+void logger_write(const logger_t *lg, const char *fmt, ...) {
     va_list args;
-    va_start(args, format);
-    vfprintf(g_log_output, format, args);
-    va_end(args);
-    fprintf(g_log_output, "\n");
-}
+    FILE *dest = logger_get_dest(lg);
 
-void logger_warn(const char* format, ...) {
-    if (g_log_output == NULL) g_log_output = stdout;
-    
-    fprintf(g_log_output, "[WARN] ");
-    va_list args;
-    va_start(args, format);
-    vfprintf(g_log_output, format, args);
-    va_end(args);
-    fprintf(g_log_output, "\n");
-}
+    if (fmt == NULL) {
+        return;
+    }
 
-void logger_error(const char* format, ...) {
-    if (g_log_output == NULL) g_log_output = stdout;
-    
-    fprintf(g_log_output, "[ERROR] ");
-    va_list args;
-    va_start(args, format);
-    vfprintf(g_log_output, format, args);
+    va_start(args, fmt);
+    vfprintf(dest, fmt, args);
     va_end(args);
-    fprintf(g_log_output, "\n");
-}
-
-void logger_close(void) {
-    printf("[LOGGER STUB] Logger closed\n");
-    g_log_output = NULL;
 }

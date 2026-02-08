@@ -1,20 +1,36 @@
+/*
+ * -----------------------------------------------------------------------------
+ * utils_files.h
+ *
+ * Shared helpers for timestamped log filenames used by template tests/modules.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
+ */
+
 #ifndef UTILS_FILES_H
 #define UTILS_FILES_H
- 
+
 #include <stdio.h>
-#include <stdlib.h>     // To set env for time zone
-#include <string.h>     // For filename manipulation    
-#include <time.h>       // For time-stamp of output logs filenames
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-// Global defines
-#define MAXFILENAME 256 // Maximum length of the filename for output logs
-#define MAXFILEEXT 64   // Maximum length of the file extension
+// Max output filename length for generated logs.
+#define MAXFILENAME 256
+// Max extension length extracted from a filename.
+#define MAXFILEEXT 64
+// Directory used by CI/local runs for generated logs.
+#define PATHDIRLOGS "./logs/"
+// Default log extension when none is provided.
+#define DEFAULT_LOG_EXT "log"
+// Special stdout selector used by set_output_test_file.
+#define OUTPUT_STDOUT_NAME "stdout"
+// Timezone used to make CI timestamps predictable.
+#define FIXED_TZ "TZ=GMT-2"
+// File open mode for appending logs.
+#define LOG_APPEND_MODE "a"
 
-// Path to the logs directory: put your full path, the directory has to exist
-//#define PATHDIRLOGS "I:/Mi unidad/UPFdrive/docencia/github/compilers/modules_template/logs/" 
-#define PATHDIRLOGS "./logs/" // For running yml
-
-// Function prototypes
 FILE* set_output_test_file(const char* filename);
 
-#endif // UTILS_FILES_H
+#endif /* UTILS_FILES_H */

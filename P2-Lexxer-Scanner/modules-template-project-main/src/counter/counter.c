@@ -1,76 +1,55 @@
-/**
- * @file counter.c
- * @brief Counter Module Implementation - STUB
- * 
- * TODO: This is a STUB - implement full functionality
+/*
+ * -----------------------------------------------------------------------------
+ * counter.c
+ *
+ * Counter implementation. Increments and prints operation counts.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #include "counter.h"
-#include <stdio.h>
-#include <string.h>
 
-/* Global state */
-static bool g_enabled = false;
-static int g_counters[CNT_COUNT];
-
-/* Counter names */
-static const char* COUNTER_NAMES[] = {
-    "Total Tokens",
-    "Numbers",
-    "Identifiers",
-    "Keywords",
-    "Literals",
-    "Operators",
-    "Special Chars",
-    "Non-Recognized",
-    "Errors",
-    "Lines"
-};
-
-void counter_init(bool enabled) {
-    g_enabled = enabled;
-    memset(g_counters, 0, sizeof(g_counters));
-    printf("[COUNTER STUB] Counter module initialized (enabled=%s)\n", 
-           enabled ? "YES" : "NO");
-}
-
-void counter_increment(CounterID counter_id) {
-    if (!g_enabled) return;
-    if (counter_id < 0 || counter_id >= CNT_COUNT) return;
-    g_counters[counter_id]++;
-}
-
-void counter_add(CounterID counter_id, int value) {
-    if (!g_enabled) return;
-    if (counter_id < 0 || counter_id >= CNT_COUNT) return;
-    g_counters[counter_id] += value;
-}
-
-int counter_get(CounterID counter_id) {
-    if (counter_id < 0 || counter_id >= CNT_COUNT) return 0;
-    return g_counters[counter_id];
-}
-
-void counter_print_all(void) {
-    if (!g_enabled) {
-        printf("[COUNTER STUB] Counting disabled\n");
+// Zeros all counters.
+void counter_init(counter_t *cnt) {
+    if (cnt == NULL) {
         return;
     }
-    
-    printf("\n=== COUNTERS ===\n");
-    for (int i = 0; i < CNT_COUNT; i++) {
-        printf("  %s: %d\n", COUNTER_NAMES[i], g_counters[i]);
-    }
-    printf("================\n");
+    cnt->comp = 0;
+    cnt->io = 0;
+    cnt->gen = 0;
 }
 
-void counter_reset(void) {
-    memset(g_counters, 0, sizeof(g_counters));
+// Adds to comparison counter.
+void counter_add_comp(counter_t *cnt, long amount) {
+    if (cnt == NULL) {
+        return;
+    }
+    cnt->comp += amount;
 }
 
-void counter_close(void) {
-    printf("[COUNTER STUB] Counter module closed\n");
-    if (g_enabled) {
-        counter_print_all();
+// Adds to I/O counter.
+void counter_add_io(counter_t *cnt, long amount) {
+    if (cnt == NULL) {
+        return;
     }
+    cnt->io += amount;
+}
+
+// Adds to general counter.
+void counter_add_gen(counter_t *cnt, long amount) {
+    if (cnt == NULL) {
+        return;
+    }
+    cnt->gen += amount;
+}
+
+// Prints counter summary.
+void counter_print(const counter_t *cnt, FILE *dest, const char *func_name,
+                   int line) {
+    if (cnt == NULL || dest == NULL || func_name == NULL) {
+        return;
+    }
+    fprintf(dest, "[COUNTER] Line %d | Func: %s | COMP=%ld IO=%ld GEN=%ld\n",
+            line, func_name, cnt->comp, cnt->io, cnt->gen);
 }

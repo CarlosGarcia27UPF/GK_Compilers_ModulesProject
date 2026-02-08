@@ -1,80 +1,80 @@
-/**
- * @file counter.h
- * @brief Counter Module (COUNTCONFIG) - STUB
- * 
- * ===============================================
- * COUNTER - COUNTCONFIG
- * ===============================================
- * 
- * Per-function & global totals tracking.
- * Compiles out when disabled.
- * 
- * Called by: driver, automata
- * Calls into: logger
- * 
- * TODO: This is a STUB - implement full functionality
+/*
+ * -----------------------------------------------------------------------------
+ * counter.h
+ *
+ * Operation counting system controlled by preprocessor flags.
+ * When COUNTCONFIG is defined, the macros expand to increment calls;
+ * otherwise they compile to nothing (zero overhead in RELEASE).
+ *
+ * Counters:
+ *   COUNTCOMP - number of comparisons
+ *   COUNTIO   - number of I/O characters read/written
+ *   COUNTGEN  - general instruction count
+ *
+ * Output controlled by COUNTOUT:
+ *   OUT=1  -> messages to output file
+ *   DBGCOUNT=0 -> messages to <filename>.<ext>dbgcnt file
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #ifndef COUNTER_H
 #define COUNTER_H
 
-#include <stdbool.h>
+#include <stdio.h>
 
-/* Counter IDs */
-typedef enum {
-    CNT_TOKENS_TOTAL,
-    CNT_NUMBERS,
-    CNT_IDENTIFIERS,
-    CNT_KEYWORDS,
-    CNT_LITERALS,
-    CNT_OPERATORS,
-    CNT_SPECIALCHARS,
-    CNT_NONRECOGNIZED,
-    CNT_ERRORS,
-    CNT_LINES,
-    /* Add more counters as needed */
-    CNT_COUNT
-} CounterID;
+// Counter state.
+typedef struct {
+    long comp;     // Comparison counter.
+    long io;       // I/O character counter.
+    long gen;      // General instruction counter.
+} counter_t;
 
-/**
- * @brief Initialize counter module
- * @param enabled Enable counting
- */
-void counter_init(bool enabled);
+// Count output routing configuration.
+#define COUNTOUT_STDOUT 0
+#define COUNTOUT_OUT    1
 
-/**
- * @brief Increment a counter
- * @param counter_id Counter to increment
- */
-void counter_increment(CounterID counter_id);
+#ifndef COUNTOUT
+#define COUNTOUT COUNTOUT_STDOUT
+#endif
 
-/**
- * @brief Increment counter by value
- * @param counter_id Counter to increment
- * @param value Value to add
- */
-void counter_add(CounterID counter_id, int value);
+#define COUNTFILE_DBGCNT 0
+#define COUNTFILE_OUTPUT 1
 
-/**
- * @brief Get counter value
- * @param counter_id Counter ID
- * @return Current value
- */
-int counter_get(CounterID counter_id);
+#ifndef COUNTFILE
+#define COUNTFILE COUNTFILE_DBGCNT
+#endif
 
-/**
- * @brief Print all counters
- */
-void counter_print_all(void);
+// Resets all counters to zero.
+void counter_init(counter_t *cnt);
 
-/**
- * @brief Reset all counters
- */
-void counter_reset(void);
+// Increments comparison counter.
+void counter_add_comp(counter_t *cnt, long amount);
 
-/**
- * @brief Close counter module
- */
-void counter_close(void);
+// Increments I/O counter.
+void counter_add_io(counter_t *cnt, long amount);
+
+// Increments general counter.
+void counter_add_gen(counter_t *cnt, long amount);
+
+// Prints current counter summary.
+void counter_print(const counter_t *cnt, FILE *dest, const char *func_name,
+                   int line);
+
+// Preprocessor macros for zero-overhead counting.
+#ifdef COUNTCONFIG
+
+#define CNT_COMP(cnt_ptr, n)  counter_add_comp((cnt_ptr), (n))
+#define CNT_IO(cnt_ptr, n)    counter_add_io((cnt_ptr), (n))
+#define CNT_GEN(cnt_ptr, n)   counter_add_gen((cnt_ptr), (n))
+
+#else
+
+#define CNT_COMP(cnt, n)  // no-op
+#define CNT_IO(cnt, n)    // no-op
+#define CNT_GEN(cnt, n)   // no-op
+
+#endif /* COUNTCONFIG */
 
 #endif /* COUNTER_H */

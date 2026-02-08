@@ -1,150 +1,120 @@
-/**
- * @file lang_spec.h
- * @brief Language Specification Module
- * 
- * ===============================================
- * LANG_SPEC - LANGUAGE DEFINITION
- * ===============================================
- * 
- * Single source of language constants. No dependencies.
- * 
- * This module defines:
- * - Character classification functions
- * - Keyword tables
- * - Category strings for output
- * - All language-specific constants
- * 
- * Called by: automata, out_writer
- * Calls into: — (no dependencies)
+/*
+ * -----------------------------------------------------------------------------
+ * lang_spec.h
+ *
+ * Language specification constants for the scanner.
+ * All language-dependent information is concentrated here so that
+ * the rest of the modules remain language-independent.
+ *
+ * Supported language (subset of C):
+ *   - Types: int, char, void (recognized as keywords)
+ *   - Keywords: if, else, while, return, int, char, void
+ *   - Operators: = > + *
+ *   - Special characters: ( ) ; { } [ ] ,
+ *   - Numbers: integers [0-9]+
+ *   - Identifiers: [A-Za-z][A-Za-z0-9]*  (not a keyword)
+ *   - Literals: "..." (double-quoted strings)
+ *   - Non-recognized: any unsupported lexeme
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #ifndef LANG_SPEC_H
 #define LANG_SPEC_H
 
-#include <stdbool.h>
-
-/* ======================= Token Categories ======================= */
-
+// Token category enumeration.
 typedef enum {
-    CAT_NUMBER,         /* [0-9]+ */
-    CAT_IDENTIFIER,     /* [A-Za-z][A-Za-z0-9]* */
-    CAT_KEYWORD,        /* if, else, while, return */
-    CAT_LITERAL,        /* "[^"]*" */
-    CAT_OPERATOR,       /* = > + * */
-    CAT_SPECIALCHAR,    /* ( ) ; { } [ ] , */
-    CAT_NONRECOGNIZED,  /* Invalid characters */
-    CAT_EOF,            /* End of file */
-    CAT_ERROR           /* Error token */
-} TokenCategory;
+    CAT_NUMBER       = 0,
+    CAT_IDENTIFIER   = 1,
+    CAT_KEYWORD      = 2,
+    CAT_LITERAL      = 3,
+    CAT_OPERATOR     = 4,
+    CAT_SPECIALCHAR  = 5,
+    CAT_NONRECOGNIZED = 6,
+    CAT_COUNT        = 7   // Total number of categories.
+} token_category_t;
 
-/* ======================= Keyword Types ======================= */
+// Category name strings.
+#define CAT_NAME_NUMBER        "CAT_NUMBER"
+#define CAT_NAME_IDENTIFIER    "CAT_IDENTIFIER"
+#define CAT_NAME_KEYWORD       "CAT_KEYWORD"
+#define CAT_NAME_LITERAL       "CAT_LITERAL"
+#define CAT_NAME_OPERATOR      "CAT_OPERATOR"
+#define CAT_NAME_SPECIALCHAR   "CAT_SPECIALCHAR"
+#define CAT_NAME_NONRECOGNIZED "CAT_NONRECOGNIZED"
 
-typedef enum {
-    KW_IF,
-    KW_ELSE,
-    KW_WHILE,
-    KW_RETURN,
-    KW_NONE  /* Not a keyword */
-} KeywordType;
+// Keywords.
+#define NUM_KEYWORDS 7
 
-/* ======================= Constants ======================= */
+#define KW_IF     "if"
+#define KW_ELSE   "else"
+#define KW_WHILE  "while"
+#define KW_RETURN "return"
+#define KW_INT    "int"
+#define KW_CHAR   "char"
+#define KW_VOID   "void"
 
-#define MAX_LEXEME_LEN 256
-#define NUM_KEYWORDS 4
+// Operators.
+#define OP_ASSIGN '='
+#define OP_GT     '>'
+#define OP_PLUS   '+'
+#define OP_STAR   '*'
+#define NUM_OPERATORS 4
 
-/* Keyword strings */
-extern const char* KEYWORDS[NUM_KEYWORDS];
+// Special characters.
+#define SC_LPAREN    '('
+#define SC_RPAREN    ')'
+#define SC_SEMICOLON ';'
+#define SC_LBRACE    '{'
+#define SC_RBRACE    '}'
+#define SC_LBRACKET  '['
+#define SC_RBRACKET  ']'
+#define SC_COMMA     ','
+#define NUM_SPECIALS 8
 
-/* ======================= Character Classification ======================= */
+// Literal delimiters.
+#define LIT_QUOTE '"'
 
-/**
- * @brief Check if character is a digit [0-9]
- * Part of Σ for NUMBER automaton
- */
-bool lang_is_digit(char c);
+// Whitespace delimiters.
+#define WS_SPACE  ' '
+#define WS_TAB    '\t'
+#define WS_CR     '\r'
+#define WS_NL     '\n'
 
-/**
- * @brief Check if character is a letter [A-Za-z]
- * Part of Σ for IDENTIFIER automaton
- */
-bool lang_is_letter(char c);
+// Max lexeme length.
+#define MAX_LEXEME_LEN 1024
 
-/**
- * @brief Check if character is letter or digit
- * Used in IDENTIFIER transitions
- */
-bool lang_is_letter_or_digit(char c);
+// Scanner output suffix.
+#define SCN_SUFFIX "scn"
 
-/**
- * @brief Check if character is an operator { =, >, +, * }
- * Σ for OPERATOR automaton
- */
-bool lang_is_operator(char c);
+// Debug count output suffix.
+#define DBGCNT_SUFFIX "dbgcnt"
 
-/**
- * @brief Check if character is a special character { (, ), ;, {, }, [, ], , }
- * Σ for SPECIALCHAR automaton
- */
-bool lang_is_special_char(char c);
+// Helper declarations.
 
-/**
- * @brief Check if character is whitespace { space, tab, newline, carriage return }
- */
-bool lang_is_whitespace(char c);
+// Returns printable category name.
+const char* ls_get_category_name(token_category_t cat);
 
-/**
- * @brief Check if character is a double quote
- * Start of LITERAL automaton
- */
-bool lang_is_quote(char c);
+// Returns 1 for exact keyword matches.
+int ls_is_keyword(const char *lexeme);
 
-/**
- * @brief Check if character is EOF marker
- */
-bool lang_is_eof(char c);
+// Returns 1 for operators.
+int ls_is_operator(char ch);
 
-/**
- * @brief Check if character can start a valid token
- * Used for NON_RECOGNIZED detection
- */
-bool lang_is_valid_token_start(char c);
+// Returns 1 for special characters.
+int ls_is_special_char(char ch);
 
-/**
- * @brief Check if character is non-recognized
- * Characters that cannot start any valid token
- */
-bool lang_is_non_recognized(char c);
+// Returns 1 for whitespace delimiters.
+int ls_is_whitespace(char ch);
 
-/* ======================= Keyword Functions ======================= */
+// Returns 1 for letters.
+int ls_is_letter(char ch);
 
-/**
- * @brief Check if lexeme is a keyword
- * @param lexeme The string to check
- * @return KeywordType (KW_NONE if not a keyword)
- */
-KeywordType lang_get_keyword_type(const char* lexeme);
+// Returns 1 for digits.
+int ls_is_digit(char ch);
 
-/**
- * @brief Check if lexeme is a keyword (boolean)
- * @param lexeme The string to check
- * @return true if lexeme is a keyword
- */
-bool lang_is_keyword(const char* lexeme);
-
-/* ======================= Category Strings ======================= */
-
-/**
- * @brief Get string representation of token category
- * @param category The token category
- * @return String name (e.g., "NUMBER", "IDENTIFIER")
- */
-const char* lang_category_to_string(TokenCategory category);
-
-/**
- * @brief Get string representation of keyword type
- * @param kw The keyword type
- * @return Keyword string (e.g., "if", "while")
- */
-const char* lang_keyword_to_string(KeywordType kw);
+// Returns 1 for quote delimiter.
+int ls_is_quote(char ch);
 
 #endif /* LANG_SPEC_H */

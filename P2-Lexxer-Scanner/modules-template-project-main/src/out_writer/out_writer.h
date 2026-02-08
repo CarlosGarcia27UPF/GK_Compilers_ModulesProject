@@ -1,59 +1,56 @@
-/**
- * @file out_writer.h
- * @brief Output Writer Module (.cscn formatting) - STUB
- * 
- * ===============================================
- * OUT_WRITER - .CSCN FORMATTING
- * ===============================================
- * 
- * RELEASE/DEBUG formatting only. No scanning.
- * 
- * Called by: driver
- * Calls into: token, lang_spec, logger
- * 
- * TODO: This is a STUB - implement full functionality
+/*
+ * -----------------------------------------------------------------------------
+ * out_writer.h
+ *
+ * Output writer for the .cscn token file.
+ * Formats the token list into RELEASE or DEBUG format and writes it
+ * to <filename>.<ext>scn.
+ *
+ * RELEASE format:
+ *   - Tokens on same lines as source code lines, separated by single spaces.
+ *   - No empty lines in output.
+ *   - Format: <lexeme, CATEGORY> <lexeme, CATEGORY> ...
+ *
+ * DEBUG format:
+ *   - Same as RELEASE but each token line starts with the input line number.
+ *   - An empty line separates each token line.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #ifndef OUT_WRITER_H
 #define OUT_WRITER_H
 
-#include <stdio.h>
-#include <stdbool.h>
 #include "../token_list/token_list.h"
 
-/* Output modes */
-typedef enum {
-    OUT_MODE_RELEASE,   /* Release format */
-    OUT_MODE_DEBUG      /* Debug format with extra info */
-} OutputMode;
+// Output format options.
+#define OUTFORMAT_RELEASE 0
+#define OUTFORMAT_DEBUG   1
 
-/**
- * @brief Initialize output writer
- * @param output Output file
- * @param mode Output mode (RELEASE/DEBUG)
- */
-void out_writer_init(FILE* output, OutputMode mode);
+#ifndef OUTFORMAT
+#define OUTFORMAT OUTFORMAT_RELEASE  // default RELEASE format
+#endif
 
-/**
- * @brief Write tokens to output file
- * @param tokens Token list to write
- * @return true if successful
- */
-bool out_writer_write(const TokenList* tokens);
+// Token formatting delimiters.
+#define TOK_FMT_OPEN  '<'
+#define TOK_FMT_CLOSE '>'
+#define TOK_FMT_SEP   ','
+#define TOK_FMT_SPACE ' '
 
-/**
- * @brief Write header
- */
-void out_writer_header(void);
+// Builds output filename with .cscn pattern.
+void ow_build_output_filename(const char *input_filename, char *output_buf,
+                              int buf_len);
 
-/**
- * @brief Write footer
- */
-void out_writer_footer(void);
+// Builds count filename with .cdbgcnt pattern.
+void ow_build_count_filename(const char *input_filename, char *output_buf,
+                             int buf_len);
 
-/**
- * @brief Close output writer
- */
-void out_writer_close(void);
+// Writes token list to output file (overwrite mode).
+int ow_write_token_file(const token_list_t *tokens, const char *output_filename);
+
+// Writes token list with explicit append/overwrite mode.
+int ow_write_token_file_mode(const token_list_t *tokens,
+                             const char *output_filename, int append_mode);
 
 #endif /* OUT_WRITER_H */

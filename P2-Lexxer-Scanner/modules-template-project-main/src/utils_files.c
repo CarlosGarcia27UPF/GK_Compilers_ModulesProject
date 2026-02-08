@@ -1,88 +1,120 @@
-#include "./utils_files.h"
- 
-void split_path(const char *fullpath, char *path, char *filename, char *extension) {
-    const char *last_slash = strrchr(fullpath, '/');
-    const char *last_dot = strrchr(fullpath, '.');
+/*
+ * -----------------------------------------------------------------------------
+ * utils_files.c
+ *
+ * Utilities for creating timestamped log filenames and routing test output.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
+ */
 
-    if (last_slash) {
-        size_t path_len = last_slash - fullpath + 1;
-        strncpy(path, fullpath, path_len);
-        path[path_len] = '\0';
-        strcpy(filename, last_slash + 1);
-    } else {
-        path[0] = '\0';
-        strcpy(filename, fullpath);
+#include "./main.h"
+
+// Splits full path into path, base filename, and extension (without dot).
+static void split_path(const char *fullpath, char *path, char *filename,
+                       char *extension) {
+    const char *last_slash;
+    const char *base_name;
+    const char *last_dot;
+    size_t path_len;
+    size_t name_len;
+
+    if (fullpath == NULL || path == NULL || filename == NULL || extension == NULL) {
+        return;
     }
 
-    if (last_dot && last_dot > last_slash) {
-        strcpy(extension, last_dot + 1);
-        filename[last_dot - last_slash - 1] = '\0';  // remove extension from filename
+    last_slash = strrchr(fullpath, '/');
+    if (last_slash != NULL) {
+        path_len = (size_t)(last_slash - fullpath + 1);
+        strncpy(path, fullpath, path_len);
+        path[path_len] = '\0';
+        base_name = last_slash + 1;
     } else {
+        path[0] = '\0';
+        base_name = fullpath;
+    }
+
+    last_dot = strrchr(base_name, '.');
+    if (last_dot != NULL) {
+        name_len = (size_t)(last_dot - base_name);
+        strncpy(filename, base_name, name_len);
+        filename[name_len] = '\0';
+        strcpy(extension, last_dot + 1);
+    } else {
+        strcpy(filename, base_name);
         extension[0] = '\0';
     }
 }
 
-void generate_timestamped_log_filename(const char* base_name, char* output, size_t maxlen) {
-    time_t now = time(NULL);
-    struct tm* t = localtime(&now);
-    char path[MAXFILENAME], filename[MAXFILENAME], extension[MAXFILEEXT];
+// Creates: PATHDIRLOGS/yyyy_mm_dd_hh_mm_<base>.<ext>
+static void generate_timestamped_log_filename(const char* base_name, char* output,
+                                              size_t maxlen) {
+    time_t now;
+    struct tm *time_info;
+    char path[MAXFILENAME];
+    char filename[MAXFILENAME];
+    char extension[MAXFILEEXT];
+
+    if (base_name == NULL || output == NULL || maxlen == 0) {
+        return;
+    }
+
+    now = time(NULL);
+    time_info = localtime(&now);
+    if (time_info == NULL) {
+        output[0] = '\0';
+        return;
+    }
 
     split_path(base_name, path, filename, extension);
-
-    if(extension == NULL || strlen(extension) == 0) {
-        snprintf(extension, sizeof(extension), "log"); // Default extension if none provided
+    if (extension[0] == '\0') {
+        snprintf(extension, sizeof(extension), "%s", DEFAULT_LOG_EXT);
     }
 
-    // Format: yyyy_mm_dd_hh_mm_base
     snprintf(output, maxlen, "%s%04d_%02d_%02d_%02d_%02d_%s.%s",
-             PATHDIRLOGS, // path
-             t->tm_year + 1900,
-             t->tm_mon + 1,
-             t->tm_mday,
-             t->tm_hour,
-             t->tm_min, 
+             PATHDIRLOGS,
+             time_info->tm_year + 1900,
+             time_info->tm_mon + 1,
+             time_info->tm_mday,
+             time_info->tm_hour,
+             time_info->tm_min,
              filename,
              extension);
-
-    printf("Generated log filename (with time stamp): %s\n", output);
-
 }
 
-// Function to set the output file for test results
-// If the filename is "stdout", it will use stdout, otherwise it will open the specified filename
-// It adds the timestamp to the filename if it is not "stdout"
+// Returns stdout or an opened timestamped file for test output.
 FILE* set_output_test_file(const char* filename) {
-    FILE *ofile = stdout;
+    FILE *dest = stdout;
     char timestamped_filename[MAXFILENAME];
+    const char *display_name = filename;
 
-    if (strcmp(filename, "stdout") != 0) {
-        fprintf(ofile, "Machine remote time ");
-        generate_timestamped_log_filename(filename, timestamped_filename, sizeof(timestamped_filename));
+    if (filename == NULL) {
+        return stdout;
+    }
 
-        // Set the time zone to Europe/Madrid: 
-        // (i.e. fake it as GMT-3 if Madrid is in GMT+2 summer time)
-        // When run in github actions the server is in another time zone
-        // We want timestamp related to our time
-        putenv("TZ=GMT-2");
-        //putenv("TZ=Europe/Madrid");
+    if (strcmp(filename, OUTPUT_STDOUT_NAME) != 0) {
+#ifdef _WIN32
+        _putenv(FIXED_TZ);
+        _tzset();
+#else
+        putenv(FIXED_TZ);
         tzset();
-        generate_timestamped_log_filename(filename, timestamped_filename, sizeof(timestamped_filename));
-        filename = timestamped_filename;
-
-        ofile = fopen(filename, "a"); // Tasks can be fast, so they are appended to the same file if it is the same minute
-        if (ofile == NULL) {
-            fprintf(stderr, "Error opening output file %s. Check if subdirectory exists, otherwise create it and run again\n", filename);
-            ofile = stdout;
+#endif
+        generate_timestamped_log_filename(filename, timestamped_filename,
+                                          sizeof(timestamped_filename));
+        display_name = timestamped_filename;
+        dest = fopen(display_name, LOG_APPEND_MODE);
+        if (dest == NULL) {
+            fprintf(stderr, "Error opening output file %s\n", display_name);
+            dest = stdout;
+            display_name = OUTPUT_STDOUT_NAME;
         }
     }
-    if(ofile == stdout){
-        printf("See log of execution in stdout (filename %s)\n", filename);
-        fprintf(ofile, "See log of execution in stdout (filename %s)\n", filename);
-    }
-    else{
-        printf("See log of execution in file %s\n", filename);
-        fprintf(ofile, "See log of execution in file %s\n", filename);
-    }
-    fflush(ofile);
-    return ofile;
+
+    fprintf(stdout, "See log of execution in %s (filename %s)\n",
+            (dest == stdout) ? "stdout" : "file", display_name);
+    fprintf(dest, "See log of execution in %s (filename %s)\n",
+            (dest == stdout) ? "stdout" : "file", display_name);
+    fflush(dest);
+    return dest;
 }

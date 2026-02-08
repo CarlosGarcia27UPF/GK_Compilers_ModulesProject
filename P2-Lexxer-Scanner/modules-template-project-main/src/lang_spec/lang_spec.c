@@ -1,109 +1,127 @@
-/**
- * @file lang_spec.c
- * @brief Implementation of Language Specification Module
- * 
- * Single source of all language constants and character classification.
+/*
+ * -----------------------------------------------------------------------------
+ * lang_spec.c
+ *
+ * Implementation of language specification helpers.
+ * All language-dependent logic is concentrated here.
+ * Character-by-character keyword matching is used (no string library for
+ * recognition in the input stream, per handout requirement).
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #include "lang_spec.h"
-#include <string.h>
+#include <stddef.h>  // NULL
 
-/* ======================= Keyword Table ======================= */
-
-const char* KEYWORDS[NUM_KEYWORDS] = {
-    "if",
-    "else",
-    "while",
-    "return"
+// Category name lookup table.
+static const char *category_names[CAT_COUNT] = {
+    CAT_NAME_NUMBER,
+    CAT_NAME_IDENTIFIER,
+    CAT_NAME_KEYWORD,
+    CAT_NAME_LITERAL,
+    CAT_NAME_OPERATOR,
+    CAT_NAME_SPECIALCHAR,
+    CAT_NAME_NONRECOGNIZED
 };
 
-/* ======================= Character Classification ======================= */
+// Keyword table.
+static const char *keywords[NUM_KEYWORDS] = {
+    KW_IF,
+    KW_ELSE,
+    KW_WHILE,
+    KW_RETURN,
+    KW_INT,
+    KW_CHAR,
+    KW_VOID
+};
 
-bool lang_is_digit(char c) {
-    return c >= '0' && c <= '9';
-}
+// Operator table.
+static const char operators[NUM_OPERATORS] = {
+    OP_ASSIGN, OP_GT, OP_PLUS, OP_STAR
+};
 
-bool lang_is_letter(char c) {
-    return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_';
-}
+// Special-character table.
+static const char specials[NUM_SPECIALS] = {
+    SC_LPAREN, SC_RPAREN, SC_SEMICOLON, SC_LBRACE,
+    SC_RBRACE, SC_LBRACKET, SC_RBRACKET, SC_COMMA
+};
 
-bool lang_is_letter_or_digit(char c) {
-    return lang_is_letter(c) || lang_is_digit(c);
-}
-
-bool lang_is_operator(char c) {
-    return c == '=' || c == '>' || c == '<' || c == '+' || c == '-' || c == '*' || c == '/' || c == '!';
-}
-
-bool lang_is_special_char(char c) {
-    return c == '(' || c == ')' || c == ';' || 
-           c == '{' || c == '}' || c == '[' || 
-           c == ']' || c == ',';
-}
-
-bool lang_is_whitespace(char c) {
-    return c == ' ' || c == '\t' || c == '\n' || c == '\r';
-}
-
-bool lang_is_quote(char c) {
-    return c == '"';
-}
-
-bool lang_is_eof(char c) {
-    return c == '\0';
-}
-
-bool lang_is_valid_token_start(char c) {
-    return lang_is_digit(c) || lang_is_letter(c) || lang_is_quote(c) ||
-           lang_is_operator(c) || lang_is_special_char(c) || 
-           lang_is_whitespace(c) || lang_is_eof(c);
-}
-
-bool lang_is_non_recognized(char c) {
-    return !lang_is_valid_token_start(c);
-}
-
-/* ======================= Keyword Functions ======================= */
-
-KeywordType lang_get_keyword_type(const char* lexeme) {
-    if (lexeme == NULL) return KW_NONE;
-    
-    if (strcmp(lexeme, "if") == 0)     return KW_IF;
-    if (strcmp(lexeme, "else") == 0)   return KW_ELSE;
-    if (strcmp(lexeme, "while") == 0)  return KW_WHILE;
-    if (strcmp(lexeme, "return") == 0) return KW_RETURN;
-    
-    return KW_NONE;
-}
-
-bool lang_is_keyword(const char* lexeme) {
-    return lang_get_keyword_type(lexeme) != KW_NONE;
-}
-
-/* ======================= Category Strings ======================= */
-
-const char* lang_category_to_string(TokenCategory category) {
-    switch (category) {
-        case CAT_NUMBER:        return "NUMBER";
-        case CAT_IDENTIFIER:    return "IDENTIFIER";
-        case CAT_KEYWORD:       return "KEYWORD";
-        case CAT_LITERAL:       return "LITERAL";
-        case CAT_OPERATOR:      return "OPERATOR";
-        case CAT_SPECIALCHAR:   return "SPECIALCHAR";
-        case CAT_NONRECOGNIZED: return "NONRECOGNIZED";
-        case CAT_EOF:           return "EOF";
-        case CAT_ERROR:         return "ERROR";
-        default:                return "UNKNOWN";
+// Returns category display name.
+const char* ls_get_category_name(token_category_t cat) {
+    if (cat >= 0 && cat < CAT_COUNT) {
+        return category_names[cat];
     }
+    return CAT_NAME_NONRECOGNIZED;
 }
 
-const char* lang_keyword_to_string(KeywordType kw) {
-    switch (kw) {
-        case KW_IF:     return "if";
-        case KW_ELSE:   return "else";
-        case KW_WHILE:  return "while";
-        case KW_RETURN: return "return";
-        case KW_NONE:   return "";
-        default:        return "UNKNOWN";
+// Compares two null-terminated strings char by char.
+static int str_equal_charwise(const char *a, const char *b) {
+    if (a == NULL || b == NULL) {
+        return 0;
     }
+    int i = 0;
+    while (a[i] != '\0' && b[i] != '\0') {
+        if (a[i] != b[i]) {
+            return 0;
+        }
+        i++;
+    }
+    return (a[i] == '\0' && b[i] == '\0');
+}
+
+// Returns 1 when lexeme matches a keyword exactly.
+int ls_is_keyword(const char *lexeme) {
+    int k;
+    if (lexeme == NULL) {
+        return 0;
+    }
+    for (k = 0; k < NUM_KEYWORDS; k++) {
+        if (str_equal_charwise(lexeme, keywords[k])) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Returns 1 for supported operators.
+int ls_is_operator(char ch) {
+    int i;
+    for (i = 0; i < NUM_OPERATORS; i++) {
+        if (ch == operators[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Returns 1 for supported special characters.
+int ls_is_special_char(char ch) {
+    int i;
+    for (i = 0; i < NUM_SPECIALS; i++) {
+        if (ch == specials[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Returns 1 for whitespace delimiters.
+int ls_is_whitespace(char ch) {
+    return (ch == WS_SPACE || ch == WS_TAB || ch == WS_CR || ch == WS_NL);
+}
+
+// Returns 1 for [A-Za-z].
+int ls_is_letter(char ch) {
+    return ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z'));
+}
+
+// Returns 1 for [0-9].
+int ls_is_digit(char ch) {
+    return (ch >= '0' && ch <= '9');
+}
+
+// Returns 1 for literal quote delimiter.
+int ls_is_quote(char ch) {
+    return (ch == LIT_QUOTE);
 }

@@ -1,72 +1,44 @@
-/**
- * @file logger.h
- * @brief Logger Module (Debug Router) - STUB
- * 
- * ===============================================
- * LOGGER - DEBUG ROUTER
- * ===============================================
- * 
- * Centralized routing via fprintf.
- * Routes messages to stdout/file/dbgcnt based on config.
- * 
- * Called by: driver, automata, error, counter, out_writer
- * Calls into: stdout / files
- * 
- * TODO: This is a STUB - implement full functionality
+/*
+ * -----------------------------------------------------------------------------
+ * logger.h
+ *
+ * Centralized debug/message router. All output from the scanner goes
+ * through this module so that the DEBUG flag can route messages to
+ * stdout or the output file.
+ *
+ * DEBUG ON  (1) = messages written to the output file
+ * DEBUG OFF (0) = messages written to stdout
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #ifndef LOGGER_H
 #define LOGGER_H
 
 #include <stdio.h>
-#include <stdbool.h>
 
-/* Log levels */
-typedef enum {
-    LOG_DEBUG,
-    LOG_INFO,
-    LOG_WARNING,
-    LOG_ERROR
-} LogLevel;
+// DEBUG configuration (compile-time).
+#ifndef DEBUG_FLAG
+#define DEBUG_FLAG 0  // Default OFF: messages go to stdout.
+#endif
 
-/**
- * @brief Initialize logger
- * @param output Output stream (NULL for stdout)
- * @param debug_enabled Enable debug output
- */
-void logger_init(FILE* output, bool debug_enabled);
+// Debug ON / OFF values.
+#define DEBUG_ON  1
+#define DEBUG_OFF 0
 
-/**
- * @brief Log a message
- * @param level Log level
- * @param format Printf format string
- * @param ... Format arguments
- */
-void logger_log(LogLevel level, const char* format, ...);
+// Logger destination state.
+typedef struct {
+    FILE *dest;  // Current output destination (stdout or file).
+} logger_t;
 
-/**
- * @brief Log debug message
- */
-void logger_debug(const char* format, ...);
+// Initializes logger destination.
+void logger_init(logger_t *lg, FILE *outfile);
 
-/**
- * @brief Log info message
- */
-void logger_info(const char* format, ...);
+// Returns current destination stream.
+FILE* logger_get_dest(const logger_t *lg);
 
-/**
- * @brief Log warning message
- */
-void logger_warn(const char* format, ...);
-
-/**
- * @brief Log error message
- */
-void logger_error(const char* format, ...);
-
-/**
- * @brief Close logger
- */
-void logger_close(void);
+// Writes a formatted message.
+void logger_write(const logger_t *lg, const char *fmt, ...);
 
 #endif /* LOGGER_H */

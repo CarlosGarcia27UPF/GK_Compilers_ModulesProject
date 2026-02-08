@@ -1,54 +1,146 @@
-/**
- * @file out_writer.c
- * @brief Output Writer Module Implementation - STUB
- * 
- * TODO: This is a STUB - implement full functionality
+/*
+ * -----------------------------------------------------------------------------
+ * out_writer.c
+ *
+ * Output writer implementation. Builds the .cscn filename and writes
+ * the formatted token list, respecting the OUTFORMAT setting.
+ *
+ * Team: Compilers P2
+ * -----------------------------------------------------------------------------
  */
 
 #include "out_writer.h"
 #include "../lang_spec/lang_spec.h"
+#include <stdio.h>
 
-/* Global state */
-static FILE* g_output = NULL;
-static OutputMode g_mode = OUT_MODE_RELEASE;
+// Internal helper to print one token.
 
-void out_writer_init(FILE* output, OutputMode mode) {
-    g_output = (output != NULL) ? output : stdout;
-    g_mode = mode;
-    printf("[OUT_WRITER STUB] Output writer initialized (mode=%s)\n",
-           mode == OUT_MODE_DEBUG ? "DEBUG" : "RELEASE");
-}
+// Builds "<input>scn". Example: example.c -> example.cscn.
+void ow_build_output_filename(const char *input_filename, char *output_buf,
+                              int buf_len) {
+    int i = 0;
 
-bool out_writer_write(const TokenList* tokens) {
-    if (tokens == NULL || g_output == NULL) return false;
-    
-    printf("[OUT_WRITER STUB] Writing %d tokens to output\n", token_list_count(tokens));
-    
-    /* Simple stub output */
-    for (int i = 0; i < token_list_count(tokens); i++) {
-        Token* t = token_list_get((TokenList*)tokens, i);
-        if (t != NULL) {
-            fprintf(g_output, "%d\t%s\t%s\n", 
-                    t->line,
-                    lang_category_to_string(t->category),
-                    t->lexeme);
+    if (input_filename == NULL || output_buf == NULL || buf_len <= 0) {
+        return;
+    }
+
+    // Copy input filename.
+    while (input_filename[i] != '\0' && i < buf_len - 1) {
+        output_buf[i] = input_filename[i];
+        i++;
+    }
+    // Append scn suffix.
+    {
+        const char *suffix = SCN_SUFFIX;
+        int s = 0;
+        while (suffix[s] != '\0' && i < buf_len - 1) {
+            output_buf[i] = suffix[s];
+            i++;
+            s++;
         }
     }
-    
-    return true;
+    output_buf[i] = '\0';
 }
 
-void out_writer_header(void) {
-    if (g_output == NULL) return;
-    fprintf(g_output, "[OUT_WRITER STUB] === OUTPUT BEGIN ===\n");
+// Builds "<input>dbgcnt". Example: example.c -> example.cdbgcnt.
+void ow_build_count_filename(const char *input_filename, char *output_buf,
+                             int buf_len) {
+    int i = 0;
+
+    if (input_filename == NULL || output_buf == NULL || buf_len <= 0) {
+        return;
+    }
+
+    while (input_filename[i] != '\0' && i < buf_len - 1) {
+        output_buf[i] = input_filename[i];
+        i++;
+    }
+    {
+        const char *suffix = DBGCNT_SUFFIX;
+        int s = 0;
+        while (suffix[s] != '\0' && i < buf_len - 1) {
+            output_buf[i] = suffix[s];
+            i++;
+            s++;
+        }
+    }
+    output_buf[i] = '\0';
 }
 
-void out_writer_footer(void) {
-    if (g_output == NULL) return;
-    fprintf(g_output, "[OUT_WRITER STUB] === OUTPUT END ===\n");
+// Writes token as <lexeme, CATEGORY>.
+static void write_token_formatted(FILE *fp, const token_t *tok) {
+    const char *cat_name = ls_get_category_name(tok->category);
+    fprintf(fp, "%c%s%c %s%c", TOK_FMT_OPEN, tok->lexeme, TOK_FMT_SEP,
+            cat_name, TOK_FMT_CLOSE);
 }
 
-void out_writer_close(void) {
-    printf("[OUT_WRITER STUB] Output writer closed\n");
-    g_output = NULL;
+// Writes complete token output file in configured mode.
+int ow_write_token_file_mode(const token_list_t *tokens,
+                             const char *output_filename, int append_mode) {
+    FILE *fp;
+    int i;
+    int count;
+    int current_line;
+    int first_on_line;
+    const token_t *tok;
+    const char *open_mode = append_mode ? "a" : "w";
+
+    if (tokens == NULL || output_filename == NULL) {
+        return -1;
+    }
+
+    fp = fopen(output_filename, open_mode);
+    if (fp == NULL) {
+        return -1;
+    }
+
+    count = tl_count(tokens);
+    if (count == 0) {
+        fclose(fp);
+        return 0;
+    }
+
+    current_line = -1;
+    first_on_line = 1;
+
+    for (i = 0; i < count; i++) {
+        tok = tl_get(tokens, i);
+        if (tok == NULL) {
+            continue;
+        }
+
+        if (tok->line != current_line) {
+            // Start a new output line for a new source line number.
+            if (current_line != -1) {
+                fprintf(fp, "\n");
+#if OUTFORMAT == OUTFORMAT_DEBUG
+                fprintf(fp, "\n");
+#endif
+            }
+#if OUTFORMAT == OUTFORMAT_DEBUG
+            fprintf(fp, "%d ", tok->line);
+#endif
+            current_line = tok->line;
+            first_on_line = 1;
+        }
+
+        if (!first_on_line) {
+            fprintf(fp, " ");
+        }
+        write_token_formatted(fp, tok);
+        first_on_line = 0;
+    }
+
+    // Finish output line. DEBUG adds an extra separator line.
+    fprintf(fp, "\n");
+#if OUTFORMAT == OUTFORMAT_DEBUG
+    fprintf(fp, "\n");
+#endif
+
+    fclose(fp);
+    return 0;
+}
+
+int ow_write_token_file(const token_list_t *tokens, const char *output_filename) {
+    return ow_write_token_file_mode(tokens, output_filename, 0);
 }
