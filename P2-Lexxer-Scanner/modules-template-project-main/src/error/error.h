@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------------------------
- * error_mod.h
+ * error.h
  *
  * Centralized error catalog and reporter for the compiler.
  * Each error has a unique ID and a step (phase) identifier.
@@ -11,8 +11,8 @@
  * -----------------------------------------------------------------------------
  */
 
-#ifndef ERROR_MOD_H
-#define ERROR_MOD_H
+#ifndef ERROR_H
+#define ERROR_H
 
 #include <stdio.h>
 
@@ -43,4 +43,4 @@ void err_report(FILE *dest, int err_id, const char *step, int line,
 // Returns the template message for an error ID.
 const char* err_get_message(int err_id);
 
-#endif /* ERROR_MOD_H */
+#endif /* ERROR_H */

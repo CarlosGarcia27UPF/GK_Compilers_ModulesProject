@@ -33,7 +33,7 @@ target_link_libraries(test_scanner PRIVATE
     lang_spec
     out_writer
     logger
-    error_mod
+    error
     counter
 )
 target_include_directories(test_scanner PRIVATE ${PROJECT_SOURCE_DIR}/src)

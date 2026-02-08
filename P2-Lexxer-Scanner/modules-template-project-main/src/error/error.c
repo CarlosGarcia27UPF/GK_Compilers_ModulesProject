@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------------------------
- * error_mod.c
+ * error.c
  *
  * Error catalog and reporter implementation.
  *
@@ -8,7 +8,7 @@
  * -----------------------------------------------------------------------------
  */
 
-#include "error_mod.h"
+#include "error.h"
 
 // Returns message template for an error ID.
 const char* err_get_message(int err_id) {

@@ -22,7 +22,7 @@
 #include "../src/token_list/token_list.h"
 #include "../src/automata/automata.h"
 #include "../src/out_writer/out_writer.h"
-#include "../src/error_mod/error_mod.h"
+#include "../src/error/error.h"
 #include "../src/logger/logger.h"
 #include "../src/counter/counter.h"
 

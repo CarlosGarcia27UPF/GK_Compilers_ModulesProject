@@ -24,7 +24,7 @@
 
 #include "../char_stream/char_stream.h"
 #include "../token_list/token_list.h"
-#include "../error_mod/error_mod.h"
+#include "../error/error.h"
 #include "../logger/logger.h"
 #include "../counter/counter.h"
 

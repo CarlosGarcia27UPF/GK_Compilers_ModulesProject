@@ -13,7 +13,7 @@
 #include "./token_list/token_list.h"
 #include "./automata/automata.h"
 #include "./out_writer/out_writer.h"
-#include "./error_mod/error_mod.h"
+#include "./error/error.h"
 #include "./logger/logger.h"
 #include "./counter/counter.h"
 
