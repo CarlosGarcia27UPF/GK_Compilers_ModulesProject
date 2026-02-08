@@ -15,7 +15,7 @@
  *   5. (Future hook) Call the parser with the in-memory token list.
  *   6. Clean up resources.
  *
- * Team: Compilers P2
+ * Team Member: Emmanuel Kwabena Cooper Acheampong
  * -----------------------------------------------------------------------------
  */
 

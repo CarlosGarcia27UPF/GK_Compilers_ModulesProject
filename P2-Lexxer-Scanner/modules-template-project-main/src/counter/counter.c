@@ -4,7 +4,7 @@
  *
  * Counter implementation. Increments and prints operation counts.
  *
- * Team: Compilers P2
+ * Team Member: Emmanuel Kwabena Cooper Acheampong
  * -----------------------------------------------------------------------------
  */
 

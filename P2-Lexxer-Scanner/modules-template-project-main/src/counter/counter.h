@@ -15,7 +15,7 @@
  *   OUT=1  -> messages to output file
  *   DBGCOUNT=0 -> messages to <filename>.<ext>dbgcnt file
  *
- * Team: Compilers P2
+ * Team Member: Emmanuel Kwabena Cooper Acheampong
  * -----------------------------------------------------------------------------
  */
 
