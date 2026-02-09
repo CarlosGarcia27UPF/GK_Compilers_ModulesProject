@@ -30,6 +30,7 @@ static const char *keywords[NUM_KEYWORDS] = {
     KW_IF,
     KW_ELSE,
     KW_WHILE,
+    KW_FOR,
     KW_RETURN,
     KW_INT,
     KW_CHAR,

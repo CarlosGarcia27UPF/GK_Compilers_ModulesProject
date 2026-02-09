@@ -8,7 +8,7 @@
  *
  * Supported language (subset of C):
  *   - Types: int, char, void (recognized as keywords)
- *   - Keywords: if, else, while, return, int, char, void
+ *   - Keywords: if, else, while, for, return, int, char, void
  *   - Operators: = > + *
  *   - Special characters: ( ) ; { } [ ] ,
  *   - Numbers: integers [0-9]+
@@ -45,11 +45,12 @@ typedef enum {
 #define CAT_NAME_NONRECOGNIZED "CAT_NONRECOGNIZED"
 
 // Keywords.
-#define NUM_KEYWORDS 7
+#define NUM_KEYWORDS 8
 
 #define KW_IF     "if"
 #define KW_ELSE   "else"
 #define KW_WHILE  "while"
+#define KW_FOR    "for"
 #define KW_RETURN "return"
 #define KW_INT    "int"
 #define KW_CHAR   "char"
