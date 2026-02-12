@@ -428,6 +428,220 @@ static void test_grouped_nonrecognized(void) {
     printf("  grouped nonrecognized tests PASSED\n");
 }
 
+/* ---- Test: Proper literal recognition ---- */
+
+/*
+ * test_literal_recognition - verifies that a properly terminated literal
+ * is recognized as CAT_LITERAL with the expected lexeme.
+ */
+static void test_literal_recognition(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result;
+
+    printf("  Testing literal recognition...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "x = \"hi\";\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Expected tokens: x = "hi" ; = 4 */
+    assert(tl_count(&tokens) == 4);
+
+    /* Token 2: literal "hi" */
+    tok = tl_get(&tokens, 2);
+    assert(tok != NULL);
+    assert(tok->category == CAT_LITERAL);
+    assert(strcmp(tok->lexeme, "\"hi\"") == 0);
+
+    tl_free(&tokens);
+
+    printf("  literal recognition tests PASSED\n");
+}
+
+/* ---- Test: Identifier and number boundaries ---- */
+
+/*
+ * test_identifier_number_boundaries - verifies that identifiers can include
+ * digits after the first letter and that numbers stop before letters.
+ */
+static void test_identifier_number_boundaries(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result;
+
+    printf("  Testing identifier/number boundaries...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "abc123 123abc\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Expected tokens: abc123 123 abc = 3 */
+    assert(tl_count(&tokens) == 3);
+
+    tok = tl_get(&tokens, 0);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+    assert(strcmp(tok->lexeme, "abc123") == 0);
+
+    tok = tl_get(&tokens, 1);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NUMBER);
+    assert(strcmp(tok->lexeme, "123") == 0);
+
+    tok = tl_get(&tokens, 2);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+    assert(strcmp(tok->lexeme, "abc") == 0);
+
+    tl_free(&tokens);
+
+    printf("  identifier/number boundaries tests PASSED\n");
+}
+
+/* ---- Test: Operators and special characters ---- */
+
+/*
+ * test_operator_special_tokens - verifies operators and special characters
+ * are recognized correctly in sequence.
+ */
+static void test_operator_special_tokens(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result;
+
+    printf("  Testing operators and special characters...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "(x+3)*y;\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Expected tokens: ( x + 3 ) * y ; = 8 */
+    assert(tl_count(&tokens) == 8);
+
+    tok = tl_get(&tokens, 0);
+    assert(tok != NULL);
+    assert(tok->category == CAT_SPECIALCHAR);
+
+    tok = tl_get(&tokens, 2);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);
+
+    tok = tl_get(&tokens, 4);
+    assert(tok != NULL);
+    assert(tok->category == CAT_SPECIALCHAR);
+
+    tok = tl_get(&tokens, 5);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);
+
+    tok = tl_get(&tokens, 7);
+    assert(tok != NULL);
+    assert(tok->category == CAT_SPECIALCHAR);
+
+    tl_free(&tokens);
+
+    printf("  operators and special characters tests PASSED\n");
+}
+
+/* ---- Test: Isolated nonrecognized character ---- */
+
+/*
+ * test_isolated_nonrecognized - verifies a single nonrecognized character
+ * becomes its own NONRECOGNIZED token.
+ */
+static void test_isolated_nonrecognized(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result;
+
+    printf("  Testing isolated nonrecognized...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "a @ b\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Expected tokens: a @ b = 3 */
+    assert(tl_count(&tokens) == 3);
+
+    tok = tl_get(&tokens, 0);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+
+    tok = tl_get(&tokens, 1);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NONRECOGNIZED);
+    assert(strcmp(tok->lexeme, "@") == 0);
+
+    tok = tl_get(&tokens, 2);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+
+    tl_free(&tokens);
+
+    printf("  isolated nonrecognized tests PASSED\n");
+}
+
 /* ---- Test: Correct output filenames ---- */
 
 /*
@@ -534,6 +748,10 @@ int main(void) {
     test_blank_lines();
     test_unterminated_literal();
     test_grouped_nonrecognized();
+    test_literal_recognition();
+    test_identifier_number_boundaries();
+    test_operator_special_tokens();
+    test_isolated_nonrecognized();
     test_output_filenames_extended();
     test_countio();
     test_null_counter_pointer();

@@ -2,15 +2,18 @@
  * -----------------------------------------------------------------------------
  * automata.c
  *
- * Scanner engine implementation. Uses a single DFA loop driven entirely
- * by the transition matrix T[state][class]. No external dispatch by
- * first character — all decisions happen inside the automaton.
+ * Scanner engine implementation using multiple specialized automata.
+ * Each token type (number, identifier, literal, operator, etc.) has its own
+ * DFA with its own transition matrix. A dispatcher function routes to the
+ * appropriate automata based on the first character's classification.
  *
  * Design:
- *   - ONE function scanner_next_token() recognises each token.
- *   - Maximal munch via last_accept_state + last_accept_pos rollback.
- *   - Keywords are reclassified char-by-char after identifier acceptance.
- *   - Whitespace is consumed inside the DFA (START + WS → START).
+ *   - MULTIPLE functions, one per token type: automata_scan_number(),
+ *     automata_scan_identifier(), automata_scan_literal(), etc.
+ *   - scanner_next_token() dispatcher that routes based on first char.
+ *   - Character-by-character lookahead within each automata.
+ *   - Keywords are reclassified after identifier acceptance.
+ *   - Whitespace is consumed in the dispatcher.
  *   - Unterminated literals emit one error + NONRECOGNIZED token.
  *   - Grouped non-recognized chars emit one error per group.
  *
@@ -21,70 +24,93 @@
 #include "automata.h"
 #include "../lang_spec/lang_spec.h"
 
-// Transition matrix:
-// rows = current state, columns = character class, value = next state.
-// ST_STOP means "do not consume; emit token from last_accept_state".
+// ============================================================================
+// NUMBER AUTOMATA
+// ============================================================================
+// States: START, IN_NUMBER
+// Transition matrix for number recognition [0-9]+
 
-static const scan_state_t T[ST_COUNT][CC_COUNT] = {
-    // ST_START: branch by first character class.
-    //           LETTER         DIGIT          QUOTE          OPERATOR       SPECIAL        SPACE          NEWLINE        EOF            OTHER
-    [ST_START]    = {ST_IN_IDENT,  ST_IN_NUMBER,  ST_IN_LITERAL, ST_ACCEPT_OP,  ST_ACCEPT_SC,  ST_START,      ST_START,      ST_STOP,       ST_IN_NONREC },
+typedef enum {
+    ST_NUM_START = 0,
+    ST_NUM_IN    = 1,
+    ST_NUM_COUNT = 2
+} num_state_t;
 
-    // ST_IN_NUMBER: accumulate digits only.
-    [ST_IN_NUMBER]= {ST_STOP,      ST_IN_NUMBER,  ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+static const num_state_t T_number[ST_NUM_COUNT][CC_COUNT] = {
+    // ST_NUM_START: first digit must be present
+    //               LETTER    DIGIT       QUOTE    OPERATOR SPECIAL SPACE   NEWLINE EOF     OTHER
+    [ST_NUM_START] = {ST_NUM_IN, ST_NUM_IN, ST_NUM_IN, ST_NUM_IN, ST_NUM_IN, ST_NUM_IN, ST_NUM_IN, ST_NUM_IN, ST_NUM_IN},
 
-    // ST_IN_IDENT: accumulate letters/digits.
-    [ST_IN_IDENT] = {ST_IN_IDENT,  ST_IN_IDENT,   ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
-
-    // ST_IN_LITERAL: accept any char except newline/EOF terminates with error.
-    [ST_IN_LITERAL]={ST_IN_LITERAL,ST_IN_LITERAL,  ST_LIT_END,    ST_IN_LITERAL, ST_IN_LITERAL, ST_IN_LITERAL, ST_ERROR,      ST_ERROR,      ST_IN_LITERAL},
-
-    // ST_ACCEPT_OP: single-character operator.
-    [ST_ACCEPT_OP]= {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
-
-    // ST_ACCEPT_SC: single-character special token.
-    [ST_ACCEPT_SC]= {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
-
-    // ST_IN_NONREC: group consecutive non-recognized characters.
-    [ST_IN_NONREC]= {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_IN_NONREC },
-
-    // ST_LIT_END: closing quote consumed.
-    [ST_LIT_END]  = {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
-
-    // ST_ERROR: terminal failure.
-    [ST_ERROR]    = {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
-
-    // ST_STOP: marker state, not an active DFA state.
-    [ST_STOP]     = {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+    // ST_NUM_IN: accumulate digits only
+    [ST_NUM_IN]    = {-1,        ST_NUM_IN, -1,       -1,       -1,       -1,       -1,       -1,       -1       },
 };
 
-// Returns 1 when state is accepting.
-static int is_accepting(scan_state_t st) {
-    switch (st) {
-        case ST_IN_NUMBER:
-        case ST_IN_IDENT:
-        case ST_IN_NONREC:
-        case ST_ACCEPT_OP:
-        case ST_ACCEPT_SC:
-        case ST_LIT_END:
-            return 1;
-        default:
-            return 0;
-    }
-}
+// ============================================================================
+// IDENTIFIER AUTOMATA
+// ============================================================================
+// States: START, IN_IDENT
+// Transition matrix for identifier recognition [A-Za-z][A-Za-z0-9]*
 
-// Maps accepting state to token category.
-static token_category_t accept_category(scan_state_t st) {
-    switch (st) {
-        case ST_IN_NUMBER:  return CAT_NUMBER;
-        case ST_IN_IDENT:   return CAT_IDENTIFIER; // Reclassified as keyword later.
-        case ST_ACCEPT_OP:  return CAT_OPERATOR;
-        case ST_ACCEPT_SC:  return CAT_SPECIALCHAR;
-        case ST_LIT_END:    return CAT_LITERAL;
-        case ST_IN_NONREC:  return CAT_NONRECOGNIZED;
-        default:            return CAT_NONRECOGNIZED;
-    }
-}
+typedef enum {
+    ST_IDENT_START = 0,
+    ST_IDENT_IN    = 1,
+    ST_IDENT_COUNT = 2
+} ident_state_t;
+
+static const ident_state_t T_identifier[ST_IDENT_COUNT][CC_COUNT] = {
+    // ST_IDENT_START: first letter must be present
+    //                 LETTER      DIGIT      QUOTE  OPERATOR SPECIAL SPACE  NEWLINE EOF    OTHER
+    [ST_IDENT_START] = {ST_IDENT_IN, ST_IDENT_IN, -1,    -1,      -1,     -1,    -1,     -1,    -1   },
+
+    // ST_IDENT_IN: accumulate letters/digits
+    [ST_IDENT_IN]    = {ST_IDENT_IN, ST_IDENT_IN, -1,    -1,      -1,     -1,    -1,     -1,    -1   },
+};
+
+// ============================================================================
+// LITERAL AUTOMATA
+// ============================================================================
+// States: IN_LITERAL, LIT_END, ERROR
+// Transition matrix for literal recognition "..."
+
+typedef enum {
+    ST_LIT_IN    = 0,
+    ST_LIT_END   = 1,
+    ST_LIT_ERROR = 2,
+    ST_LIT_COUNT = 3
+} lit_state_t;
+
+static const lit_state_t T_literal[ST_LIT_COUNT][CC_COUNT] = {
+    // ST_LIT_IN: accumulate any char except newline/EOF
+    //            LETTER       DIGIT        QUOTE       OPERATOR     SPECIAL      SPACE        NEWLINE  EOF      OTHER
+    [ST_LIT_IN]    = {ST_LIT_IN,   ST_LIT_IN,   ST_LIT_END, ST_LIT_IN,   ST_LIT_IN,   ST_LIT_IN,   -1,      -1,      ST_LIT_IN},
+
+    // ST_LIT_END: closing quote consumed, accept
+    [ST_LIT_END]   = {-1,          -1,          -1,         -1,          -1,          -1,          -1,      -1,      -1       },
+
+    // ST_LIT_ERROR: error state
+    [ST_LIT_ERROR] = {-1,          -1,          -1,         -1,          -1,          -1,          -1,      -1,      -1       },
+};
+
+// ============================================================================
+// NONRECOGNIZED AUTOMATA
+// ============================================================================
+// States: IN_NONREC
+// Transition matrix for grouping consecutive non-recognized chars
+
+typedef enum {
+    ST_NONREC_IN    = 0,
+    ST_NONREC_COUNT = 1
+} nonrec_state_t;
+
+static const nonrec_state_t T_nonrec[ST_NONREC_COUNT][CC_COUNT] = {
+    // ST_NONREC_IN: accumulate non-recognized chars
+    //               LETTER   DIGIT   QUOTE   OPERATOR SPECIAL SPACE  NEWLINE EOF    OTHER
+    [ST_NONREC_IN] = {-1,      -1,     -1,     -1,      -1,     -1,    -1,     -1,    ST_NONREC_IN},
+};
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
 
 // Maps one character to a DFA class.
 char_class_t classify_char(int ch) {
@@ -137,114 +163,73 @@ static void report_unterminated_literal(logger_t *lg, int line,
                line, lexeme);
 }
 
-// Scans one token with the DFA. Returns 1 when a token is emitted, 0 on EOF.
-static int scanner_next_token(char_stream_t *cs, token_list_t *tokens,
-                              logger_t *lg, counter_t *cnt) {
-    scan_state_t state = ST_START;
-    scan_state_t last_accept_state = ST_STOP; // ST_STOP means no accept yet.
+// ============================================================================
+// INDIVIDUAL AUTOMATA FUNCTIONS
+// ============================================================================
+
+// NUMBER AUTOMATA: recognizes [0-9]+
+static int automata_scan_number(char_stream_t *cs, token_list_t *tokens,
+                                 logger_t *lg, counter_t *cnt) {
     char buf[MAX_LEXEME_LEN];
     int buf_len = 0;
     int tok_line = cs_line(cs);
     int tok_col = cs_col(cs);
     int ch;
     char_class_t cls;
-    scan_state_t next;
 
     buf[0] = '\0';
 
     while (1) {
-        // Defensive check: ST_STOP should never be a current state.
-        if (state == ST_STOP) {
-            // internal error: force recovery by consuming 1 char
-            char fallback[2];
-            token_t tok;
-            int fb_line = cs_line(cs);
-            int fb_col  = cs_col(cs);
-            ch = cs_get(cs);
-            CNT_IO(cnt, 1);
-            fallback[0] = (char)ch;
-            fallback[1] = '\0';
-            report_nonrecognized(lg, fb_line, fallback);
-            token_init(&tok, fallback, CAT_NONRECOGNIZED, fb_line, fb_col);
-            tl_add(tokens, &tok);
-            return 1;  // continue scanning
-        }
-
         ch = cs_peek(cs);
         CNT_COMP(cnt, 1);
 
         cls = classify_char(ch);
         CNT_COMP(cnt, 1);
 
-        next = T[state][cls];
-
-        // Handle STOP/ERROR transitions.
-        if (next == ST_STOP || next == ST_ERROR) {
-            if (next == ST_ERROR && state == ST_IN_LITERAL) {
-                // Unterminated literal: exactly one error + one token.
-                report_unterminated_literal(lg, tok_line, buf);
-                {
-                    token_t tok;
-                    token_init(&tok, buf, CAT_NONRECOGNIZED, tok_line, tok_col);
-                    tl_add(tokens, &tok);
-                }
-                return 1;
-            }
-
-            if (last_accept_state != ST_STOP) {
-                // Emit token from the last accepting state.
-                token_category_t cat = accept_category(last_accept_state);
-                token_t tok;
-
-                // Reclassify accepted identifiers as keywords.
-                if (cat == CAT_IDENTIFIER && ls_is_keyword(buf)) {
-                    cat = CAT_KEYWORD;
-                }
-
-                token_init(&tok, buf, cat, tok_line, tok_col);
-                tl_add(tokens, &tok);
-
-                // One error for one grouped non-recognized token.
-                if (cat == CAT_NONRECOGNIZED) {
-                    report_nonrecognized(lg, tok_line, buf);
-                }
-                return 1;
-            }
-
-            // EOF reached with no pending token.
-            if (state == ST_START && cls == CC_EOF) {
-                return 0;
-            }
-
-            // Defensive fallback: consume one char as NONRECOGNIZED and continue.
-            {
-                char fallback[2];
-                token_t tok;
-                tok_line = cs_line(cs);
-                tok_col  = cs_col(cs);
-                ch = cs_get(cs);
-                CNT_IO(cnt, 1);
-                fallback[0] = (char)ch;
-                fallback[1] = '\0';
-                report_nonrecognized(lg, tok_line, fallback);
-                token_init(&tok, fallback, CAT_NONRECOGNIZED, tok_line, tok_col);
-                tl_add(tokens, &tok);
-            }
-            return 1;
+        // Check transition: -1 means stop
+        if (T_number[ST_NUM_IN][cls] == (num_state_t)-1) {
+            break;
         }
 
-        // Skip whitespace while staying in START.
-        if (state == ST_START && next == ST_START) {
-            cs_get(cs);
-            CNT_IO(cnt, 1);
-            continue;
-        }
+        ch = cs_get(cs);
+        CNT_IO(cnt, 1);
+        CNT_GEN(cnt, 1);
+        add_char_to_lexeme(buf, &buf_len, ch);
+    }
 
-        // Normal transition: consume one character.
-        if (state == ST_START) {
-            // Track source position of first token character.
-            tok_line = cs_line(cs);
-            tok_col = cs_col(cs);
+    // Emit number token
+    token_t tok;
+    token_init(&tok, buf, CAT_NUMBER, tok_line, tok_col);
+    tl_add(tokens, &tok);
+    return 1;
+}
+
+// IDENTIFIER AUTOMATA: recognizes [A-Za-z][A-Za-z0-9]*
+static int automata_scan_identifier(char_stream_t *cs, token_list_t *tokens,
+                                     logger_t *lg, counter_t *cnt) {
+    char buf[MAX_LEXEME_LEN];
+    int buf_len = 0;
+    int tok_line = cs_line(cs);
+    int tok_col = cs_col(cs);
+    int ch;
+    char_class_t cls;
+    ident_state_t state = ST_IDENT_START;
+
+    buf[0] = '\0';
+
+    while (1) {
+        ch = cs_peek(cs);
+        CNT_COMP(cnt, 1);
+
+        cls = classify_char(ch);
+        CNT_COMP(cnt, 1);
+
+        // Check transition: -1 means stop
+        if (state == ST_IDENT_START && T_identifier[ST_IDENT_START][cls] == (ident_state_t)-1) {
+            break;
+        }
+        if (state == ST_IDENT_IN && T_identifier[ST_IDENT_IN][cls] == (ident_state_t)-1) {
+            break;
         }
 
         ch = cs_get(cs);
@@ -252,14 +237,223 @@ static int scanner_next_token(char_stream_t *cs, token_list_t *tokens,
         CNT_GEN(cnt, 1);
         add_char_to_lexeme(buf, &buf_len, ch);
 
-        state = next;
+        state = (state == ST_IDENT_START) ? ST_IDENT_IN : ST_IDENT_IN;
+    }
 
-        // Keep last accepting state for maximal munch.
-        if (is_accepting(state)) {
-            last_accept_state = state;
+    // Determine category: keyword or identifier
+    token_category_t cat = ls_is_keyword(buf) ? CAT_KEYWORD : CAT_IDENTIFIER;
+
+    // Emit token
+    token_t tok;
+    token_init(&tok, buf, cat, tok_line, tok_col);
+    tl_add(tokens, &tok);
+    return 1;
+}
+
+// LITERAL AUTOMATA: recognizes "..."
+static int automata_scan_literal(char_stream_t *cs, token_list_t *tokens,
+                                  logger_t *lg, counter_t *cnt) {
+    char buf[MAX_LEXEME_LEN];
+    int buf_len = 0;
+    int tok_line = cs_line(cs);
+    int tok_col = cs_col(cs);
+    int ch;
+    char_class_t cls;
+    lit_state_t state = ST_LIT_IN;
+
+    buf[0] = '\0';
+
+    // Consume opening quote
+    ch = cs_get(cs);
+    CNT_IO(cnt, 1);
+    CNT_GEN(cnt, 1);
+    add_char_to_lexeme(buf, &buf_len, ch);
+
+    while (1) {
+        ch = cs_peek(cs);
+        CNT_COMP(cnt, 1);
+
+        cls = classify_char(ch);
+        CNT_COMP(cnt, 1);
+
+        // Check for error conditions (newline or EOF)
+        if (cls == CC_NEWLINE || cls == CC_EOF) {
+            // Unterminated literal
+            report_unterminated_literal(lg, tok_line, buf);
+            token_t tok;
+            token_init(&tok, buf, CAT_NONRECOGNIZED, tok_line, tok_col);
+            tl_add(tokens, &tok);
+            return 1;
+        }
+
+        // Check transition
+        if (T_literal[ST_LIT_IN][cls] == (lit_state_t)-1) {
+            break;
+        }
+
+        ch = cs_get(cs);
+        CNT_IO(cnt, 1);
+        CNT_GEN(cnt, 1);
+        add_char_to_lexeme(buf, &buf_len, ch);
+
+        // Check if we reached closing quote
+        if (cls == CC_QUOTE) {
+            state = ST_LIT_END;
+            break;
         }
     }
+
+    // Emit literal token
+    token_t tok;
+    token_init(&tok, buf, CAT_LITERAL, tok_line, tok_col);
+    tl_add(tokens, &tok);
+    return 1;
 }
+
+// OPERATOR AUTOMATA: recognizes single-char operators
+static int automata_scan_operator(char_stream_t *cs, token_list_t *tokens,
+                                   logger_t *lg, counter_t *cnt) {
+    char buf[MAX_LEXEME_LEN];
+    int buf_len = 0;
+    int tok_line = cs_line(cs);
+    int tok_col = cs_col(cs);
+    int ch;
+
+    buf[0] = '\0';
+
+    // Consume single operator character
+    ch = cs_get(cs);
+    CNT_IO(cnt, 1);
+    CNT_GEN(cnt, 1);
+    add_char_to_lexeme(buf, &buf_len, ch);
+
+    // Emit operator token
+    token_t tok;
+    token_init(&tok, buf, CAT_OPERATOR, tok_line, tok_col);
+    tl_add(tokens, &tok);
+    return 1;
+}
+
+// SPECIAL CHARACTER AUTOMATA: recognizes single-char special tokens
+static int automata_scan_specialchar(char_stream_t *cs, token_list_t *tokens,
+                                      logger_t *lg, counter_t *cnt) {
+    char buf[MAX_LEXEME_LEN];
+    int buf_len = 0;
+    int tok_line = cs_line(cs);
+    int tok_col = cs_col(cs);
+    int ch;
+
+    buf[0] = '\0';
+
+    // Consume single special character
+    ch = cs_get(cs);
+    CNT_IO(cnt, 1);
+    CNT_GEN(cnt, 1);
+    add_char_to_lexeme(buf, &buf_len, ch);
+
+    // Emit special char token
+    token_t tok;
+    token_init(&tok, buf, CAT_SPECIALCHAR, tok_line, tok_col);
+    tl_add(tokens, &tok);
+    return 1;
+}
+
+// NONRECOGNIZED AUTOMATA: groups consecutive non-recognized chars
+static int automata_scan_nonrecognized(char_stream_t *cs, token_list_t *tokens,
+                                        logger_t *lg, counter_t *cnt) {
+    char buf[MAX_LEXEME_LEN];
+    int buf_len = 0;
+    int tok_line = cs_line(cs);
+    int tok_col = cs_col(cs);
+    int ch;
+    char_class_t cls;
+
+    buf[0] = '\0';
+
+    while (1) {
+        ch = cs_peek(cs);
+        CNT_COMP(cnt, 1);
+
+        cls = classify_char(ch);
+        CNT_COMP(cnt, 1);
+
+        // Check transition: -1 means stop
+        if (T_nonrec[ST_NONREC_IN][cls] == (nonrec_state_t)-1) {
+            break;
+        }
+
+        ch = cs_get(cs);
+        CNT_IO(cnt, 1);
+        CNT_GEN(cnt, 1);
+        add_char_to_lexeme(buf, &buf_len, ch);
+    }
+
+    // Report error for grouped non-recognized characters
+    report_nonrecognized(lg, tok_line, buf);
+
+    // Emit nonrecognized token
+    token_t tok;
+    token_init(&tok, buf, CAT_NONRECOGNIZED, tok_line, tok_col);
+    tl_add(tokens, &tok);
+    return 1;
+}
+
+// ============================================================================
+// DISPATCHER: SCANNER_NEXT_TOKEN
+// ============================================================================
+
+// Main scanner dispatcher: routes to appropriate automata based on first char
+static int scanner_next_token(char_stream_t *cs, token_list_t *tokens,
+                              logger_t *lg, counter_t *cnt) {
+    int ch;
+    char_class_t cls;
+
+    // Skip whitespace and newlines
+    while (1) {
+        ch = cs_peek(cs);
+        CNT_COMP(cnt, 1);
+
+        if (ch == CS_EOF) {
+            return 0;  // End of file
+        }
+
+        cls = classify_char(ch);
+        CNT_COMP(cnt, 1);
+
+        if (cls != CC_SPACE && cls != CC_NEWLINE) {
+            break;  // Found first non-whitespace character
+        }
+
+        cs_get(cs);
+        CNT_IO(cnt, 1);
+    }
+
+    // Dispatch based on character classification
+    switch (cls) {
+        case CC_LETTER:
+            return automata_scan_identifier(cs, tokens, lg, cnt);
+
+        case CC_DIGIT:
+            return automata_scan_number(cs, tokens, lg, cnt);
+
+        case CC_QUOTE:
+            return automata_scan_literal(cs, tokens, lg, cnt);
+
+        case CC_OPERATOR:
+            return automata_scan_operator(cs, tokens, lg, cnt);
+
+        case CC_SPECIAL:
+            return automata_scan_specialchar(cs, tokens, lg, cnt);
+
+        default:
+            // CC_OTHER or any unrecognized character class
+            return automata_scan_nonrecognized(cs, tokens, lg, cnt);
+    }
+}
+
+// ============================================================================
+// PUBLIC INTERFACE
+// ============================================================================
 
 // Scanner loop until EOF.
 int automata_scan(char_stream_t *cs, token_list_t *tokens, logger_t *lg,
