@@ -48,7 +48,4 @@ typedef enum {
 int automata_scan(char_stream_t *cs, token_list_t *tokens, logger_t *lg,
                   counter_t *cnt);
 
-// Returns the character class for a character.
-char_class_t classify_char(int ch);
-
 #endif /* AUTOMATA_H */

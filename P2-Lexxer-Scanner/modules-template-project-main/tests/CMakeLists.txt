@@ -40,4 +40,21 @@ target_include_directories(test_scanner PRIVATE ${PROJECT_SOURCE_DIR}/src)
 add_test(NAME TestScanner COMMAND test_scanner)
 message(STATUS " - (${PROJECT_NAME}) Test for scanner/lexer added")
 
+# Test for parallel automata (P2 unit tests)
+add_executable(test_parallel_automata test_parallel_automata.c)
+target_link_libraries(test_parallel_automata PRIVATE 
+    automata
+    token_list
+    token
+    char_stream
+    lang_spec
+    out_writer
+    logger
+    error
+    counter
+)
+target_include_directories(test_parallel_automata PRIVATE ${PROJECT_SOURCE_DIR}/src)
+add_test(NAME TestParallelAutomata COMMAND test_parallel_automata)
+message(STATUS " - (${PROJECT_NAME}) Test for parallel automata added")
+
 message(STATUS " - (${PROJECT_NAME}) Test configuration (executables) completed.")
