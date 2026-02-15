@@ -28,35 +28,6 @@ static void print_usage(const char *prog_name) {
     fprintf(stderr, "Usage: %s <input.c>\n", prog_name);
 }
 
-#ifdef COUNTCONFIG
-// Routes count summary to stdout, .cscn, or .cdbgcnt according to flags.
-static void write_count_summary(const char *input_filename,
-                                const char *output_filename,
-                                const counter_t *cnt) {
-    FILE *dest = stdout;
-    char count_filename[MAX_FILENAME_BUF];
-
-    if (COUNTOUT == COUNTOUT_OUT) {
-        if (COUNTFILE == COUNTFILE_DBGCNT) {
-            ow_build_count_filename(input_filename, count_filename,
-                                    MAX_FILENAME_BUF);
-            dest = fopen(count_filename, "w");
-        } else {
-            dest = fopen(output_filename, "a");
-        }
-        if (dest == NULL) {
-            dest = stdout;
-        }
-    }
-
-    counter_print(cnt, dest, "run_scanner", 0);
-
-    if (dest != stdout) {
-        fclose(dest);
-    }
-}
-#endif
-
 // Orchestrates scanner execution for one input file.
 static int run_scanner(const char *input_filename) {
     char_stream_t cs;
@@ -66,6 +37,14 @@ static int run_scanner(const char *input_filename) {
     FILE *debug_out = NULL;
     char output_filename[MAX_FILENAME_BUF];
     int result;
+#ifdef COUNTCONFIG
+    FILE *count_trace_dest = stdout;
+    FILE *count_summary_dest = stdout;
+    int close_count_trace_dest = 0;
+    int close_count_summary_dest = 0;
+    int count_trace_enabled = 1;
+    char count_filename[MAX_FILENAME_BUF];
+#endif
 
     if (input_filename == NULL) {
         return ERR_FILE_OPEN;
@@ -78,10 +57,35 @@ static int run_scanner(const char *input_filename) {
     // Build output filename: input.c -> input.cscn.
     ow_build_output_filename(input_filename, output_filename, MAX_FILENAME_BUF);
 
+#ifdef COUNTCONFIG
+    if (COUNTOUT == COUNTOUT_OUT && COUNTFILE == COUNTFILE_DBGCNT) {
+        ow_build_count_filename(input_filename, count_filename,
+                                MAX_FILENAME_BUF);
+        count_trace_dest = fopen(count_filename, "w");
+        if (count_trace_dest == NULL) {
+            count_trace_dest = stdout;
+        } else {
+            close_count_trace_dest = 1;
+        }
+    }
+
+    if (COUNTOUT == COUNTOUT_OUT && COUNTFILE == COUNTFILE_OUTPUT) {
+        // Writing live traces here would be overwritten by token-file write mode.
+        count_trace_enabled = 0;
+    }
+
+    counter_set_trace(&cnt, count_trace_dest, count_trace_enabled);
+#endif
+
     // Initialize logger destination.
-    if (DEBUG_FLAG == DEBUG_ON) {
+    if (DEBUG == DEBUG_ON) {
         debug_out = fopen(output_filename, "w");
         if (debug_out == NULL) {
+#ifdef COUNTCONFIG
+            if (close_count_trace_dest) {
+                fclose(count_trace_dest);
+            }
+#endif
             tl_free(&tokens);
             return ERR_FILE_OUTPUT;
         }
@@ -97,11 +101,16 @@ static int run_scanner(const char *input_filename) {
         if (debug_out != NULL) {
             fclose(debug_out);
         }
+#ifdef COUNTCONFIG
+        if (close_count_trace_dest) {
+            fclose(count_trace_dest);
+        }
+#endif
         tl_free(&tokens);
         return ERR_FILE_OPEN;
     }
 
-    fprintf(stdout, "Scanning: %s\n", input_filename);
+    logger_write(&lg, "Scanning: %s\n", input_filename);
 
     // Run scanner.
     result = automata_scan(&cs, &tokens, &lg, &cnt);
@@ -110,25 +119,72 @@ static int run_scanner(const char *input_filename) {
     cs_close(&cs);
 
     if (debug_out != NULL) {
+        fflush(debug_out);
+    }
+
+    // Write token file.
+    if (ow_write_token_file_mode(&tokens, output_filename,
+                                 (DEBUG == DEBUG_ON)) != 0) {
+        err_report(logger_get_dest(&lg), ERR_FILE_OUTPUT, ERR_STEP_DRIVER,
+                   0, output_filename);
+        if (debug_out != NULL) {
+            fclose(debug_out);
+            debug_out = NULL;
+        }
+#ifdef COUNTCONFIG
+        if (close_count_trace_dest) {
+            fclose(count_trace_dest);
+        }
+#endif
+        tl_free(&tokens);
+        return ERR_FILE_OUTPUT;
+    }
+
+    // Token writer appends using a separate FILE handle; reposition to EOF before
+    // writing more debug messages through the logger handle.
+    if (debug_out != NULL) {
+        fseek(debug_out, 0, SEEK_END);
+    }
+
+    logger_write(&lg, "Output written to: %s\n", output_filename);
+    logger_write(&lg, "Tokens found: %d\n", tl_count(&tokens));
+#ifdef COUNTCONFIG
+    if (COUNTOUT == COUNTOUT_OUT &&
+        COUNTFILE == COUNTFILE_DBGCNT &&
+        close_count_trace_dest) {
+        logger_write(&lg, "Count output written to: %s\n", count_filename);
+    }
+#endif
+
+    if (debug_out != NULL) {
         fclose(debug_out);
         debug_out = NULL;
         logger_init(&lg, stdout);
     }
 
-    // Write token file.
-    if (ow_write_token_file_mode(&tokens, output_filename,
-                                 (DEBUG_FLAG == DEBUG_ON)) != 0) {
-        err_report(logger_get_dest(&lg), ERR_FILE_OUTPUT, ERR_STEP_DRIVER,
-                   0, output_filename);
-        tl_free(&tokens);
-        return ERR_FILE_OUTPUT;
+#ifdef COUNTCONFIG
+    if (COUNTOUT == COUNTOUT_OUT) {
+        if (COUNTFILE == COUNTFILE_DBGCNT) {
+            count_summary_dest = count_trace_dest;
+        } else {
+            count_summary_dest = fopen(output_filename, "a");
+            if (count_summary_dest == NULL) {
+                count_summary_dest = stdout;
+            } else {
+                close_count_summary_dest = 1;
+            }
+        }
     }
 
-    fprintf(stdout, "Output written to: %s\n", output_filename);
-    fprintf(stdout, "Tokens found: %d\n", tl_count(&tokens));
+    counter_print(&cnt, count_summary_dest, "run_scanner", 0);
 
-#ifdef COUNTCONFIG
-    write_count_summary(input_filename, output_filename, &cnt);
+    if (close_count_summary_dest) {
+        fclose(count_summary_dest);
+        count_summary_dest = NULL;
+    }
+    if (close_count_trace_dest) {
+        fclose(count_trace_dest);
+    }
 #endif
 
     // Future hook: parser can consume the in-memory token list here.

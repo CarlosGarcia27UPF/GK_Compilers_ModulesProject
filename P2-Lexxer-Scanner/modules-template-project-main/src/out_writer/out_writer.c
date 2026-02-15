@@ -14,6 +14,18 @@
 #include <stdio.h>
 
 // Internal helper to print one token.
+static const char *ow_get_category_name(token_category_t cat) {
+    switch (cat) {
+        case CAT_NUMBER:        return CAT_NAME_NUMBER;
+        case CAT_IDENTIFIER:    return CAT_NAME_IDENTIFIER;
+        case CAT_KEYWORD:       return CAT_NAME_KEYWORD;
+        case CAT_LITERAL:       return CAT_NAME_LITERAL;
+        case CAT_OPERATOR:      return CAT_NAME_OPERATOR;
+        case CAT_SPECIALCHAR:   return CAT_NAME_SPECIALCHAR;
+        case CAT_NONRECOGNIZED: return CAT_NAME_NONRECOGNIZED;
+        default:                return CAT_NAME_NONRECOGNIZED;
+    }
+}
 
 // Builds "<input>scn". Example: example.c -> example.cscn.
 void ow_build_output_filename(const char *input_filename, char *output_buf,
@@ -69,7 +81,7 @@ void ow_build_count_filename(const char *input_filename, char *output_buf,
 
 // Writes token as <lexeme, CATEGORY>.
 static void write_token_formatted(FILE *fp, const token_t *tok) {
-    const char *cat_name = ls_get_category_name(tok->category);
+    const char *cat_name = ow_get_category_name(tok->category);
     fprintf(fp, "%c%s%c %s%c", TOK_FMT_OPEN, tok->lexeme, TOK_FMT_SEP,
             cat_name, TOK_FMT_CLOSE);
 }

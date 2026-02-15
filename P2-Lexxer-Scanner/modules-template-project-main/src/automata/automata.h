@@ -79,6 +79,14 @@ typedef enum {
     ST_KW_IF,
     ST_KW_IN,
     ST_KW_INT,
+    ST_KW_C,
+    ST_KW_CH,
+    ST_KW_CHA,
+    ST_KW_CHAR,
+    ST_KW_V,
+    ST_KW_VO,
+    ST_KW_VOI,
+    ST_KW_VOID,
 
     ST_KW_E,
     ST_KW_EL,
@@ -97,16 +105,6 @@ typedef enum {
     ST_KW_RETU,
     ST_KW_RETUR,
     ST_KW_RETURN,
-
-    ST_KW_C,
-    ST_KW_CH,
-    ST_KW_CHA,
-    ST_KW_CHAR,
-
-    ST_KW_V,
-    ST_KW_VO,
-    ST_KW_VOI,
-    ST_KW_VOID,
 
     ST_ERROR,
     ST_STOP,

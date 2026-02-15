@@ -18,14 +18,14 @@
 
 #include <stdio.h>
 
-// DEBUG configuration (compile-time).
-#ifndef DEBUG_FLAG
-#define DEBUG_FLAG 0  // Default OFF: messages go to stdout.
-#endif
-
 // Debug ON / OFF values.
 #define DEBUG_ON  1
 #define DEBUG_OFF 0
+
+// DEBUG configuration (compile-time).
+#ifndef DEBUG
+#define DEBUG DEBUG_OFF  // Default OFF: messages go to stdout.
+#endif
 
 // Logger destination state.
 typedef struct {

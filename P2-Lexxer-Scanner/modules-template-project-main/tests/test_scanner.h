@@ -35,7 +35,4 @@
 /* Number of expected tokens for the basic test input */
 #define TEST_BASIC_EXPECTED_TOKENS 17
 
-/* Test keyword count */
-#define TEST_NUM_KEYWORDS 7
-
 #endif /* TEST_SCANNER_H */

@@ -41,4 +41,26 @@ add_subdirectory(automata)
 add_subdirectory(out_writer)
 message(STATUS "   - (${PROJECT_NAME}) Added scanner modules")
 
+# Main scanner executable.
+add_executable(modules_template_main main.c)
+target_include_directories(modules_template_main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+# Enable operation counting and route output to .dbgcnt file.
+target_compile_definitions(automata PRIVATE COUNTCONFIG COUNTOUT=1)
+target_compile_definitions(modules_template_main PRIVATE COUNTCONFIG COUNTOUT=1)
+target_link_libraries(modules_template_main PRIVATE
+    utils
+    module_args
+    module_2
+    automata
+    token_list
+    token
+    char_stream
+    lang_spec
+    out_writer
+    error
+    logger
+    counter
+)
+message(STATUS "   - (${PROJECT_NAME}) Added modules_template_main executable")
+
 message(STATUS "(${PROJECT_NAME}) Finished including module subdirectories.")

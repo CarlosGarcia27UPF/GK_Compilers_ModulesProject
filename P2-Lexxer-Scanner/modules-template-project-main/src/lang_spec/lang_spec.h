@@ -7,8 +7,7 @@
  * the rest of the modules remain language-independent.
  *
  * Supported language (subset of C):
- *   - Types: int, char, void (recognized as keywords)
- *   - Keywords: if, else, while, for, return, int, char, void
+ *   - Keywords/types: if, else, while, return, int, char, void
  *   - Operators: = > + *
  *   - Special characters: ( ) ; { } [ ] ,
  *   - Numbers: integers [0-9]+
@@ -45,12 +44,11 @@ typedef enum {
 #define CAT_NAME_NONRECOGNIZED "CAT_NONRECOGNIZED"
 
 // Keywords.
-#define NUM_KEYWORDS 8
+#define NUM_KEYWORDS 7
 
 #define KW_IF     "if"
 #define KW_ELSE   "else"
 #define KW_WHILE  "while"
-#define KW_FOR    "for"
 #define KW_RETURN "return"
 #define KW_INT    "int"
 #define KW_CHAR   "char"
@@ -83,6 +81,24 @@ typedef enum {
 #define WS_CR     '\r'
 #define WS_NL     '\n'
 
+// Lowercase letters used in DFA character-class routing.
+#define CH_I_LOWER 'i'
+#define CH_E_LOWER 'e'
+#define CH_W_LOWER 'w'
+#define CH_R_LOWER 'r'
+#define CH_C_LOWER 'c'
+#define CH_V_LOWER 'v'
+#define CH_F_LOWER 'f'
+#define CH_L_LOWER 'l'
+#define CH_S_LOWER 's'
+#define CH_H_LOWER 'h'
+#define CH_A_LOWER 'a'
+#define CH_T_LOWER 't'
+#define CH_N_LOWER 'n'
+#define CH_U_LOWER 'u'
+#define CH_O_LOWER 'o'
+#define CH_D_LOWER 'd'
+
 // Max lexeme length.
 #define MAX_LEXEME_LEN 1024
 
@@ -92,22 +108,13 @@ typedef enum {
 // Debug count output suffix.
 #define DBGCNT_SUFFIX "dbgcnt"
 
-// Helper declarations.
-
-// Returns printable category name.
-const char* ls_get_category_name(token_category_t cat);
-
-// Returns 1 for exact keyword matches.
-int ls_is_keyword(const char *lexeme);
+// Helper declarations used by the scanner automata.
 
 // Returns 1 for operators.
 int ls_is_operator(char ch);
 
 // Returns 1 for special characters.
 int ls_is_special_char(char ch);
-
-// Returns 1 for whitespace delimiters.
-int ls_is_whitespace(char ch);
 
 // Returns 1 for letters.
 int ls_is_letter(char ch);

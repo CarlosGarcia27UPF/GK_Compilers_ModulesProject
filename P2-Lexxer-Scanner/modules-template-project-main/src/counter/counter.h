@@ -29,6 +29,12 @@ typedef struct {
     long comp;     // Comparison counter.
     long io;       // I/O character counter.
     long gen;      // General instruction counter.
+    long partial_comp;  // Per-function partial comparisons.
+    long partial_io;    // Per-function partial I/O ops.
+    long partial_gen;   // Per-function partial general ops.
+    char current_func[64]; // Function currently being counted for partials.
+    FILE *trace_dest;   // Destination for update traces.
+    int trace_enabled;  // 1 when update traces are enabled.
 } counter_t;
 
 // Count output routing configuration.
@@ -49,6 +55,21 @@ typedef struct {
 // Resets all counters to zero.
 void counter_init(counter_t *cnt);
 
+// Configures trace destination and enables/disables update tracing.
+void counter_set_trace(counter_t *cnt, FILE *dest, int enabled);
+
+// Increments comparison counter with function/line metadata.
+void counter_add_comp_trace(counter_t *cnt, long amount, const char *func_name,
+                            int line);
+
+// Increments I/O counter with function/line metadata.
+void counter_add_io_trace(counter_t *cnt, long amount, const char *func_name,
+                          int line);
+
+// Increments general counter with function/line metadata.
+void counter_add_gen_trace(counter_t *cnt, long amount, const char *func_name,
+                           int line);
+
 // Increments comparison counter.
 void counter_add_comp(counter_t *cnt, long amount);
 
@@ -65,9 +86,9 @@ void counter_print(const counter_t *cnt, FILE *dest, const char *func_name,
 // Preprocessor macros for zero-overhead counting.
 #ifdef COUNTCONFIG
 
-#define CNT_COMP(cnt_ptr, n)  counter_add_comp((cnt_ptr), (n))
-#define CNT_IO(cnt_ptr, n)    counter_add_io((cnt_ptr), (n))
-#define CNT_GEN(cnt_ptr, n)   counter_add_gen((cnt_ptr), (n))
+#define CNT_COMP(cnt_ptr, n)  counter_add_comp_trace((cnt_ptr), (n), __func__, __LINE__)
+#define CNT_IO(cnt_ptr, n)    counter_add_io_trace((cnt_ptr), (n), __func__, __LINE__)
+#define CNT_GEN(cnt_ptr, n)   counter_add_gen_trace((cnt_ptr), (n), __func__, __LINE__)
 
 #else
 

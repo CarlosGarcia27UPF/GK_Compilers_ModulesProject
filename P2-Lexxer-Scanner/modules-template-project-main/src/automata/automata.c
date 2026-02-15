@@ -9,7 +9,7 @@
  * Design:
  *   - ONE function scanner_next_token() recognises each token.
  *   - Maximal munch via last_accept_state + last_accept_pos rollback.
- *   - Keywords are reclassified char-by-char after identifier acceptance.
+ *   - Keywords are recognised via dedicated DFA state chains.
  *   - Whitespace is consumed inside the DFA (START + WS → START).
  *   - Unterminated literals emit one error + NONRECOGNIZED token.
  *   - Grouped non-recognized chars emit one error per group.
@@ -21,12 +21,9 @@
 #include "automata.h"
 #include "../lang_spec/lang_spec.h"
 
-// Transition matrix:
-// rows = current state, columns = character class, value = next state.
+// Transition matrix T[state][class] -> next_state.
 // ST_STOP means "do not consume; emit token from last_accept_state".
-
-// Transition matrix T[state][class] -> next_state
-// Uses GNU C range designators: [0 ... CC_COUNT-1] = ST_STOP
+// Uses GNU C range designators: [0 ... CC_COUNT-1] = ST_STOP.
 
 static const scan_state_t T[ST_COUNT][CC_COUNT] = {
 
@@ -51,10 +48,10 @@ static const scan_state_t T[ST_COUNT][CC_COUNT] = {
         [CC_e] = ST_KW_E,
         [CC_w] = ST_KW_W,
         [CC_r] = ST_KW_R,
-        [CC_c] = ST_KW_C,
-        [CC_v] = ST_KW_V,
 
         // other letters start identifier
+        [CC_c] = ST_KW_C,
+        [CC_v] = ST_KW_V,
         [CC_f] = ST_IN_IDENT,
         [CC_l] = ST_IN_IDENT,
         [CC_s] = ST_IN_IDENT,
@@ -188,6 +185,117 @@ static const scan_state_t T[ST_COUNT][CC_COUNT] = {
 
     [ST_KW_INT] = {
         [0 ... CC_COUNT-1] = ST_STOP, // accept "int"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // TYPES: char / void
+    // -------------------------
+    [ST_KW_C] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_h] = ST_KW_CH,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_CH] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_a] = ST_KW_CHA,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_CHA] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_r] = ST_KW_CHAR,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_CHAR] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "char"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_V] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_o] = ST_KW_VO,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_VO] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_i] = ST_KW_VOI,
+
+        // otherwise identifier
+        [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_VOI] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_d] = ST_KW_VOID,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_VOID] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "void"
 
         // if followed by letter/digit => identifier
         [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
@@ -412,120 +520,6 @@ static const scan_state_t T[ST_COUNT][CC_COUNT] = {
     },
 
     // -------------------------
-    // KEYWORDS: char
-    // -------------------------
-    [ST_KW_C] = {
-        [0 ... CC_COUNT-1] = ST_STOP,
-
-        [CC_h] = ST_KW_CH,
-
-        // otherwise identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
-        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
-        [CC_s] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
-        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    [ST_KW_CH] = {
-        [0 ... CC_COUNT-1] = ST_STOP,
-
-        [CC_a] = ST_KW_CHA,
-
-        // otherwise identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
-        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
-        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
-        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    [ST_KW_CHA] = {
-        [0 ... CC_COUNT-1] = ST_STOP,
-
-        [CC_r] = ST_KW_CHAR,
-
-        // otherwise identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
-        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
-        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
-        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    [ST_KW_CHAR] = {
-        [0 ... CC_COUNT-1] = ST_STOP, // accept "char"
-
-        // if followed by letter/digit => identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
-        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
-        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
-        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    // -------------------------
-    // KEYWORDS: void
-    // -------------------------
-    [ST_KW_V] = {
-        [0 ... CC_COUNT-1] = ST_STOP,
-
-        [CC_o] = ST_KW_VO,
-
-        // otherwise identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
-        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
-        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
-        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    [ST_KW_VO] = {
-        [0 ... CC_COUNT-1] = ST_STOP,
-
-        [CC_i] = ST_KW_VOI,
-
-        // otherwise identifier
-        [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
-        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
-        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
-        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    [ST_KW_VOI] = {
-        [0 ... CC_COUNT-1] = ST_STOP,
-
-        [CC_d] = ST_KW_VOID,
-
-        // otherwise identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
-        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
-        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
-        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    [ST_KW_VOID] = {
-        [0 ... CC_COUNT-1] = ST_STOP, // accept "void"
-
-        // if followed by letter/digit => identifier
-        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
-        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
-        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
-        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
-        [CC_LETTER] = ST_IN_IDENT,
-        [CC_DIGIT]  = ST_IN_IDENT
-    },
-
-    // -------------------------
     // ERROR + STOP
     // -------------------------
     [ST_ERROR] = {
@@ -547,13 +541,35 @@ static int is_accepting(scan_state_t st) {
         case ST_ACCEPT_OP:
         case ST_ACCEPT_SC:
         case ST_LIT_END:
+        /* Complete keyword accept states */
         case ST_KW_IF:
         case ST_KW_INT:
+        case ST_KW_CHAR:
+        case ST_KW_VOID:
         case ST_KW_ELSE:
         case ST_KW_WHILE:
         case ST_KW_RETURN:
-        case ST_KW_CHAR:
-        case ST_KW_VOID:
+        /* Intermediate keyword states (valid as identifiers, e.g. "i", "in", "wh") */
+        case ST_KW_I:
+        case ST_KW_IN:
+        case ST_KW_C:
+        case ST_KW_CH:
+        case ST_KW_CHA:
+        case ST_KW_V:
+        case ST_KW_VO:
+        case ST_KW_VOI:
+        case ST_KW_E:
+        case ST_KW_EL:
+        case ST_KW_ELS:
+        case ST_KW_W:
+        case ST_KW_WH:
+        case ST_KW_WHI:
+        case ST_KW_WHIL:
+        case ST_KW_R:
+        case ST_KW_RE:
+        case ST_KW_RET:
+        case ST_KW_RETU:
+        case ST_KW_RETUR:
             return 1;
         default:
             return 0;
@@ -564,20 +580,44 @@ static int is_accepting(scan_state_t st) {
 static token_category_t accept_category(scan_state_t st) {
     switch (st) {
         case ST_IN_NUMBER:  return CAT_NUMBER;
-        case ST_IN_IDENT:   return CAT_IDENTIFIER; // Reclassified as keyword later.
+        case ST_IN_IDENT:   return CAT_IDENTIFIER;
         case ST_ACCEPT_OP:  return CAT_OPERATOR;
         case ST_ACCEPT_SC:  return CAT_SPECIALCHAR;
         case ST_LIT_END:    return CAT_LITERAL;
         case ST_IN_NONREC:  return CAT_NONRECOGNIZED;
 
+        /* Complete keyword accept states */
         case ST_KW_IF:
         case ST_KW_INT:
+        case ST_KW_CHAR:
+        case ST_KW_VOID:
         case ST_KW_ELSE:
         case ST_KW_WHILE:
         case ST_KW_RETURN:
-        case ST_KW_CHAR:
-        case ST_KW_VOID:
             return CAT_KEYWORD;
+
+        /* Intermediate keyword states are valid identifiers */
+        case ST_KW_I:
+        case ST_KW_IN:
+        case ST_KW_C:
+        case ST_KW_CH:
+        case ST_KW_CHA:
+        case ST_KW_V:
+        case ST_KW_VO:
+        case ST_KW_VOI:
+        case ST_KW_E:
+        case ST_KW_EL:
+        case ST_KW_ELS:
+        case ST_KW_W:
+        case ST_KW_WH:
+        case ST_KW_WHI:
+        case ST_KW_WHIL:
+        case ST_KW_R:
+        case ST_KW_RE:
+        case ST_KW_RET:
+        case ST_KW_RETU:
+        case ST_KW_RETUR:
+            return CAT_IDENTIFIER;
 
         default:            return CAT_NONRECOGNIZED;
     }
@@ -587,8 +627,8 @@ static token_category_t accept_category(scan_state_t st) {
 char_class_t classify_char(int ch) {
     if (ch == EOF) return CC_EOF;
 
-    if (ch == '\n') return CC_NEWLINE;
-    if (ch == ' ' || ch == '\t' || ch == '\r') return CC_SPACE;
+    if (ch == WS_NL) return CC_NEWLINE;
+    if (ch == WS_SPACE || ch == WS_TAB || ch == WS_CR) return CC_SPACE;
 
     if (ls_is_digit((char)ch)) return CC_DIGIT;
     if (ls_is_quote((char)ch)) return CC_QUOTE;
@@ -596,23 +636,23 @@ char_class_t classify_char(int ch) {
     if (ls_is_special_char((char)ch)) return CC_SPECIAL;
 
     switch (ch) {
-        case 'i': return CC_i;
-        case 'e': return CC_e;
-        case 'w': return CC_w;
-        case 'r': return CC_r;
-        case 'c': return CC_c;
-        case 'v': return CC_v;
+        case CH_I_LOWER: return CC_i;
+        case CH_E_LOWER: return CC_e;
+        case CH_W_LOWER: return CC_w;
+        case CH_R_LOWER: return CC_r;
+        case CH_C_LOWER: return CC_c;
+        case CH_V_LOWER: return CC_v;
 
-        case 'f': return CC_f;
-        case 'l': return CC_l;
-        case 's': return CC_s;
-        case 'h': return CC_h;
-        case 'a': return CC_a;
-        case 't': return CC_t;
-        case 'n': return CC_n;
-        case 'u': return CC_u;
-        case 'o': return CC_o;
-        case 'd': return CC_d;
+        case CH_F_LOWER: return CC_f;
+        case CH_L_LOWER: return CC_l;
+        case CH_S_LOWER: return CC_s;
+        case CH_H_LOWER: return CC_h;
+        case CH_A_LOWER: return CC_a;
+        case CH_T_LOWER: return CC_t;
+        case CH_N_LOWER: return CC_n;
+        case CH_U_LOWER: return CC_u;
+        case CH_O_LOWER: return CC_o;
+        case CH_D_LOWER: return CC_d;
     }
 
     if (ls_is_letter((char)ch)) return CC_LETTER;

@@ -15,25 +15,10 @@
 /* ---- Test: Language Specification ---- */
 
 /*
- * test_lang_spec - verifies keyword detection, char classification,
- * and category naming.
+ * test_lang_spec - verifies char classification helpers used by automata.
  */
 static void test_lang_spec(void) {
     printf("  Testing lang_spec...\n");
-
-    /* Keywords must be recognized */
-    assert(ls_is_keyword(KW_IF) == 1);
-    assert(ls_is_keyword(KW_ELSE) == 1);
-    assert(ls_is_keyword(KW_WHILE) == 1);
-    assert(ls_is_keyword(KW_RETURN) == 1);
-    assert(ls_is_keyword(KW_INT) == 1);
-    assert(ls_is_keyword(KW_CHAR) == 1);
-    assert(ls_is_keyword(KW_VOID) == 1);
-
-    /* Non-keywords must NOT be recognized */
-    assert(ls_is_keyword("foo") == 0);
-    assert(ls_is_keyword("iff") == 0);
-    assert(ls_is_keyword("whil") == 0);
 
     /* Character classification */
     assert(ls_is_letter('a') == 1);
@@ -50,15 +35,8 @@ static void test_lang_spec(void) {
     assert(ls_is_special_char(SC_LPAREN) == 1);
     assert(ls_is_special_char(SC_SEMICOLON) == 1);
     assert(ls_is_special_char('x') == 0);
-    assert(ls_is_whitespace(WS_SPACE) == 1);
-    assert(ls_is_whitespace(WS_TAB) == 1);
-    assert(ls_is_whitespace('a') == 0);
     assert(ls_is_quote(LIT_QUOTE) == 1);
     assert(ls_is_quote('a') == 0);
-
-    /* Category names */
-    assert(ls_get_category_name(CAT_NUMBER) != NULL);
-    assert(ls_get_category_name(CAT_KEYWORD) != NULL);
 
     printf("  lang_spec tests PASSED\n");
 }
@@ -521,6 +499,400 @@ static void test_null_counter_pointer(void) {
     printf("  NULL counter pointer tests PASSED\n");
 }
 
+/* ---- Test: All Keywords ---- */
+
+/*
+ * test_all_keywords - verifies that all 5 keywords are recognized
+ * when used together in realistic C-like code.
+ */
+static void test_all_keywords(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result, i;
+    int keyword_count = 0;
+
+    printf("  Testing all keywords...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "int x;\n");
+    fprintf(fp, "if (1) return; else while (0);\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Count how many keyword tokens we got */
+    for (i = 0; i < tl_count(&tokens); i++) {
+        tok = tl_get(&tokens, i);
+        if (tok->category == CAT_KEYWORD) {
+            keyword_count++;
+        }
+    }
+
+    /* Must find all 5 keywords: int, if, return, else, while */
+    assert(keyword_count == 5);
+
+    tl_free(&tokens);
+
+    printf("  all keywords tests PASSED\n");
+}
+
+/* ---- Test: Keyword Lookalikes (typos) ---- */
+
+/*
+ * test_keyword_typos - verifies that misspelled keywords like
+ * "wile", "iff", "intt" are classified as IDENTIFIER, not KEYWORD.
+ */
+static void test_keyword_typos(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result, i;
+
+    printf("  Testing keyword typos/lookalikes...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "wile notKeyword;\n");
+    fprintf(fp, "iff alsoNot;\n");
+    fprintf(fp, "intt stillNot;\n");
+    fprintf(fp, "returns bad;\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Every identifier-like token must be CAT_IDENTIFIER, never CAT_KEYWORD */
+    for (i = 0; i < tl_count(&tokens); i++) {
+        tok = tl_get(&tokens, i);
+        assert(tok->category != CAT_KEYWORD);
+    }
+
+    /* Specifically verify the typo tokens are identifiers */
+    /* Line 1: wile notKeyword ; */
+    tok = tl_get(&tokens, 0);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+    assert(strcmp(tok->lexeme, "wile") == 0);
+
+    tok = tl_get(&tokens, 1);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+    assert(strcmp(tok->lexeme, "notKeyword") == 0);
+
+    /* Line 2: iff alsoNot ; */
+    tok = tl_get(&tokens, 3);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+    assert(strcmp(tok->lexeme, "iff") == 0);
+
+    /* Line 3: intt stillNot ; */
+    tok = tl_get(&tokens, 6);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);
+    assert(strcmp(tok->lexeme, "intt") == 0);
+
+    tl_free(&tokens);
+
+    printf("  keyword typos tests PASSED\n");
+}
+
+/* ---- Test: Numbers with Leading Zeros ---- */
+
+/*
+ * test_numbers_leading_zeros - verifies that numbers with leading zeros
+ * (007, 000) and large numbers are all recognized as CAT_NUMBER.
+ */
+static void test_numbers_leading_zeros(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result;
+
+    printf("  Testing numbers with leading zeros...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "int x = 007;\n");
+    fprintf(fp, "int y = 000;\n");
+    fprintf(fp, "int z = 123456789;\n");
+    fprintf(fp, "int w = 0;\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Line 1: int x = 007 ; -> tokens 0..4 */
+    tok = tl_get(&tokens, 3);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NUMBER);
+    assert(strcmp(tok->lexeme, "007") == 0);
+
+    /* Line 2: int y = 000 ; -> tokens 5..9 */
+    tok = tl_get(&tokens, 8);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NUMBER);
+    assert(strcmp(tok->lexeme, "000") == 0);
+
+    /* Line 3: int z = 123456789 ; -> tokens 10..14 */
+    tok = tl_get(&tokens, 13);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NUMBER);
+    assert(strcmp(tok->lexeme, "123456789") == 0);
+
+    /* Line 4: int w = 0 ; -> tokens 15..19 */
+    tok = tl_get(&tokens, 18);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NUMBER);
+    assert(strcmp(tok->lexeme, "0") == 0);
+
+    tl_free(&tokens);
+
+    printf("  numbers with leading zeros tests PASSED\n");
+}
+
+/* ---- Test: All Operators Together ---- */
+
+/*
+ * test_all_operators - verifies that all four operators (=, >, +, *)
+ * are correctly recognized when used in a single expression.
+ */
+static void test_all_operators(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result;
+
+    printf("  Testing all operators together...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "x = y + z * a > b;\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Expected: x = y + z * a > b ; = 10 tokens */
+    assert(tl_count(&tokens) == 10);
+
+    /* "=" operator */
+    tok = tl_get(&tokens, 1);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);
+    assert(tok->lexeme[0] == OP_ASSIGN);
+
+    /* "+" operator */
+    tok = tl_get(&tokens, 3);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);
+    assert(tok->lexeme[0] == OP_PLUS);
+
+    /* "*" operator */
+    tok = tl_get(&tokens, 5);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);
+    assert(tok->lexeme[0] == OP_STAR);
+
+    /* ">" operator */
+    tok = tl_get(&tokens, 7);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);
+    assert(tok->lexeme[0] == OP_GT);
+
+    tl_free(&tokens);
+
+    printf("  all operators tests PASSED\n");
+}
+
+/* ---- Test: Arrays and Pointers ---- */
+
+/*
+ * test_arrays_pointers - verifies that array bracket syntax and
+ * pointer star syntax are correctly tokenized.
+ */
+static void test_arrays_pointers(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result, i;
+    int found_lbracket = 0, found_rbracket = 0, found_star = 0;
+
+    printf("  Testing arrays and pointers...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "int arr[10];\n");
+    fprintf(fp, "char* ptr;\n");
+    fprintf(fp, "void** pptr;\n");
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Verify brackets and stars are found */
+    for (i = 0; i < tl_count(&tokens); i++) {
+        tok = tl_get(&tokens, i);
+        if (tok->category == CAT_SPECIALCHAR && tok->lexeme[0] == SC_LBRACKET)
+            found_lbracket = 1;
+        if (tok->category == CAT_SPECIALCHAR && tok->lexeme[0] == SC_RBRACKET)
+            found_rbracket = 1;
+        if (tok->category == CAT_OPERATOR && tok->lexeme[0] == OP_STAR)
+            found_star = 1;
+    }
+
+    assert(found_lbracket == 1);
+    assert(found_rbracket == 1);
+    assert(found_star == 1);
+
+    /* Line 1: int arr [ 10 ] ; = 6 tokens */
+    tok = tl_get(&tokens, 0);
+    assert(tok != NULL);
+    assert(tok->category == CAT_KEYWORD);  /* int */
+
+    tok = tl_get(&tokens, 1);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);  /* arr */
+
+    tok = tl_get(&tokens, 2);
+    assert(tok != NULL);
+    assert(tok->category == CAT_SPECIALCHAR);  /* [ */
+
+    tok = tl_get(&tokens, 3);
+    assert(tok != NULL);
+    assert(tok->category == CAT_NUMBER);  /* 10 */
+
+    tok = tl_get(&tokens, 4);
+    assert(tok != NULL);
+    assert(tok->category == CAT_SPECIALCHAR);  /* ] */
+
+    tok = tl_get(&tokens, 5);
+    assert(tok != NULL);
+    assert(tok->category == CAT_SPECIALCHAR);  /* ; */
+
+    /* Line 2: char * ptr ; (char is a supported type keyword) */
+    tok = tl_get(&tokens, 6);
+    assert(tok != NULL);
+    assert(tok->category == CAT_KEYWORD);  /* char */
+
+    tok = tl_get(&tokens, 7);
+    assert(tok != NULL);
+    assert(tok->category == CAT_OPERATOR);  /* * */
+
+    tok = tl_get(&tokens, 8);
+    assert(tok != NULL);
+    assert(tok->category == CAT_IDENTIFIER);  /* ptr */
+
+    tl_free(&tokens);
+
+    printf("  arrays and pointers tests PASSED\n");
+}
+
+/* ---- Test: Complex Literals ---- */
+
+/*
+ * test_complex_literals - verifies that various literal forms are
+ * correctly recognized: empty literals, literals with spaces,
+ * and literals with special characters.
+ */
+static void test_complex_literals(void) {
+    char_stream_t cs;
+    token_list_t tokens;
+    logger_t lg;
+    counter_t cnt;
+    const token_t *tok;
+    FILE *fp;
+    int result, i;
+    int literal_count = 0;
+
+    printf("  Testing complex literals...\n");
+
+    fp = fopen(TEST_INPUT_FILE, "w");
+    assert(fp != NULL);
+    fprintf(fp, "char* s1 = \"\";\n");                        /* empty literal */
+    fprintf(fp, "char* s2 = \"hello world\";\n");              /* spaces */
+    fprintf(fp, "char* s3 = \"symbols!@#$%%^&*()\";\n");      /* special chars */
+    fprintf(fp, "char* s4 = \"12345\";\n");                    /* digits inside */
+    fclose(fp);
+
+    counter_init(&cnt);
+    tl_init(&tokens);
+    logger_init(&lg, stdout);
+
+    result = cs_open(&cs, TEST_INPUT_FILE);
+    assert(result == 0);
+    result = automata_scan(&cs, &tokens, &lg, &cnt);
+    assert(result == 0);
+    cs_close(&cs);
+
+    /* Count all literal tokens */
+    for (i = 0; i < tl_count(&tokens); i++) {
+        tok = tl_get(&tokens, i);
+        if (tok->category == CAT_LITERAL) {
+            literal_count++;
+        }
+    }
+
+    /* Should have exactly 4 literals */
+    assert(literal_count == 4);
+
+    tl_free(&tokens);
+
+    printf("  complex literals tests PASSED\n");
+}
+
 /* ---- Main ---- */
 
 int main(void) {
@@ -537,6 +909,12 @@ int main(void) {
     test_output_filenames_extended();
     test_countio();
     test_null_counter_pointer();
+    test_all_keywords();
+    test_keyword_typos();
+    test_numbers_leading_zeros();
+    test_all_operators();
+    test_arrays_pointers();
+    test_complex_literals();
 
     printf("All scanner tests PASSED!\n");
     return 0;
