@@ -25,38 +25,518 @@
 // rows = current state, columns = character class, value = next state.
 // ST_STOP means "do not consume; emit token from last_accept_state".
 
+// Transition matrix T[state][class] -> next_state
+// Uses GNU C range designators: [0 ... CC_COUNT-1] = ST_STOP
+
 static const scan_state_t T[ST_COUNT][CC_COUNT] = {
-    // ST_START: branch by first character class.
-    //           LETTER         DIGIT          QUOTE          OPERATOR       SPECIAL        SPACE          NEWLINE        EOF            OTHER
-    [ST_START]    = {ST_IN_IDENT,  ST_IN_NUMBER,  ST_IN_LITERAL, ST_ACCEPT_OP,  ST_ACCEPT_SC,  ST_START,      ST_START,      ST_STOP,       ST_IN_NONREC },
 
-    // ST_IN_NUMBER: accumulate digits only.
-    [ST_IN_NUMBER]= {ST_STOP,      ST_IN_NUMBER,  ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+    // -------------------------
+    // START
+    // -------------------------
+    [ST_START] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
 
-    // ST_IN_IDENT: accumulate letters/digits.
-    [ST_IN_IDENT] = {ST_IN_IDENT,  ST_IN_IDENT,   ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+        [CC_SPACE]   = ST_START,
+        [CC_NEWLINE] = ST_START,
+        [CC_EOF]     = ST_STOP,
 
-    // ST_IN_LITERAL: accept any char except newline/EOF terminates with error.
-    [ST_IN_LITERAL]={ST_IN_LITERAL,ST_IN_LITERAL,  ST_LIT_END,    ST_IN_LITERAL, ST_IN_LITERAL, ST_IN_LITERAL, ST_ERROR,      ST_ERROR,      ST_IN_LITERAL},
+        [CC_DIGIT]   = ST_IN_NUMBER,
+        [CC_QUOTE]   = ST_IN_LITERAL,
 
-    // ST_ACCEPT_OP: single-character operator.
-    [ST_ACCEPT_OP]= {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+        [CC_OPERATOR] = ST_ACCEPT_OP,
+        [CC_SPECIAL]  = ST_ACCEPT_SC,
 
-    // ST_ACCEPT_SC: single-character special token.
-    [ST_ACCEPT_SC]= {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+        // keyword starting letters
+        [CC_i] = ST_KW_I,
+        [CC_e] = ST_KW_E,
+        [CC_w] = ST_KW_W,
+        [CC_r] = ST_KW_R,
+        [CC_c] = ST_KW_C,
+        [CC_v] = ST_KW_V,
 
-    // ST_IN_NONREC: group consecutive non-recognized characters.
-    [ST_IN_NONREC]= {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_IN_NONREC },
+        // other letters start identifier
+        [CC_f] = ST_IN_IDENT,
+        [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT,
+        [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT,
+        [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT,
+        [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
 
-    // ST_LIT_END: closing quote consumed.
-    [ST_LIT_END]  = {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+        // unknown starts nonrecognized group
+        [CC_OTHER] = ST_IN_NONREC,
+    },
 
-    // ST_ERROR: terminal failure.
-    [ST_ERROR]    = {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+    // -------------------------
+    // NUMBER
+    // -------------------------
+    [ST_IN_NUMBER] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+        [CC_DIGIT] = ST_IN_NUMBER
+    },
 
-    // ST_STOP: marker state, not an active DFA state.
-    [ST_STOP]     = {ST_STOP,      ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP,       ST_STOP      },
+    // -------------------------
+    // IDENTIFIER
+    // -------------------------
+    [ST_IN_IDENT] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        // any letter class continues identifier
+        [CC_i] = ST_IN_IDENT,
+        [CC_e] = ST_IN_IDENT,
+        [CC_w] = ST_IN_IDENT,
+        [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT,
+        [CC_v] = ST_IN_IDENT,
+
+        [CC_f] = ST_IN_IDENT,
+        [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT,
+        [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT,
+        [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT,
+        [CC_d] = ST_IN_IDENT,
+
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // LITERAL (double-quoted)
+    // -------------------------
+    [ST_IN_LITERAL] = {
+        [0 ... CC_COUNT-1] = ST_IN_LITERAL,
+
+        [CC_QUOTE]   = ST_LIT_END,
+        [CC_NEWLINE] = ST_ERROR,
+        [CC_EOF]     = ST_ERROR
+    },
+
+    [ST_LIT_END] = {
+        [0 ... CC_COUNT-1] = ST_STOP
+    },
+
+    // -------------------------
+    // NONRECOGNIZED GROUP
+    // -------------------------
+    [ST_IN_NONREC] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+        [CC_OTHER] = ST_IN_NONREC
+    },
+
+    // -------------------------
+    // SINGLE-CHAR TOKENS
+    // -------------------------
+    [ST_ACCEPT_OP] = {
+        [0 ... CC_COUNT-1] = ST_STOP
+    },
+
+    [ST_ACCEPT_SC] = {
+        [0 ... CC_COUNT-1] = ST_STOP
+    },
+
+    // -------------------------
+    // KEYWORDS: if / int
+    // -------------------------
+    [ST_KW_I] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_f] = ST_KW_IF,
+        [CC_n] = ST_KW_IN,
+
+        // otherwise, if it continues as identifier => fall into ident
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT,
+        [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_IF] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "if" on delimiter/operator/special/space/newline/EOF
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_IN] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_t] = ST_KW_INT,
+
+        // otherwise, identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_INT] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "int"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // KEYWORDS: else
+    // -------------------------
+    [ST_KW_E] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_l] = ST_KW_EL,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT,
+        [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_EL] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_s] = ST_KW_ELS,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_ELS] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_e] = ST_KW_ELSE,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_ELSE] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "else"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // KEYWORDS: while
+    // -------------------------
+    [ST_KW_W] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_h] = ST_KW_WH,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_WH] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_i] = ST_KW_WHI,
+
+        // otherwise identifier
+        [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_WHI] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_l] = ST_KW_WHIL,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT,
+        [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_WHIL] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_e] = ST_KW_WHILE,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_WHILE] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "while"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // KEYWORDS: return
+    // -------------------------
+    [ST_KW_R] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_e] = ST_KW_RE,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_RE] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_t] = ST_KW_RET,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_RET] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_u] = ST_KW_RETU,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_RETU] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_r] = ST_KW_RETUR,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_RETUR] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_n] = ST_KW_RETURN,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_RETURN] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "return"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // KEYWORDS: char
+    // -------------------------
+    [ST_KW_C] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_h] = ST_KW_CH,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_CH] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_a] = ST_KW_CHA,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT,
+        [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_CHA] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_r] = ST_KW_CHAR,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_CHAR] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "char"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // KEYWORDS: void
+    // -------------------------
+    [ST_KW_V] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_o] = ST_KW_VO,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_VO] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_i] = ST_KW_VOI,
+
+        // otherwise identifier
+        [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT, [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT,
+        [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT, [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT,
+        [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT, [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT,
+        [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_VOI] = {
+        [0 ... CC_COUNT-1] = ST_STOP,
+
+        [CC_d] = ST_KW_VOID,
+
+        // otherwise identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    [ST_KW_VOID] = {
+        [0 ... CC_COUNT-1] = ST_STOP, // accept "void"
+
+        // if followed by letter/digit => identifier
+        [CC_i] = ST_IN_IDENT, [CC_e] = ST_IN_IDENT, [CC_w] = ST_IN_IDENT, [CC_r] = ST_IN_IDENT,
+        [CC_c] = ST_IN_IDENT, [CC_v] = ST_IN_IDENT, [CC_f] = ST_IN_IDENT, [CC_l] = ST_IN_IDENT,
+        [CC_s] = ST_IN_IDENT, [CC_h] = ST_IN_IDENT, [CC_a] = ST_IN_IDENT, [CC_t] = ST_IN_IDENT,
+        [CC_n] = ST_IN_IDENT, [CC_u] = ST_IN_IDENT, [CC_o] = ST_IN_IDENT, [CC_d] = ST_IN_IDENT,
+        [CC_LETTER] = ST_IN_IDENT,
+        [CC_DIGIT]  = ST_IN_IDENT
+    },
+
+    // -------------------------
+    // ERROR + STOP
+    // -------------------------
+    [ST_ERROR] = {
+        [0 ... CC_COUNT-1] = ST_STOP
+    },
+
+    [ST_STOP] = {
+        [0 ... CC_COUNT-1] = ST_STOP
+    }
 };
+
 
 // Returns 1 when state is accepting.
 static int is_accepting(scan_state_t st) {
@@ -67,6 +547,13 @@ static int is_accepting(scan_state_t st) {
         case ST_ACCEPT_OP:
         case ST_ACCEPT_SC:
         case ST_LIT_END:
+        case ST_KW_IF:
+        case ST_KW_INT:
+        case ST_KW_ELSE:
+        case ST_KW_WHILE:
+        case ST_KW_RETURN:
+        case ST_KW_CHAR:
+        case ST_KW_VOID:
             return 1;
         default:
             return 0;
@@ -82,38 +569,57 @@ static token_category_t accept_category(scan_state_t st) {
         case ST_ACCEPT_SC:  return CAT_SPECIALCHAR;
         case ST_LIT_END:    return CAT_LITERAL;
         case ST_IN_NONREC:  return CAT_NONRECOGNIZED;
+
+        case ST_KW_IF:
+        case ST_KW_INT:
+        case ST_KW_ELSE:
+        case ST_KW_WHILE:
+        case ST_KW_RETURN:
+        case ST_KW_CHAR:
+        case ST_KW_VOID:
+            return CAT_KEYWORD;
+
         default:            return CAT_NONRECOGNIZED;
     }
 }
 
 // Maps one character to a DFA class.
 char_class_t classify_char(int ch) {
-    if (ch == CS_EOF) {
-        return CC_EOF;
+    if (ch == EOF) return CC_EOF;
+
+    if (ch == '\n') return CC_NEWLINE;
+    if (ch == ' ' || ch == '\t' || ch == '\r') return CC_SPACE;
+
+    if (ls_is_digit((char)ch)) return CC_DIGIT;
+    if (ls_is_quote((char)ch)) return CC_QUOTE;
+    if (ls_is_operator((char)ch)) return CC_OPERATOR;
+    if (ls_is_special_char((char)ch)) return CC_SPECIAL;
+
+    switch (ch) {
+        case 'i': return CC_i;
+        case 'e': return CC_e;
+        case 'w': return CC_w;
+        case 'r': return CC_r;
+        case 'c': return CC_c;
+        case 'v': return CC_v;
+
+        case 'f': return CC_f;
+        case 'l': return CC_l;
+        case 's': return CC_s;
+        case 'h': return CC_h;
+        case 'a': return CC_a;
+        case 't': return CC_t;
+        case 'n': return CC_n;
+        case 'u': return CC_u;
+        case 'o': return CC_o;
+        case 'd': return CC_d;
     }
-    if (ls_is_letter((char)ch)) {
-        return CC_LETTER;
-    }
-    if (ls_is_digit((char)ch)) {
-        return CC_DIGIT;
-    }
-    if (ls_is_quote((char)ch)) {
-        return CC_QUOTE;
-    }
-    if (ls_is_operator((char)ch)) {
-        return CC_OPERATOR;
-    }
-    if (ls_is_special_char((char)ch)) {
-        return CC_SPECIAL;
-    }
-    if ((char)ch == WS_NL) {
-        return CC_NEWLINE;
-    }
-    if (ls_is_whitespace((char)ch)) {
-        return CC_SPACE;
-    }
+
+    if (ls_is_letter((char)ch)) return CC_LETTER;
+
     return CC_OTHER;
 }
+
 
 // Appends one character to the token buffer with bounds check.
 static void add_char_to_lexeme(char *buf, int *len, int ch) {
@@ -195,11 +701,6 @@ static int scanner_next_token(char_stream_t *cs, token_list_t *tokens,
                 // Emit token from the last accepting state.
                 token_category_t cat = accept_category(last_accept_state);
                 token_t tok;
-
-                // Reclassify accepted identifiers as keywords.
-                if (cat == CAT_IDENTIFIER && ls_is_keyword(buf)) {
-                    cat = CAT_KEYWORD;
-                }
 
                 token_init(&tok, buf, cat, tok_line, tok_col);
                 tl_add(tokens, &tok);
