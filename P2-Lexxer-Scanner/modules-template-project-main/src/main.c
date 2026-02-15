@@ -78,7 +78,7 @@ static int run_scanner(const char *input_filename) {
 #endif
 
     // Initialize logger destination.
-    if (DEBUG == DEBUG_ON) {
+    if (DEBUG_FLAG == DEBUG_ON) {
         debug_out = fopen(output_filename, "w");
         if (debug_out == NULL) {
 #ifdef COUNTCONFIG
@@ -89,9 +89,9 @@ static int run_scanner(const char *input_filename) {
             tl_free(&tokens);
             return ERR_FILE_OUTPUT;
         }
-        logger_init(&lg, debug_out);
+        logger_init(&lg, debug_out, input_filename);
     } else {
-        logger_init(&lg, stdout);
+        logger_init(&lg, stdout, input_filename);
     }
 
     // Open input file.
@@ -124,7 +124,7 @@ static int run_scanner(const char *input_filename) {
 
     // Write token file.
     if (ow_write_token_file_mode(&tokens, output_filename,
-                                 (DEBUG == DEBUG_ON)) != 0) {
+                                 (DEBUG_FLAG == DEBUG_ON)) != 0) {
         err_report(logger_get_dest(&lg), ERR_FILE_OUTPUT, ERR_STEP_DRIVER,
                    0, output_filename);
         if (debug_out != NULL) {
@@ -159,7 +159,7 @@ static int run_scanner(const char *input_filename) {
     if (debug_out != NULL) {
         fclose(debug_out);
         debug_out = NULL;
-        logger_init(&lg, stdout);
+        logger_init(&lg, stdout, input_filename);
     }
 
 #ifdef COUNTCONFIG
@@ -190,6 +190,7 @@ static int run_scanner(const char *input_filename) {
     // Future hook: parser can consume the in-memory token list here.
     // Clean up.
     tl_free(&tokens);
+    logger_close(&lg);
 
     return result;
 }

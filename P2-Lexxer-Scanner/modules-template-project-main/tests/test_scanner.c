@@ -107,7 +107,7 @@ static void test_scanner_scan(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -194,7 +194,7 @@ static void test_output_writer(void) {
     write_test_file();
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -245,7 +245,7 @@ static void test_blank_lines(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -304,7 +304,7 @@ static void test_unterminated_literal(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -360,7 +360,7 @@ static void test_grouped_nonrecognized(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -485,7 +485,7 @@ static void test_null_counter_pointer(void) {
 
     write_test_file();
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -525,7 +525,7 @@ static void test_all_keywords(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -576,7 +576,7 @@ static void test_keyword_typos(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -646,7 +646,7 @@ static void test_numbers_leading_zeros(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -707,7 +707,7 @@ static void test_all_operators(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -774,7 +774,7 @@ static void test_arrays_pointers(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
@@ -869,7 +869,7 @@ static void test_complex_literals(void) {
 
     counter_init(&cnt);
     tl_init(&tokens);
-    logger_init(&lg, stdout);
+    logger_init(&lg, stdout, NULL);
 
     result = cs_open(&cs, TEST_INPUT_FILE);
     assert(result == 0);
