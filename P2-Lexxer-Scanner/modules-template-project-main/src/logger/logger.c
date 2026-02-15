@@ -1,41 +1,30 @@
-/*
- * logger.c - simple message router implementation
- *
- * routes messages to stdout or file, formats tokens, manages counter files
- */
-
 #include "logger.h"
 #include <stdarg.h>
 #include <string.h>
 
-/*
- * initialize logger with destinations
- * input_filename is used to create .dbgcnt file if needed
- */
+
 void logger_init(logger_t *lg, FILE *outfile, const char *input_filename) {
     if (lg == NULL) return;
 
-    /* set main destination based on debug flag */
+    // set main destination based on debug flag and provided output file
     if (DEBUG_FLAG == DEBUG_ON && outfile != NULL) {
         lg->dest = outfile;
     } else {
         lg->dest = stdout;
     }
 
-    /* set up counter destination */
+    // set up counter destination based on COUNTOUT configuration
 #ifdef COUNTCONFIG
     if (COUNTOUT == COUNTOUT_MAIN) {
-        /* counter messages go to main output */
         lg->count_dest = lg->dest;
         lg->count_file[0] = '\0';
     } else {
-        /* counter messages go to separate .dbgcnt file */
         if (input_filename != NULL) {
             snprintf(lg->count_file, sizeof(lg->count_file),
                      "%s.dbgcnt", input_filename);
             lg->count_dest = fopen(lg->count_file, "w");
             if (lg->count_dest == NULL) {
-                lg->count_dest = stdout;  /* fallback */
+                lg->count_dest = stdout;  
                 lg->count_file[0] = '\0';
             }
         } else {
@@ -49,9 +38,9 @@ void logger_init(logger_t *lg, FILE *outfile, const char *input_filename) {
 #endif
 }
 
-/*
- * get the destination file for messages
- */
+
+//get the destination file for messages
+
 FILE* logger_get_dest(const logger_t *lg) {
     if (lg == NULL || lg->dest == NULL) {
         return stdout;
@@ -59,9 +48,7 @@ FILE* logger_get_dest(const logger_t *lg) {
     return lg->dest;
 }
 
-/*
- * write a formatted message to destination
- */
+// write a formatted message to destination
 void logger_write(const logger_t *lg, const char *fmt, ...) {
     va_list args;
     FILE *dest = logger_get_dest(lg);
@@ -84,7 +71,7 @@ void logger_write_tokens(logger_t *lg, int line_num, const char *token_str) {
 
 #if OUTFORMAT == OUTFORMAT_DEBUG
     fprintf(dest, "%d %s\n", line_num, token_str);
-    fprintf(dest, "\n");  /* blank line */
+    fprintf(dest, "\n"); 
 #else
     fprintf(dest, "%s\n", token_str);
 #endif
@@ -113,9 +100,8 @@ void logger_log_counts(logger_t *lg, int line, const char *func,
 #endif
 }
 
-/*
- * close counter file if it was opened separately
- */
+
+// close counter file if it was opened separately
 void logger_close(logger_t *lg) {
     if (lg == NULL) return;
 
