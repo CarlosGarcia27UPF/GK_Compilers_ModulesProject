@@ -89,9 +89,9 @@ static int run_scanner(const char *input_filename) {
             tl_free(&tokens);
             return ERR_FILE_OUTPUT;
         }
-        logger_init(&lg, debug_out, input_filename);
+        logger_init(&lg, debug_out);
     } else {
-        logger_init(&lg, stdout, input_filename);
+        logger_init(&lg, stdout);
     }
 
     // Open input file.
@@ -159,7 +159,7 @@ static int run_scanner(const char *input_filename) {
     if (debug_out != NULL) {
         fclose(debug_out);
         debug_out = NULL;
-        logger_init(&lg, stdout, input_filename);
+        logger_init(&lg, stdout);
     }
 
 #ifdef COUNTCONFIG
