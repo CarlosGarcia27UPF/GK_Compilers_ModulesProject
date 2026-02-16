@@ -5,6 +5,8 @@
  * Ordered token list implementation using a growable dynamic array.
  *
  * Team: Compilers P2
+ * 
+ * Author: Francesc Baiget
  * -----------------------------------------------------------------------------
  */
 

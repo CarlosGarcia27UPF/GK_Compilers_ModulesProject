@@ -6,6 +6,8 @@
  * Copies the lexeme character-by-character (no string library for recognition).
  *
  * Team: Compilers P2
+ * 
+ * Author: Francesc Baiget
  * -----------------------------------------------------------------------------
  */
 
