@@ -172,6 +172,39 @@ If compiled with `COUNTCONFIG`:
   - The `.cscn` file
   - A `.cdbgcnt` file (default)
 
+#### How to Enable/Disable Counting (Comment/Uncomment)
+
+Counting is controlled at compile time in:
+
+- `src/CMakeLists.txt`
+
+Current counting activation lines:
+
+```cmake
+# Enable operation counting and route output to .dbgcnt file.
+target_compile_definitions(automata PRIVATE COUNTCONFIG COUNTOUT=1)
+target_compile_definitions(modules_template_main PRIVATE COUNTCONFIG COUNTOUT=1)
+```
+
+Enable counting:
+- Keep both lines uncommented.
+
+Disable counting:
+- Comment both lines:
+
+```cmake
+# target_compile_definitions(automata PRIVATE COUNTCONFIG COUNTOUT=1)
+# target_compile_definitions(modules_template_main PRIVATE COUNTCONFIG COUNTOUT=1)
+```
+
+After changing those lines, rebuild so the generated Makefiles/executable pick up the new configuration:
+
+```bash
+cd build
+cmake ..
+cmake --build .
+```
+
 ---
 
 ## 6. Examples
