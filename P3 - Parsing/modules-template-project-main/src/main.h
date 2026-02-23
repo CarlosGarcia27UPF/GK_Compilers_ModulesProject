@@ -1,15 +1,30 @@
+/*
+ * =============================================================================
+ * main.h
+ * Global declarations for the p3_parser program.
+ *
+ * Includes all module headers and declares shared global variables.
+ * Author: [Team]
+ * =============================================================================
+ */
+
 #ifndef MAIN_H
 #define MAIN_H
- 
+
 #include <stdio.h>
 #include "./utils_files.h"
 #include "./module_args/module_args.h"
-#include "./module_2/module_2.h"
+#include "./lang_spec/lang_spec.h"
+#include "./token_loader/token_loader.h"
+#include "./parser_stack/parser_stack.h"
+#include "./sra/sra.h"
+#include "./out_writer/out_writer.h"
 
-// Output file of project run: either a stdout or a filename with log extension (comment one out)
-#define PROJOUTFILENAME "./proj_modules_template.log"
-//#define PROJOUTFILENAME "stdout"
+/* Output log filename for the main program run */
+#define PROJOUTFILENAME "./proj_p3_parser.log"
 
-extern FILE* ofile; // The output handler for the project run (same variable name as in modules)
+extern FILE        *ofile;     /* Shared output log (defined in main.c)  */
+extern config_t     g_config;  /* CLI arguments (defined in main.c)      */
+extern lang_spec_t  g_lang;    /* Language specification (defined in main.c) */
 
-#endif // MAIN_H
+#endif /* MAIN_H */

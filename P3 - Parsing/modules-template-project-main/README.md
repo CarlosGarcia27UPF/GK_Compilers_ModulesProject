@@ -1,121 +1,149 @@
-# Project Template README
+# P3 Parser – Shift-Reduce Automaton (SRA) Engine
 
 ## Overview
 
-This project template is designed to facilitate modular C development with CMake and VS Code 
-with github source control and testing with actions. It enables individual module development,
-isolated testing, and easy integration into a complete environment that creates several 
-executables (one to run the program, and a separate one to test each module in isolation) 
-in separete run and debug modes. So the project has several main functions.
+This project implements a **general Shift-Reduce Automaton (SRA) parser engine** in C.
+The engine is grammar-agnostic: the language specification (terminals, non-terminals,
+production rules, ACTION table, and GOTO table) is loaded at run time from a plain-text
+file, so changing the grammar file changes the language parsed without modifying the engine code.
 
-The testing is integrated with the github actions so it is automatically run everytime 
-push or pull request is done. The output logs of automatic runs are stored in the logs 
-directory. The log files are named with the time to avoid overwritting the different runs files.
+The project was built for the Compilers course (Dolors Sala, UPF) — Practice 3: Bottom-up Parsing.
+
+Two example grammars are provided:
+
+| File | Grammar | Sample inputs |
+|------|---------|---------------|
+| `data/language1.txt` | Arithmetic expressions (`e -> e+t \| t`, `t -> t*f \| f`, `f -> (e) \| NUM`) | `samples/sample1.cscn`, `samples/sample2.cscn`, `samples/sample3.cscn` |
+| `data/language2.txt` | Theory slide 32 (`e -> e+(e) \| int`) | `samples/sample3.cscn`, `samples/sample4.cscn` |
 
 ---
 
 ## Project Structure
+
 ```
-/ (root)
-├── CMakeLists.txt     # Top-level CMake configuration (compiles several independent programs)
-├── cmake-kits.json    # CMake kits for VS Code to select toolchains
-└── .github/      # Github configurations
-│ ├── workflows         # Github workflows for testing when push and PR
-├── .vscode/      # Configurations to run VS code
-│ └── cmake-kits.json  # To ensure gcc path for cmake (update your path)
-│ └── extensions.json  # Recommended extensions (install when recommendations pop up in your VS code installation)
-│ ├── launch.json      # Debug configurations of command line arguments (create your run configurations)
-│ ├── settings.json    # VS Code workspace settings for CMake and build (update your paths and modules)
-│ └── tasks.json       # Build and run tasks for VS Code: Add/modify tasks as you need
-├── src/          # The project source code
-│ ├── main.c           # Main program 
-│ ├── main.h           # Program data structure and common project definitions
-│ ├── module_args/     # Module arguments
-│ │ ├── module_args.c  # Module arguments source
-│ │ ├── module_args.h  # Module arguments header
-│ │ └── CMakeLists.txt # Module arguments build instructions (separate to avoid conflicts)
-│ └── module_2/        # Module 2 example template (create more modules as you need)
-│ │ ├── module_2.c     # Module 2 source
-│ │ ├── module_2.h     # Module 2 header
-│ └── CMakeLists.txt   # Module 2 build instructions (separate to avoid conflicts)
-│ ├── utils.c/         # Utility library (module example without independent CMakeList)
-│ ├── utils.h/         # 
-├── tests/        # Independent programs (mains) for testing modules individually
-│ ├── test_module_args.c # Independent program to test the module_args
-│ ├── test_module_args.h # Definitions needed just for testing module_args
-│ ├── test_module_2.c    # Independent program to test the module_2
-│ ├── test_module_2.h    # Definitions needed just for testing module_2
-│ ├── test_module.h      # Common testing definitions to all testing modules
-│ └── CMakeLists.txt     # Test executables build instructions (generates the different executables)
-└── build/      # Directory for CMake build output (ignored in git commits, different for each computer)
-└── logs/       # Directory with the output logs to track execution (can ignore in git commits)
+/
+├── CMakeLists.txt          # Top-level CMake configuration
+├── data/
+│   ├── language1.txt       # Grammar spec for Language 1 (arithmetic)
+│   └── language2.txt       # Grammar spec for Language 2 (theory slide 32)
+├── samples/
+│   ├── sample1.cscn        # 3 + 5 * 2   (Language 1)
+│   ├── sample2.cscn        # (3+4) * 2   (Language 1)
+│   ├── sample3.cscn        # 42          (Language 1 and 2)
+│   └── sample4.cscn        # 42 + ( 7 )  (Language 2)
+├── src/
+│   ├── main.c / main.h     # Main entry point (wrapper calling all modules)
+│   ├── utils_files.c/h     # Utility: timestamped log-file helper
+│   ├── dfa/                # Module: DFA – ACTION and GOTO tables and transitions
+│   ├── lang_spec/          # Module: Grammar/Language – load grammar from file
+│   ├── token_loader/       # Module: Input System – read .cscn token files
+│   ├── parser_stack/       # Module: Stack – SRA parse stack operations
+│   ├── sra/                # Module: Parser Engine – SRA main loop (DFA + Stack)
+│   ├── out_writer/         # Module: Output & Debug – write _p3dbg.txt step log
+│   └── module_args/        # Module: Main – process command-line arguments
+└── tests/
+    ├── test_dfa.c/h        # Unit tests: DFA module
+    ├── test_lang_spec.c/h  # Unit tests: lang_spec module
+    ├── test_parser_stack.c/h # Unit tests: parser_stack module
+    ├── test_sra.c/h        # Integration tests: SRA engine (language1 & language2)
+    ├── test_module_args.c/h # Unit tests: module_args
+    └── CMakeLists.txt
 ```
 
 ---
 
-## Tools and Configuration
+## Modules
 
-### CMake
+| Module | File(s) | Responsibility |
+|--------|---------|----------------|
+| **DFA** | `src/dfa/` | Deterministic Finite Automaton: stores ACTION/GOTO tables and provides `dfa_get_action` / `dfa_get_goto` |
+| **Grammar & Language** | `src/lang_spec/` | Loads a grammar file into `lang_spec_t`; wraps DFA queries; maps tokens to terminal indices |
+| **Input System** | `src/token_loader/` | Reads `.cscn` scanner-output files and builds the token list for the parser |
+| **Stack** | `src/parser_stack/` | SRA parse stack: push, pop, top-state, print |
+| **Parser Engine (SRA)** | `src/sra/` | Main SRA parse loop: reads tokens, queries DFA, calls shift/reduce/accept/error handlers |
+| **Output & Debug** | `src/out_writer/` | Opens `<name>_p3dbg.txt` and writes a formatted line for each SRA step |
+| **Main / Args** | `src/module_args/` | Parses `argc`/`argv` into a `config_t` struct used by `main.c` |
 
-- **CMake** is used as the build system generator.
-- The project uses a **modular CMake setup**, with one `CMakeLists.txt` per module for isolated compilation.
-- The top-level `CMakeLists.txt` ties all modules together and builds the main executable.
-- Unit tests for each module are built as separate executables under `tests/`.
-
-### VS Code Extensions
-
-Recommended extensions for a smooth experience:
-
-- **CMake Tools** (twxs.cmake) — CMake integration and build support.
-- **C/C++** (ms-vscode.cpptools) — IntelliSense, debugging, and code browsing.
-- **Code Runner** (formulahendry.code-runner) — quick code execution.
-- **GitHub Copilot** (GitHub.copilot) — AI-assisted coding.
-- **Git Graph** (mhutchie.git-graph) — visual git history.
-
-### CMake Kits (`cmake-kits.json`)
-
-- Preconfigures the MSYS2 UCRT64 toolchain:
-  - Compiler: `gcc.exe` from MSYS2.
-  - Generator: `MinGW Makefiles`.
-
-This allows to select the proper compiler and generator in VS Code easily.
+Each module header has a `TRACE_<MODULE>` compile-time flag (default 0).  
+Set it to 1 to enable per-module debug output to `stderr`.
 
 ---
 
-## Building the Project
+## Building
 
-1. Open the project folder in VS Code.
-2. Select the CMake Kit `MSYS2 UCRT64 (preconfigured)` via the CMake extension.
-3. Configure the project (usually done automatically on open).
-4. Build the project using the **CMake Build** command or the default build task.
-5. Run or debug the main executable or individual module tests from the VS Code Run panel or tasks.
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
 
----
-
-## Running and Debugging
-
-- Debug configurations (`launch.json`) are provided for:
-  - The main program (`modules_template_main.exe`).
-  - Each module test executable (`test_module_args.exe`, `test_module_2.exe`).
-- These use **GDB** from the MSYS2 toolchain and are preconfigured for easy debugging in VS Code.
+The main executable is `p3_parser`.
 
 ---
 
-## How to Extend the Template
+## Usage
 
-- Add new modules by creating a new folder under `src/` with its own `CMakeLists.txt`.
-- Add corresponding test files under `tests/` and update the tests `CMakeLists.txt`.
-- Extend `launch.json` and `tasks.json` to include debugging and build tasks for new modules.
+```
+p3_parser <input.cscn> [language_spec.txt]
+```
+
+- `<input.cscn>`: scanner output file (token sequence).
+- `[language_spec.txt]`: grammar file (defaults to `./data/language1.txt`).
+
+**Output:** a debug file `<basename>_p3dbg.txt` recording every SRA step.
+
+Examples:
+```bash
+./p3_parser samples/sample1.cscn data/language1.txt   # arithmetic expression
+./p3_parser samples/sample4.cscn data/language2.txt   # theory slide 32 grammar
+```
 
 ---
 
-## Notes
+## Running Tests
 
-- The `build/` directory is ignored by git to keep build artifacts out of source control.
-- The `logs/` directory can be ignored by git depending if you want to share your output files to the team.
-- Environment assumes MSYS2 installed with UCRT64 toolchain available and added to PATH.
-- The configuration aims for minimal manual setup to reduce friction between team contributors.
+```bash
+cd build && ctest --output-on-failure
+```
 
+Tests cover: DFA, lang_spec, parser_stack, module_args, and SRA integration (both grammars).
 
+---
 
+## Output Format
 
+Each line in `<name>_p3dbg.txt` follows one of these formats:
+
+```
+[SHIFT  ] pos=<n>  state=<from>-><to>  token=<name>("<lexeme>")  stack: <trace>
+[REDUCE<r>] pos=<n>  state=<from>-><to>  rule=<desc>  stack: <trace>
+[ACCEPT ] pos=<n>  state=<s>  ACCEPTED  stack: <trace>
+[ERROR  ] pos=<n>  state=<s>  token=<name>  PARSE ERROR
+```
+
+`<trace>` shows the state at the bottom, then each pushed symbol as `(state,symbol)`.
+
+---
+
+## Grammar File Format
+
+```
+LANGUAGE <name>
+
+TERMINALS <count>
+<name> LEXEME:<value>       # match by literal lexeme
+<name> CATEGORY:<tag>       # match by scanner category
+<name> EOF                  # end-of-input sentinel
+
+NONTERMINALS <count>
+<name>
+
+RULES <count>
+<lhs_index> <rhs_len> <description>
+
+STATES <count>
+ACTION
+E|S<n>|R<n>|A  ...         # one row per state, one cell per terminal
+GOTO
+<state>|-1  ...             # one row per state, one column per non-terminal
+```

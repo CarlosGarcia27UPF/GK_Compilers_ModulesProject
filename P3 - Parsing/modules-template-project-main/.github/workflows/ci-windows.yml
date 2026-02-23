@@ -84,10 +84,9 @@ jobs:
       run: |
         export TZ=Etc/GMT-2
         date_time=$(date +"%Y_%m_%d_%H_%M")
-        ./build/modules_template_main.exe ym111larg1 yml111arg2 yml111arg3 >> ./gitlogs/${date_time}_yml_proj_modules_template_run_1.log
-        ./build/tests/test_module_2.exe  >> ./gitlogs/${date_time}_yml_test_module_2.log
-        ./build/tests/test_module_args.exe testym333larg1 testyml333arg2 testyml333arg3 >> ./gitlogs/${date_time}_yml_test_module_args_run_3.log
-        ./build/modules_template_main.exe ym222larg1 yml222arg2 yml222arg3 >> gitlogs/${date_time}_yml_proj_run_2.log
+        ./build/p3_parser.exe samples/sample1.cscn data/language1.txt >> ./gitlogs/${date_time}_yml_proj_lang1_sample1.log
+        ./build/tests/test_module_args.exe testym333larg1 testyml333arg2 testyml333arg3 >> ./gitlogs/${date_time}_yml_test_module_args.log
+        ./build/p3_parser.exe samples/sample4.cscn data/language2.txt >> gitlogs/${date_time}_yml_proj_lang2_sample4.log
 
     # Step 7: Run all unit tests (CTest integration) and log output per test
     - name: Run tests (CTest) and log output

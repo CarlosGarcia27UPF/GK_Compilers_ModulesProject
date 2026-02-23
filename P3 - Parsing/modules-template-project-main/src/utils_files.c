@@ -1,4 +1,23 @@
-#include "./main.h"
+/*
+ * =============================================================================
+ * utils_files.c
+ * Utility functions for timestamped log-file generation and output routing.
+ *
+ * Provides:
+ *   split_path                   : Break a full path into directory, basename, extension
+ *   generate_timestamped_log_filename : Build a dated filename in PATHDIRLOGS
+ *   set_output_test_file         : Open the appropriate output stream (file or stdout)
+ *
+ * Author: [Team]
+ * Date:   2026
+ * =============================================================================
+ */
+#include "./utils_files.h"
+#include <time.h>
+#include <stdio.h>
+#include <string.h>
+
+extern FILE *ofile; /* Defined in main.c (or in each test's .c file) */
  
 void split_path(const char *fullpath, char *path, char *filename, char *extension) {
     const char *last_slash = strrchr(fullpath, '/');
@@ -29,14 +48,14 @@ void generate_timestamped_log_filename(const char* base_name, char* output, size
 
     split_path(base_name, path, filename, extension);
 
-    if(extension == NULL || strlen(extension) == 0) {
-        snprintf(extension, sizeof(extension), "log"); // Default extension if none provided
+    if (strlen(extension) == 0) {
+        snprintf(extension, sizeof(extension), UTILS_DEFAULT_LOG_EXT); // Default extension if none provided
     }
 
     // Format: yyyy_mm_dd_hh_mm_base
-    snprintf(output, maxlen, "%s%04d_%02d_%02d_%02d_%02d_%s.%s",
+    snprintf(output, maxlen, UTILS_TIMESTAMP_FMT,
              PATHDIRLOGS, // path
-             t->tm_year + 1900,
+             t->tm_year + UTILS_TM_YEAR_BASE,
              t->tm_mon + 1,
              t->tm_mday,
              t->tm_hour,
@@ -52,37 +71,37 @@ void generate_timestamped_log_filename(const char* base_name, char* output, size
 // If the filename is "stdout", it will use stdout, otherwise it will open the specified filename
 // It adds the timestamp to the filename if it is not "stdout"
 FILE* set_output_test_file(const char* filename) {
-    FILE *ofile = stdout;
+    FILE *log_file = stdout;  /* Output file handle; starts as stdout */
     char timestamped_filename[MAXFILENAME];
 
-    if (strcmp(filename, "stdout") != 0) {
-        fprintf(ofile, "Machine remote time ");
+    if (strcmp(filename, UTILS_STDOUT_NAME) != 0) {
+        fprintf(log_file, "Machine remote time ");
         generate_timestamped_log_filename(filename, timestamped_filename, sizeof(timestamped_filename));
 
         // Set the time zone to Europe/Madrid: 
         // (i.e. fake it as GMT-3 if Madrid is in GMT+2 summer time)
         // When run in github actions the server is in another time zone
         // We want timestamp related to our time
-        _putenv("TZ=GMT-2");
+        _putenv(UTILS_TZ_SETTING);
         //_putenv("TZ=Europe/Madrid");
         _tzset();
         generate_timestamped_log_filename(filename, timestamped_filename, sizeof(timestamped_filename));
         filename = timestamped_filename;
 
-        ofile = fopen(filename, "a"); // Tasks can be fast, so they are appended to the same file if it is the same minute
-        if (ofile == NULL) {
+        log_file = fopen(filename, UTILS_FOPEN_APPEND_MODE); // Tasks can be fast, so they are appended to the same file if it is the same minute
+        if (log_file == NULL) {
             fprintf(stderr, "Error opening output file %s. Check if subdirectory exists, otherwise create it and run again\n", filename);
-            ofile = stdout;
+            log_file = stdout;
         }
     }
-    if(ofile == stdout){
+    if(log_file == stdout){
         printf("See log of execution in stdout (filename %s)\n", filename);
-        fprintf(ofile, "See log of execution in stdout (filename %s)\n", filename);
+        fprintf(log_file, "See log of execution in stdout (filename %s)\n", filename);
     }
     else{
         printf("See log of execution in file %s\n", filename);
-        fprintf(ofile, "See log of execution in file %s\n", filename);
+        fprintf(log_file, "See log of execution in file %s\n", filename);
     }
-    fflush(ofile);
-    return ofile;
+    fflush(log_file);
+    return log_file;
 }

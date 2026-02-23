@@ -1,3 +1,15 @@
+/*
+ * =============================================================================
+ * test_module_args.h
+ * Test configuration for the module_args module.
+ *
+ * Declares the log filename constant and includes the necessary headers
+ * for testing the command-line argument processor.
+ *
+ * Author: [Team]
+ * Date:   2026
+ * =============================================================================
+ */
 #ifndef TEST_MODULE_ARGS_H
 #define TEST_MODULE_ARGS_H
  

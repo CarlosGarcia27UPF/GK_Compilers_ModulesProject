@@ -51,7 +51,8 @@ message(STATUS " - (${PROJECT_NAME}) Added tests/ directory")
 
 # Optionally build main executable if needed 
 # This executable links together all module libraries.
-# (to have modular test for each module in parallel)
-add_executable(modules_template_main src/main.c)
-target_link_libraries(modules_template_main PRIVATE module_args module_2 utils)
-message(STATUS " - (${PROJECT_NAME}) Modules Template Main executable 'modules_template_main' linked with module_args and module_2")
+add_executable(p3_parser src/main.c)
+target_include_directories(p3_parser PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(p3_parser PRIVATE
+    dfa module_args lang_spec token_loader parser_stack out_writer sra utils)
+message(STATUS " - (${PROJECT_NAME}) Main executable 'p3_parser' configured")
