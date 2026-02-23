@@ -1,0 +1,128 @@
+# -----------------------------------------------------------------------------
+# ci-windows.yml:
+# GitHub Actions Workflow: CI for Modules_Template Project on Windows (MSYS2 UCRT64)
+# 
+# This workflow automatically builds and tests the project using the same
+# MSYS2 UCRT64 toolchain used locally. It ensures compatibility and correctness
+# on Windows for all commits and pull requests.
+#
+# It uses:
+# - MSYS2 with UCRT64 environment
+# - CMake + MinGW Makefiles
+# - GCC, GDB, Make, and CTest (MSYS2 packages)
+#
+# Triggered on: pushes or pull requests to the 'main' branch.
+# 
+# This workflow:
+# - Installs MSYS2 and required toolchains
+# - Configures and builds the project in Debug mode
+# - Runs the main program and logs its output
+# - Runs all tests via CTest
+# - Saves logs with timestamps as CI artifacts
+# -----------------------------------------------------------------------------
+name: CMake CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+# To allow to create the workflow to create files in the repository (log files)
+permissions: 
+  contents: write
+
+jobs:
+  build-and-test:
+    name: Build & Run (MSYS2 Debug)
+    runs-on: windows-latest
+
+    # Use MSYS2 bash shell for all run: commands
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    # Step 1: Check out the repository code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Install MSYS2 with required toolchain and packages
+    - name: Set up MSYS2 with UCRT64
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: UCRT64 # Matches the local environment used
+        update: true
+        install: >      # Required MSYS2 packages
+          git
+          base-devel
+          cmake
+          mingw-w64-ucrt-x86_64-gcc
+          mingw-w64-ucrt-x86_64-cmake
+          mingw-w64-ucrt-x86_64-make
+          mingw-w64-ucrt-x86_64-gdb
+
+    # Step 3: Create build, logs, and gitlogs directories
+    - name: Create build and logs directories
+      run: |
+        mkdir -p build
+        mkdir -p logs
+        mkdir -p gitlogs
+
+    # Step 4: Configure the project using CMake and MinGW Makefiles
+    - name: Configure (CMake Debug)
+      run: >
+        cmake -S . -B build
+        -G "MinGW Makefiles"
+        -DCMAKE_BUILD_TYPE=Debug
+
+    # Step 5: Build the project
+    - name: Build project
+      run: cmake --build build --config Debug
+
+    # Step 6: Run the main program and log output, time stamp our time
+    - name: Run program with multiple argument sets and log output
+      run: |
+        export TZ=Etc/GMT-2
+        date_time=$(date +"%Y_%m_%d_%H_%M")
+        ./build/modules_template_main.exe ym111larg1 yml111arg2 yml111arg3 >> ./gitlogs/${date_time}_yml_proj_modules_template_run_1.log
+        ./build/tests/test_module_2.exe  >> ./gitlogs/${date_time}_yml_test_module_2.log
+        ./build/tests/test_module_args.exe testym333larg1 testyml333arg2 testyml333arg3 >> ./gitlogs/${date_time}_yml_test_module_args_run_3.log
+        ./build/modules_template_main.exe ym222larg1 yml222arg2 yml222arg3 >> gitlogs/${date_time}_yml_proj_run_2.log
+
+    # Step 7: Run all unit tests (CTest integration) and log output per test
+    - name: Run tests (CTest) and log output
+      run: |
+        export TZ=Etc/GMT-2
+        date_time=$(date +"%Y_%m_%d_%H_%M")
+        ctest --test-dir build --output-on-failure | tee gitlogs/${date_time}_yml_ctest_output.log
+
+    # For debugging the yml, to see if there are files in gitlogs
+    - name: List files in logs
+      run: ls -l logs
+    - name: List files in gitlogs
+      run: ls -l gitlogs
+
+    # Step X: Merge logs into gitlogs directory
+    - name: Copy all logs into gitlogs
+      run: |
+        cp -v logs/*.log gitlogs/ || echo "No files in logs/"
+
+      # Step 8: Upload all log files as GitHub Actions artifacts (it creates a file attachment with all logs produced)
+    - name: Upload logs as artifacts
+      if: always()  # Upload even if tests fail
+      uses: actions/upload-artifact@v4
+      with:
+        name: all-logs
+        path: gitlogs/*_*.log          # Adjust the path if logs are in a different directory
+        if-no-files-found: ignore # prevents workflow failure if no log exists.
+
+    # Step 9: 
+    - name: Commit and push logs to repo
+      if: always()  # Even if tests fail
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add gitlogs/*.log
+        git commit -m "Add CI logs for run at $(date +"%Y-%m-%d %H:%M:%S")" || echo "No changes to commit"
+        git push origin HEAD
+

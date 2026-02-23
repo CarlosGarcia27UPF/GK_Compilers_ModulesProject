@@ -1,0 +1,90 @@
+{ 
+    "version": "2.0.0",
+    "tasks": [
+        {
+        // -------------------------------------------------------
+        // Build the full project (main + modules)
+        // -------------------------------------------------------
+            "label": "Build project modules-template",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build",
+                "--config",
+                "Debug"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        // -------------------------------------------------------
+        // Run main executable (non-debug mode) with arguments sets
+        // -------------------------------------------------------        
+        {
+            "label": "Run main project modules_template with args1",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/modules_template_main.exe",
+            "args": ["111arg1run", "111arg2run"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Run main project modules_template with args2",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/modules_template_main.exe",
+            "args": ["222arg1run", "222arg2run"],
+            "problemMatcher": []
+        },
+        // -------------------------------------------------------
+        // Run tests modules
+        // -------------------------------------------------------
+        {
+            "label": "Run test_module_args with args2",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/tests/test_module_args.exe",
+            "args": ["222arg1run_test_args", "222arg2run-test-args"],
+            "dependsOn": ["Build project modules_template"],
+            "problemMatcher": []
+        },
+        {
+            "label": "Run test_module_2",
+            "type": "shell",
+            "command": "${workspaceFolder}/build/tests/test_module_2.exe",
+            "args": [],
+            "dependsOn": ["Build project modules_template"],
+            "problemMatcher": []
+        },
+        {
+            "label": "All runs of modules-template",
+            "dependsOn": [
+                "Run main project modules_template with args1",
+                "Run main project modules_template with args2",
+                "Run test_module_args with args2",
+                "Run test_module_2"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        },
+
+        // -------------------------------------------------------
+        // Run tests (CTest)
+        // -------------------------------------------------------
+        {
+        "label": "Run tests (CTest)",
+        "type": "shell",
+        "command": "ctest",
+        "args": [
+            "--test-dir",
+            "${workspaceFolder}/build",
+            "--output-on-failure"
+        ],
+        "group": "test",
+        "presentation": {
+            "reveal": "always"
+        },
+        "dependsOn": ["Build project modules_template"]
+        },
+    ]
+}
