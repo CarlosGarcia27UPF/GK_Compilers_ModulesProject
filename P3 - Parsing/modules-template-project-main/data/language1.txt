@@ -1,0 +1,71 @@
+# =============================================================================
+# language1.txt
+# SRA table for Language 1: Arithmetic expressions
+#
+# Grammar:
+#   1. s -> e
+#   2. e -> e + t
+#   3. e -> t
+#   4. t -> t * f
+#   5. t -> f
+#   6. f -> ( e )
+#   7. f -> NUM
+#
+# Terminals: + * ( ) NUM $
+# Non-terminals: s e t f
+# =============================================================================
+
+LANGUAGE arithmetic
+
+TERMINALS 6
++ LEXEME:+
+* LEXEME:*
+( LEXEME:(
+) LEXEME:)
+NUM CATEGORY:CAT_NUMBER
+$ EOF
+
+NONTERMINALS 4
+s
+e
+t
+f
+
+RULES 7
+0 1 s->e
+1 3 e->e+t
+1 1 e->t
+2 3 t->t*f
+2 1 t->f
+3 3 f->(e)
+3 1 f->NUM
+
+STATES 13
+ACTION
+E E S5 E S6 E
+E E E E E A
+S7 E E E E R1
+R3 S8 E R3 E R3
+R5 R5 E R5 E R5
+E E S5 E S6 E
+R7 R7 E R7 E R7
+E E S5 E S6 E
+E E S5 E S6 E
+S7 E E S12 E E
+R2 S8 E R2 E R2
+R4 R4 E R4 E R4
+R6 R6 E R6 E R6
+GOTO
+1 2 3 4
+-1 -1 -1 -1
+-1 -1 -1 -1
+-1 -1 -1 -1
+-1 -1 -1 -1
+-1 9 3 4
+-1 -1 -1 -1
+-1 -1 10 4
+-1 -1 -1 11
+-1 -1 -1 -1
+-1 -1 -1 -1
+-1 -1 -1 -1
+-1 -1 -1 -1

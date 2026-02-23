@@ -1,0 +1,45 @@
+# =============================================================================
+# language2.txt
+# SRA table for Language 2: Theory slide 32
+#
+# Grammar:
+#   1. e -> e + ( e )
+#   2. e -> int
+#
+# Terminals: int + ( ) $
+# Non-terminals: e
+# =============================================================================
+
+LANGUAGE theory_slide32
+
+TERMINALS 5
+int CATEGORY:CAT_NUMBER
++ LEXEME:+
+( LEXEME:(
+) LEXEME:)
+$ EOF
+
+NONTERMINALS 1
+e
+
+RULES 2
+0 5 e->e+(e)
+0 1 e->int
+
+STATES 7
+ACTION
+S2 E E E E
+E S3 E E A
+E R2 E R2 R2
+E E S4 E E
+S2 E E E E
+E S3 E S6 E
+E R1 E R1 R1
+GOTO
+1
+-1
+-1
+-1
+5
+-1
+-1
