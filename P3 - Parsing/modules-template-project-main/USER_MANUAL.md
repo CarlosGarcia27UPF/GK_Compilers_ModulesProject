@@ -1,7 +1,7 @@
 # P3 Parser User Manual
 ## Shift-Reduce Automaton Parser Practice Tool
 
-**Version:** 1.0  
+**Version:** 1.2  
 **Course:** Compilers - Practice 3  
 **Last Updated:** March 2026
 
