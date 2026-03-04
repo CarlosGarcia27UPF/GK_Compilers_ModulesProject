@@ -17,7 +17,7 @@ Two example grammars are provided:
 | `data/language2.txt` | Theory slide 32 (`e -> e+(e) \| int`) | `samples/sample3.cscn`, `samples/sample4.cscn` |
 
 ---
- 
+
 ## Project Structure
 
 ```
